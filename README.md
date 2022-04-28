@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/Sorahawk/BURG.L-Discord-Bot">
+  <a href="https://github.com/Sorahawk/BURG.L_Discord_Bot">
     <img src="images/logo.jpg" alt="Logo" width="225" height="200">
   </a>
   <h3 align="center">BURG.L Discord Bot</h3>
@@ -91,12 +91,12 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 - [X] Discord Bot Functionality
 - [X] Overhaul current extraction algorithms with modular style of detecting data to make them inherently compatible with more pages
     - [X] Infobox extraction
-    - [ ] Recipe extraction
-        - [ ] Smoothie recipe special case
+    - [X] Recipe extraction
+        - [X] Smoothie recipe special case
     - [ ] Armor set info extraction
     - [ ] Equipment repair cost extraction
-- [ ] Help Display
 - [ ] Status Effect Search
+- [ ] Help Display
 - [ ] Hosting on Heroku (or EC2, if Heroku can't upload multiple scripts)
 - [ ] Manually record BURG.L's in-game voicelines
 - [ ] Set up proper environment files for API keys which can be hidden from GitHub, so repo could possibly be made public 
@@ -119,3 +119,7 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+---
+
+Copyright © 2022, [Sorahawk](https://github.com/Sorahawk)
