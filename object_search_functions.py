@@ -1,9 +1,8 @@
 import requests
 
 from lxml import html
-from collections import Counter
 from secret_variables import JSON_API_KEY, SEARCH_ENGINE_ID
-from helper_functions import get_appended_url, string_similarity
+from helper_functions import compile_counter, get_appended_url, string_similarity
 
 
 # returns content of wiki page as an lxml.html.HtmlElement object
@@ -168,18 +167,25 @@ def get_recipe_table(page_content, object_name):
 	if recipe_name == object_name:
 		recipe_name = ''
 
-	# collections.Counter will make it much easier to recursively sum up materials for chopping list
-	recipe = Counter()
-	value = None
-
-	for item in recipe_list:
-		if item.strip():
-			if recipe_type == 'Smoothie':
-				recipe[item] = 1
-			elif value is None:
-				value = item
-			else:
-				recipe[value] = int(item)
-				value = None
+	recipe = compile_counter(recipe_list, recipe_type)
 
 	return recipe, recipe_name
+
+
+# returns object's repair cost as a Counter()
+def get_repair_cost(page_content):
+	sections = page_content.iterdescendants('div')
+
+	repair_list = None
+	for section in sections:
+		if section.get('data-source') == 'repair':
+			repair_list = section
+			break
+
+	if repair_list is None:
+		return False
+
+	repair_list = list(repair_list.xpath('div')[0].itertext())[::-1]
+	repair_cost = compile_counter(repair_list)
+	
+	return repair_cost

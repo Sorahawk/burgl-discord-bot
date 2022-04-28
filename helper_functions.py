@@ -1,5 +1,6 @@
 import re, string
 
+from collections import Counter
 from difflib import SequenceMatcher
 
 
@@ -25,6 +26,25 @@ def get_appended_url(search_query):
 # returns ratio of similarity between two input strings
 def string_similarity(a, b):
 	return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+
+
+# compiles materials into a Counter() and returns it
+# collections.Counter will make it much easier to recursively sum up materials for chopping list
+def compile_counter(item_list, recipe_type=None):
+	counter = Counter()
+	value = None
+
+	for item in item_list:
+		if item.strip():
+			if recipe_type == 'Smoothie':
+				counter[item] = 1
+			elif value is None:
+				value = item
+			else:
+				counter[value] = int(item)
+				value = None
+
+	return counter
 
 
 # removes one newline from the end of the string if there are two

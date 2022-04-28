@@ -28,6 +28,13 @@ def get_object_info(search_query):
 			# recipe extraction failed
 			pass
 
+	if has_repair_cost:
+		try:
+			object_info['repair_cost'] = get_repair_cost(page_content)
+		except:
+			# repair cost extraction failed
+			pass
+
 	return object_info
 
 
@@ -112,9 +119,12 @@ def format_object_info(object_info):
 		formatted_string = remove_extra_newline(formatted_string) + f"\n**Recipe:** {object_info['recipe_name']}\n"
 
 		for item in sorted(object_info['recipe'].items()):
-			formatted_string += f'{item[1]} {item[0]}\n'
+			formatted_string += f"{item[1]} {item[0]}\n"
 
 	if 'repair_cost' in object_info:
-		formatted_string += f"\n**Repair Cost:** {object_info['repair_cost']}\n"
+		formatted_string = remove_extra_newline(formatted_string) + f"\n**Repair Cost:**\n"
+
+		for item in sorted(object_info['repair_cost'].items()):
+			formatted_string += f"{item[1]} {item[0]}\n"
 
 	return formatted_string

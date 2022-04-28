@@ -93,8 +93,8 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
     - [X] Infobox extraction
     - [X] Recipe extraction
         - [X] Smoothie recipe special case
+    - [X] Equipment repair cost extraction
     - [ ] Armor set info extraction
-    - [ ] Equipment repair cost extraction
 - [ ] Status Effect Search
 - [ ] Help Display
 - [ ] Hosting on Heroku (or EC2, if Heroku can't upload multiple scripts)
