@@ -62,41 +62,40 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 
 # Roadmap
 
-- [X] Object Search
+- [X] Object search
     - [X] Google APIs (Programmable Search Engine and Custom Search JSON) integration as an option to locate page URLs
-    - [X] Creature Search
-    - [X] Item Search
-- [X] Discord Bot Functionality
-- [X] Overhaul current extraction algorithms (Creature and Item Search) with modular style of detecting data to make them inherently compatible with more pages
+    - [X] Creature search
+    - [X] Item search
+- [X] Discord bot functionality
+- [X] Overhaul object (creature and item) Search with new modular style of extracting data to be inherently compatible with more pages
     - [X] Infobox extraction
     - [X] Recipe extraction
-        - [X] Smoothie recipe special case
-    - [X] Equipment repair cost extraction
-    - [X] Object tier extraction
-    - [X] Process special smoothie type from input
-    - [X] Single armor piece sleek upgrade extraction
-    - [ ] Armor set info extraction
-- [ ] Status Effect Search
-- [ ] Help Display
+    - [X] Repair cost extraction
+    - [X] Specify smoothie type from input, with corresponding base added to recipe
+- [ ] Full armor set info extraction
+- [ ] Status effects search
+- [ ] `.help` command
 - [ ] Hosting on Heroku (or EC2, if Heroku can't upload multiple scripts)
-- [ ] Manually record BURG.L's in-game voicelines
-- [ ] Set up proper environment files for API keys which can be hidden from GitHub, so repo could possibly be made public 
-- [ ] Database Implementation
-- [ ] Command for user to bind search queries directly to URL of desired object, or maybe just the postfix
-- [ ] Cache all search queries to the resulting URL within Heroku
+- [ ] Cache implementation (Ephemeral storage)
+    - [ ] Ability to cache dictionary of object information upon successful retrieval
+    - [ ] Ability to retrieve dictionary of object information from cache
+- [ ] Database implementation (DynamoDB)
+    - [ ] Command to manually link search terms to desired URLs (requires elevation)
 - [ ] Chopping List
-    - [ ] Ability to recognise multiple items from a user string
-    - [ ] Print back to user the items that were successfully added
-    - [ ] User is able to remove any errors
+    - [ ] Ability to recognise multiple items from a user string, along with their respective quantities
+    - [ ] Display the items that were successfully added
+    - [ ] Able to manually remove any errors
     - [ ] Sum and multiply item costs using collections.Counter
-    - [ ] Ability to continuously consolidate materials
+    - [ ] Ability to continuously update a persistent chopping list
 - [ ] Task Scheduler
     - [ ] Track user-inputted tasks, with user-set priority
     - [ ] Generate list of tasks in order of priority, task ID assigned from highest to lowest priority
     - [ ] Allow user to complete tasks
     - [ ] Generate harvesting tasks with priority based on chopping list
+- [ ] Tweak Discord BURG.L bot's lines to sound more like in-game BURG.L
+    - [ ] Manually record BURG.L's in-game voicelines
 - [ ] Telegram Bot Functionality
-    - [ ] Perhaps just the function to view the current tasks which can assist planning in the Telegram group
+    - [ ] View current tasks in Task Scheduler
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
