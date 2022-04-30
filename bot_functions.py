@@ -3,7 +3,7 @@ import string
 from object_search import get_object_info, format_object_info
 
 
-# object search function
+# object search method
 async def search_function(message, search_query):
 	if search_query == '':
 		await message.channel.send('Please provide an input query.')

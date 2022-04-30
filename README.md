@@ -73,7 +73,8 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
         - [X] Smoothie recipe special case
     - [X] Equipment repair cost extraction
     - [X] Object tier extraction
-    - [ ] Process special smoothie type from input
+    - [X] Process special smoothie type from input
+    - [X] Single armor piece sleek upgrade extraction
     - [ ] Armor set info extraction
 - [ ] Status Effect Search
 - [ ] Help Display

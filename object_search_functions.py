@@ -3,6 +3,7 @@ import requests
 from lxml import html
 from helper_functions import *
 from secret_variables import JSON_API_KEY, SEARCH_ENGINE_ID
+from global_variables import SIMILARITY_THRESHOLD, SMOOTHIE_BASES
 
 
 # returns content of wiki page as an lxml.html.HtmlElement object
@@ -28,9 +29,9 @@ def check_existing_page(url):
 		return True
 
 
-SIMILAR_THRESHOLD = 0.4
 # returns the most likely wiki URL of the desired object
-# if it cannot be located, it returns None. if Google API daily limit exceeded, it returns False
+# if it cannot be located, it returns None
+# if Google API daily limit is exceeded, it returns False
 def locate_object_url(search_query):
 	url = get_appended_url(search_query)
 
@@ -60,7 +61,7 @@ def locate_object_url(search_query):
 		title = top_url.replace('https://grounded.fandom.com/wiki/', '')
 
 		# return url if strings are similar and item page exists, otherwise return False
-		if string_similarity(search_query, title) > SIMILAR_THRESHOLD and check_existing_page(top_url):
+		if string_similarity(search_query, title) > SIMILARITY_THRESHOLD and check_existing_page(top_url):
 			return top_url
 		else:
 			return None
@@ -88,17 +89,26 @@ def get_infobox_info(page_content):
 		header = section.get('data-source')
 		content = section.text_content()
 
-		print(header)
-		print(content)
-		
-		standard_headers = ['aggression', 'tamewith', 'effectresistance', 'weakpoint', \
-							'tooltype', 'augmenttype', 'damage', 'stun', 'speed', 'defense', 'class', \
-							'food', 'water', 'health', 'sturdiness', 'species', 'gender']
-
-		if header is None:
+		# ignore the actual infobox headers
+		if header is None or header.lower() == content.lower():
 			continue
-		elif header in standard_headers:
+
+		standard_headers = ['aggression', 'tamewith', 'effectresistance', 'weakpoint', \
+							'tooltype', 'augmenttype',  'class', 'food', 'water', 'health', \
+							'species', 'gender']
+		stat_headers = ['damage', 'stun', 'speed', 'defense', 'sturdiness', 'weight']
+
+		if header in standard_headers:
 			object_info[header] = content
+
+		elif header in stat_headers:
+			# wiki layout has something that reuses the 'weight' tag so find the one that is a float
+			# some stats are also written as '.5' without the preceding zero
+			# converting them to floats will solve both of the above
+			try:
+				object_info[header] = float(content)
+			except:
+				pass
 
 		# when extracting smoothie info, content will include the header names, so have to remove 
 		elif header in ['description', 'info']:
@@ -122,47 +132,37 @@ def get_infobox_info(page_content):
 			header, content = weakness_resistance_processing(header, content)
 			object_info[header] = content
 
+		# armor sleek upgrade effect
+		elif header == 'upgradeeffect':
+			object_info['upgradeeffect'] = content
+
 		# ignore the smoothie data fields labelled 'baseeffect'
 		elif header != 'baseeffect' and ('effect' in header or header == 'perk'):
 			if 'effects' not in object_info:
-				object_info['effects'] = {content}
+				# initially used a set to ignore duplicates, but it does not preserve insertion order
+				object_info['effects'] = [content]
 			else:
 				# account for special case where Sticky Smoothie? has an additional effect
 				if object_info['name'] == 'Smoothie?' and content == '+Regenerate':
 					content = f'{content} (Sticky only)'
 
-				# a set is used to inherently ignore duplicate effects during smoothie extraction
-				object_info['effects'].add(content)
-				print(object_info['effects'])
-
-		elif header == 'weight':
-			# wiki layout has something that reuses the 'weight' tag so only take the first one
-			if header not in object_info:
-				object_info[header] = content
+				# ignore any duplicate effects, e.g. during smoothie extraction
+				if content not in object_info['effects']:
+					object_info['effects'].append(content)
 
 	return object_info
 
 
-# check for presence of recipe or repair costs on an object's page
-def check_info_presence(page_content):
-	has_recipe = True
-	has_repair_cost = False
-
-	try:
-		page_content.get_element_by_id('Recipe')
-	except KeyError:
-		has_recipe = False
-
-	if 'Repair Cost' in page_content.itertext():
-		has_repair_cost = True
-
-	return (has_recipe, has_repair_cost)
-
-
 # returns object's crafting recipe as a Counter()
-def get_recipe_table(page_content, object_name, smoothie_type='normal'):
+def get_recipe_table(page_content, object_name, smoothie_type):
+	recipe_keyword = 'Recipe'
+
+	# account for special case where upgraded Fiber Bandage has lower crafting costs
+	if object_name == 'Fiber Bandage':
+		recipe_keyword = 'Upgraded'
+
 	# get the recipe table right below the Recipe header
-	recipe_table = page_content.get_element_by_id('Recipe').getparent().getnext().xpath('tbody/tr')
+	recipe_table = page_content.get_element_by_id(recipe_keyword).getparent().getnext().xpath('tbody/tr')
 	recipe_type = recipe_table[0].xpath('th')[0].text_content().strip()
 
 	if recipe_type == 'Item':
@@ -180,10 +180,13 @@ def get_recipe_table(page_content, object_name, smoothie_type='normal'):
 
 	recipe = compile_counter(recipe_list, recipe_type)
 
+	# add in smoothie base to recipe
 	if recipe_type == 'Smoothie':
-		if smoothie_type == 'normal':
-			# add base to recipe
-			pass
+		for base in SMOOTHIE_BASES:
+			if smoothie_type == base:
+				recipe_name = f'{base.title()} {object_name}'
+				recipe[SMOOTHIE_BASES[base]] = 1
+				break
 
 	return recipe, recipe_name
 
@@ -192,14 +195,10 @@ def get_recipe_table(page_content, object_name, smoothie_type='normal'):
 def get_repair_cost(page_content):
 	sections = page_content.iterdescendants('div')
 
-	repair_list = None
 	for section in sections:
 		if section.get('data-source') == 'repair':
 			repair_list = section
 			break
-
-	if repair_list is None:
-		return False
 
 	repair_list = list(repair_list.xpath('div')[0].itertext())[::-1]
 	repair_cost = compile_counter(repair_list)

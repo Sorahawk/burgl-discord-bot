@@ -2,14 +2,33 @@ import re, string
 
 from collections import Counter
 from difflib import SequenceMatcher
+from global_variables import ILLEGAL_URL_SYMBOLS, SMOOTHIE_BASES
 
 
-# sanitises search query and appends it to base wiki URL, and returns result 
+# detect special smoothie type from user input and remove it
+# returns new search query and the smoothie type as two separate variables
+# returns 'basic' by default since don't expect basic to be explicitly stated for smoothies
+def detect_smoothie_type(search_query):
+	smoothie_type = 'basic'
+
+	# detect any special smoothie types from input, e.g. beefy, sticky
+	# does not account for multiple smoothie types, will just take the last one iterated
+	for special in SMOOTHIE_BASES:
+		# ignore 'basic' base because it might appear in other items, e.g. Normal Chair
+		if special != 'basic' and special in search_query.lower():
+			new_search_query = re.compile(special, re.IGNORECASE).sub('', search_query).strip()
+
+			# if the input was just the smoothie type alone, do not remove it
+			if new_search_query:
+				search_query = new_search_query
+				smoothie_type = special
+
+	return search_query, smoothie_type
+
+
+# returns page URL, comprised of sanitised search query appended to the base wiki URL 
 def get_appended_url(search_query):
-	illegal_symbols = '[\][}{><|%+]+'
-
-	# sanitise input as these symbols will cause a 'Bad Title' page on the wiki
-	search_query = re.sub(illegal_symbols, '', search_query)
+	search_query = re.sub(ILLEGAL_URL_SYMBOLS, '', search_query)
 
 	# replace ? with %3F
 	search_query = search_query.replace('?', '%3F')
@@ -28,6 +47,8 @@ def string_similarity(a, b):
 	return SequenceMatcher(None, a.lower(), b.lower()).ratio()
 
 
+# processes the many variations of (e)weakness and (e)resistance labels with a single function
+# returns the specific header (out of 4 possibilities) and the processed string
 def weakness_resistance_processing(header, content):
 	if 'weakness' in header:
 		keyword = 'weakness'
@@ -41,8 +62,24 @@ def weakness_resistance_processing(header, content):
 	return keyword, content.replace('-or-', ', ')
 
 
-# compiles materials into a Counter() and returns it
-# collections.Counter will make it much easier to recursively sum up materials for chopping list
+# returns booleans representing presence of recipe and repair costs on an object's page
+def check_info_presence(page_content):
+	has_recipe = True
+	has_repair_cost = False
+
+	try:
+		page_content.get_element_by_id('Recipe')
+	except KeyError:
+		has_recipe = False
+
+	if 'Repair Cost' in page_content.itertext():
+		has_repair_cost = True
+
+	return has_recipe, has_repair_cost
+
+
+# returns a Counter() of the compiled materials and their quantities
+# collections.Counter will make it much easier to recursively sum up materials for chopping list in future
 def compile_counter(item_list, recipe_type=None):
 	counter = Counter()
 	value = None
@@ -61,14 +98,8 @@ def compile_counter(item_list, recipe_type=None):
 
 
 # removes one newline from the end of the string if there are two
+# returns processed string
 def remove_extra_newline(formatted_string):
 	if formatted_string[-2:] == '\n\n':
 		formatted_string = formatted_string[:-1]
 	return formatted_string
-
-
-# prefix a 0 if stat is just '.5'
-def prefix_zero(content):
-	if content == '.5':
-		content = f'0{content}'
-	return content

@@ -1,26 +1,10 @@
+from helper_functions import *
 from object_search_functions import *
-from helper_functions import prefix_zero, remove_extra_newline
 
 
-# retrieve details for an object
+# returns dictionary of extracted information for an input object
 def get_object_info(search_query):
-	SPECIAL_SMOOTHIE_TYPES = {'beefy': 'Health recovery x2', 'sticky': 'Effect duration x2'}
-
-	# detect any special smoothie types from input, e.g. beefy, sticky
-	for special in SPECIAL_SMOOTHIE_TYPES:
-		if special in search_query.lower():
-			new_search_query = re.compile(special, re.IGNORECASE).sub('', search_query).strip()
-
-			# if the input was just the smoothie type alone, do not remove it
-			if new_search_query:
-				search_query = new_search_query
-				smoothie_type = special
-
-			break
-
-	print(search_query)
-
-
+	search_query, smoothie_type = detect_smoothie_type(search_query)
 	url = locate_object_url(search_query)
 
 	if url is None:  # unable to locate URL for item
@@ -40,7 +24,7 @@ def get_object_info(search_query):
 
 	if has_recipe:
 		try:
-			object_info['recipe'], object_info['recipe_name'] = get_recipe_table(page_content, object_info['name'])
+			object_info['recipe'], object_info['recipe_name'] = get_recipe_table(page_content, object_info['name'], smoothie_type)
 		except:
 			# recipe extraction failed
 			print(f"WARNING: Recipe extraction for {object_info['name']} failed.")
@@ -55,7 +39,7 @@ def get_object_info(search_query):
 	return object_info
 
 
-# converts extracted object information into a formatted string
+# returns a formatted string, displaying the extracted object information in a presentable format
 def format_object_info(object_info):
 	formatted_string = f"**Name:** {object_info['name']}\n"
 
@@ -128,14 +112,16 @@ def format_object_info(object_info):
 	if 'augmenttype' in object_info:
 		formatted_string += f"**Element Type:** {object_info['augmenttype']}\n"
 	if 'damage' in object_info:
-		formatted_string += f"**Damage:** {prefix_zero(object_info['damage'])}\n"
+		formatted_string += f"**Damage:** {object_info['damage']}\n"
 	if 'stun' in object_info:
-		formatted_string += f"**Stun:** {prefix_zero(object_info['stun'])}\n"
+		formatted_string += f"**Stun:** {object_info['stun']}\n"
 	if 'speed' in object_info:
-		formatted_string += f"**Speed:** {prefix_zero(object_info['speed'])}\n"
+		formatted_string += f"**Speed:** {object_info['speed']}\n"
 
 	if 'effects' in object_info:
 		formatted_string += f"**Effects:** {', '.join(object_info['effects'])}\n"
+	if 'upgradeeffect' in object_info:
+		formatted_string += f"**Sleek Upgrade Effect:** {object_info['upgradeeffect']}\n"
 
 	if 'recipe' in object_info:
 		formatted_string = remove_extra_newline(formatted_string) + f"\n**Recipe:** {object_info['recipe_name']}\n"
