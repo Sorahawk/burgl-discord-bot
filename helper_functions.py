@@ -28,6 +28,19 @@ def string_similarity(a, b):
 	return SequenceMatcher(None, a.lower(), b.lower()).ratio()
 
 
+def weakness_resistance_processing(header, content):
+	if 'weakness' in header:
+		keyword = 'weakness'
+	else:
+		keyword = 'resistance'
+
+	header = header.split(keyword)
+	if header[0] == 'e':
+		keyword = f'e{keyword}'
+
+	return keyword, content.replace('-or-', ', ')
+
+
 # compiles materials into a Counter() and returns it
 # collections.Counter will make it much easier to recursively sum up materials for chopping list
 def compile_counter(item_list, recipe_type=None):

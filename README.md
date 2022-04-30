@@ -13,29 +13,13 @@
 </div>
 
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-  </ol>
-</details>
-
-
 
 # About The Project
 
 The BURG.L Discord Bot is a resource manager that aids [Grounded](https://grounded.obsidian.net/) players by tracking requirements and allocating tasks. BURG.L pulls data from the [Grounded Wiki](https://grounded.fandom.com/wiki/Grounded_Wiki) to get information for items, such as crafting costs. Despite the recent introduction of slash commands by Discord, prefix commands are still used in this project as Discord's in-game overlay does not work with slash commands.
 
 
-## Features
+## Planned Features
 
 | Feature | Description |
 | ------- | ----------- |
@@ -53,9 +37,6 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 * [Custom Search JSON API by Google](https://developers.google.com/custom-search/v1/introduction)
 * [Amazon EC2](https://aws.amazon.com/ec2/) or [Heroku](https://www.heroku.com/)
 * [Amazon DynamoDB](https://aws.amazon.com/dynamodb/) ~~or [Amazon S3](https://aws.amazon.com/s3/)~~
-
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
@@ -78,9 +59,6 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 | 103 | Daily limit of 100 queries for Google Custom Search JSON API has been exceeded. |
 
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 # Roadmap
 
@@ -89,11 +67,13 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
     - [X] Creature Search
     - [X] Item Search
 - [X] Discord Bot Functionality
-- [X] Overhaul current extraction algorithms with modular style of detecting data to make them inherently compatible with more pages
+- [X] Overhaul current extraction algorithms (Creature and Item Search) with modular style of detecting data to make them inherently compatible with more pages
     - [X] Infobox extraction
     - [X] Recipe extraction
         - [X] Smoothie recipe special case
     - [X] Equipment repair cost extraction
+    - [X] Object tier extraction
+    - [ ] Process special smoothie type from input
     - [ ] Armor set info extraction
 - [ ] Status Effect Search
 - [ ] Help Display

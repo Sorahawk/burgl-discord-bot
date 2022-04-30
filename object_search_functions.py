@@ -1,8 +1,8 @@
 import requests
 
 from lxml import html
+from helper_functions import *
 from secret_variables import JSON_API_KEY, SEARCH_ENGINE_ID
-from helper_functions import compile_counter, get_appended_url, string_similarity
 
 
 # returns content of wiki page as an lxml.html.HtmlElement object
@@ -81,53 +81,64 @@ def get_infobox_info(page_content):
 	object_info['name'] = infobox.find_class('pi-title')[0].text_content()
 	object_info['picture_url'] = list(infobox.find_class('image-thumbnail')[0].iterlinks())[0][2]
 
-	# if infobox has tabs, e.g. smoothies, take the first one
-	sections = infobox.find_class('wds-is-current')
-	if sections == []:
-		try:
-			sections = sections[1].find_class('pi-data-value')
-		except:
-			# if error occurs, revert to default
-			sections = infobox.find_class('pi-data-value')
-	else:
-		sections = infobox.find_class('pi-data-value')
+	sections = infobox.find_class('pi-item-spacing')
 
 	# extract available info
 	for section in sections:
 		header = section.get('data-source')
 		content = section.text_content()
 
-		standard_headers = ['aggression', 'tamewith', 'effectresistance', 'tooltype', \
-							'augmenttype', 'damage', 'stun', 'speed', 'defense', 'class', \
+		print(header)
+		print(content)
+		
+		standard_headers = ['aggression', 'tamewith', 'effectresistance', 'weakpoint', \
+							'tooltype', 'augmenttype', 'damage', 'stun', 'speed', 'defense', 'class', \
 							'food', 'water', 'health', 'sturdiness', 'species', 'gender']
-		weakness_resistance_headers = ['eweakness', 'eweakness1', 'eresistance', 'eresistance1', \
-										'weakness', 'weakness1', 'resistance', 'resistance1']
 
-		if header in standard_headers:
+		if header is None:
+			continue
+		elif header in standard_headers:
 			object_info[header] = content
+
+		# when extracting smoothie info, content will include the header names, so have to remove 
 		elif header in ['description', 'info']:
-			object_info['description'] = content
+			object_info['description'] = content.replace('Description', '').strip()
 		elif header in ['category', 'subcat']:
-			object_info['category'] = content
+			object_info['category'] = content.replace('Category', '').strip()
+
+		elif header == 'brokenwith':
+			object_info[header] = content.replace('Harvest With', '').strip()
+		elif header == 'tier':
+			try:
+				object_info[header] = section.getchildren()[0].get('title').replace('Tier', '').strip()
+			except:
+				# ignore Tier header
+				pass
+
+		elif header == 'loot':
+			object_info[header] = content.strip().replace(')', ')\n').replace('\n ', '\n')
+
+		elif 'weakness' in header or 'resistance' in header:
+			header, content = weakness_resistance_processing(header, content)
+			object_info[header] = content
+
+		# ignore the smoothie data fields labelled 'baseeffect'
+		elif header != 'baseeffect' and ('effect' in header or header == 'perk'):
+			if 'effects' not in object_info:
+				object_info['effects'] = {content}
+			else:
+				# account for special case where Sticky Smoothie? has an additional effect
+				if object_info['name'] == 'Smoothie?' and content == '+Regenerate':
+					content = f'{content} (Sticky only)'
+
+				# a set is used to inherently ignore duplicate effects during smoothie extraction
+				object_info['effects'].add(content)
+				print(object_info['effects'])
 
 		elif header == 'weight':
 			# wiki layout has something that reuses the 'weight' tag so only take the first one
 			if header not in object_info:
 				object_info[header] = content
-
-		elif header == 'loot':
-			object_info[header] = content.strip().replace(') ', ')\n')
-
-		elif header in weakness_resistance_headers:
-			if header[-1] == '1':
-				header = header[:-1]
-			object_info[header] = content.replace('-or-', ' and ')
-
-		elif header in ['effect', 'effect1', 'effect2', 'effect3', 'effect4', '-effect3', 'perk']:
-			if 'effects' not in object_info:
-				object_info['effects'] = content
-			else:
-				object_info['effects'] += f', {content}'
 
 	return object_info
 
@@ -149,7 +160,7 @@ def check_info_presence(page_content):
 
 
 # returns object's crafting recipe as a Counter()
-def get_recipe_table(page_content, object_name):
+def get_recipe_table(page_content, object_name, smoothie_type='normal'):
 	# get the recipe table right below the Recipe header
 	recipe_table = page_content.get_element_by_id('Recipe').getparent().getnext().xpath('tbody/tr')
 	recipe_type = recipe_table[0].xpath('th')[0].text_content().strip()
@@ -168,6 +179,11 @@ def get_recipe_table(page_content, object_name):
 		recipe_name = ''
 
 	recipe = compile_counter(recipe_list, recipe_type)
+
+	if recipe_type == 'Smoothie':
+		if smoothie_type == 'normal':
+			# add base to recipe
+			pass
 
 	return recipe, recipe_name
 

@@ -17,7 +17,7 @@ async def search_function(message, search_query):
 			await message.channel.send(f"**ERROR 102:** Wiki page for '{result[1]}' has an unsupported layout.")
 
 	# unable to locate item page URL
-	if result == 101:
+	elif result == 101:
 		await message.channel.send(f"**ERROR 101:** Unable to locate '{string.capwords(search_query)}'. Try typing in the object's full name.")
 
 	# daily quota for Google API exhausted
