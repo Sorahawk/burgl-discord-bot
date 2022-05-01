@@ -1,6 +1,7 @@
 import string
 
 from object_search import *
+from supplementary_extraction import get_creature_card
 
 
 # object search method
@@ -27,3 +28,24 @@ async def search_function(message, search_query):
 	else:
 		await message.channel.send(result['picture_url'])
 		await message.channel.send(format_object_info(result))
+
+
+# creature card search method
+async def card_function(message, search_query):
+	if search_query == '':
+		await message.channel.send('Please provide an input query.')
+		return
+
+	creature_card = get_creature_card(search_query)
+
+	# card cannot be found
+	if creature_card == 104:
+		if '.' in search_query:
+			search_query = search_query.upper()
+		else:
+			search_query = search_query.title()
+
+		await message.channel.send(f"**ERROR 104:** Unable to locate Creature Card for '{search_query}'. Type in the exact name of the creature.")
+
+	else:
+		await message.channel.send(creature_card)

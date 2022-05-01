@@ -5,8 +5,14 @@ from difflib import SequenceMatcher
 from global_variables import ILLEGAL_URL_SYMBOLS, SMOOTHIE_BASES
 
 
-# returns page URL, comprised of sanitised search query appended to the base wiki URL 
+# returns page URL, comprised of sanitised search query appended to the base wiki URL
 def get_appended_url(search_query):
+	base_url = 'https://grounded.fandom.com/wiki/'
+
+	# raise all letters for robot names
+	if '.' in search_query:
+		return f'{base_url}{search_query.upper()}'
+
 	search_query = re.sub(ILLEGAL_URL_SYMBOLS, '', search_query)
 
 	# replace ? with %3F
@@ -18,7 +24,7 @@ def get_appended_url(search_query):
 
 	# capitalise the first letter of every word as the webpage URL is case sensitive
 	# initially used .title() but then realised that it also capitalises the letter after an apostrophe
-	return f'https://grounded.fandom.com/wiki/{string.capwords(search_query)}'
+	return f'{base_url}{string.capwords(search_query)}'
 
 
 # returns ratio of similarity between two input strings

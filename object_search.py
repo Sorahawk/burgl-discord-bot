@@ -1,4 +1,5 @@
 from object_extraction import *
+from supplementary_extraction import get_modifier_info
 from url_processing import get_page_data, locate_object_url
 from helper_functions import detect_smoothie_type, check_info_presence, remove_extra_newline
 

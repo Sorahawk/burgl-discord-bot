@@ -1,3 +1,4 @@
+<!-- MARKER FOR 'BACK TO TOP' BUTTON -->
 <div id="top"></div>
 
 <!-- PROJECT LOGO -->
@@ -23,7 +24,8 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 
 | Feature | Description |
 | ------- | ----------- |
-| Object Search | Retrieves object information (e.g. Creatures, Items, Resources, Status Effects, Mutations) |
+| Object Search | Retrieves object information (e.g. creatures, items, resources, status effects, mutations) |
+| Creature Card Search | Retrieves a creature's bestiary card |
 | Chopping List | Consolidates total number of resources required for crafting and building. |
 | Task Scheduler | Keeps track of user-inputted tasks, as well as generating harvesting tasks based on the Chopping List |
 
@@ -44,9 +46,10 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 ## Bot Commands
 
 * `.help` - Display this list
-* `.search <object_name>` - Display details of the object, including its picture and description.
-  * If the object is a creature, its aggression trait and loot tables are also shown.
-  * If the object is an item, its category and crafting recipe (if any) are also shown.
+* `.search <object_name>` - Display any available details of the object, including its picture and description.
+    * The search works with any page with an infobox, e.g. creatures, equipment, resources, building components, resource nodes, landmarks.
+    * It also supports status effects and mutations.
+* `.card <creature_name>` - Displays the specified creature's bestiary card
 
 
 ## Error Codes
@@ -56,6 +59,7 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 | 101 | Wiki page for the object cannot be located. |
 | 102 | Wiki page for the object has an unsupported layout. |
 | 103 | Daily limit of 100 queries for Google Custom Search JSON API has been exceeded. |
+| 104 | Bestiary card for the creature cannot be located. |
 
 
 
@@ -72,7 +76,7 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
     - [X] Repair cost extraction
     - [X] Specify smoothie type from input, with corresponding base added to recipe
 - [X] Modifiers (Status effects and Mutations) extraction merged into `.search`
-- [ ] Full armor set info extraction
+- [X] `.card` command to retrieve creature cards
 - [ ] `.help` command
 - [ ] Hosting on Heroku (or EC2, if Heroku can't upload multiple scripts)
 - [ ] Cache implementation (Ephemeral storage)

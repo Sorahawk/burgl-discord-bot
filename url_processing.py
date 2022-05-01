@@ -31,8 +31,8 @@ def check_existing_page(url):
 		return page_content, page_title
 
 
-# returns the most likely wiki URL of the desired object
-# if it cannot be located, it returns None
+# returns wiki page content directly if the appended URL works, else the most likely wiki URL of the object
+# if it cannot be located, returns None by default
 # if Google API daily limit is exceeded, it returns False
 def locate_object_url(search_query):
 	url = get_appended_url(search_query)
@@ -66,12 +66,8 @@ def locate_object_url(search_query):
 		# return url if strings are similar and item page exists, otherwise return False
 		if string_similarity(search_query, title) > SIMILARITY_THRESHOLD and check_existing_page(top_url):
 			return top_url
-		else:
-			return None
 
 	# check if daily quota is exceeded
 	elif results.get('error') is not None:
 		if results['error']['code'] == 429:
 			return False
-
-	return None
