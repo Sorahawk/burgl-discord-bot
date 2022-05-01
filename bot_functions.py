@@ -1,6 +1,6 @@
 import string
 
-from object_search import get_object_info, format_object_info
+from object_search import *
 
 
 # object search method

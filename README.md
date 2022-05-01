@@ -23,8 +23,7 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 
 | Feature | Description |
 | ------- | ----------- |
-| Object Search | Retrieves object information |
-| Status Effect Search | Retrieves status effect information |
+| Object Search | Retrieves object information (e.g. Creatures, Items, Resources, Status Effects, Mutations) |
 | Chopping List | Consolidates total number of resources required for crafting and building. |
 | Task Scheduler | Keeps track of user-inputted tasks, as well as generating harvesting tasks based on the Chopping List |
 
@@ -72,8 +71,8 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
     - [X] Recipe extraction
     - [X] Repair cost extraction
     - [X] Specify smoothie type from input, with corresponding base added to recipe
+- [X] Modifiers (Status effects and Mutations) extraction merged into `.search`
 - [ ] Full armor set info extraction
-- [ ] Status effects search
 - [ ] `.help` command
 - [ ] Hosting on Heroku (or EC2, if Heroku can't upload multiple scripts)
 - [ ] Cache implementation (Ephemeral storage)

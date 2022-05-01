@@ -1,18 +1,27 @@
-from helper_functions import *
-from object_search_functions import *
+from object_extraction import *
+from url_processing import get_page_data, locate_object_url
+from helper_functions import detect_smoothie_type, check_info_presence, remove_extra_newline
 
 
-# returns dictionary of extracted information for an input object
+# returns dictionary of extracted information for an input object, or error codes if an error occurs
 def get_object_info(search_query):
+
+	# check for status effect or modifier first
+	modifier_info = get_modifier_info(search_query)
+	if modifier_info is not None:
+		return modifier_info
+
 	search_query, smoothie_type = detect_smoothie_type(search_query)
-	url = locate_object_url(search_query)
+	result = locate_object_url(search_query)
 
-	if url is None:  # unable to locate URL for item
+	if result is None:  # unable to locate URL for item
 		return 101
-	elif not url:  # Google API daily resource exhausted
+	elif not result:  # Google API daily resource exhausted
 		return 103
-
-	page_title, page_content = get_page_data(url)
+	elif isinstance(result, str):
+		page_content, page_title = get_page_data(result, True)
+	else:
+		page_content, page_title = result[0], result[1]
 
 	try:
 		object_info = get_infobox_info(page_content)
@@ -48,6 +57,10 @@ def format_object_info(object_info):
 	if 'category' in object_info:
 		formatted_string += f"**Category:** {object_info['category']}\n\n"
 
+	# status effects / mutations
+	if 'source' in object_info:
+		formatted_string += f"\n**Source:**\n{object_info['source']}\n"
+
 	# resource nodes
 	if 'brokenwith' in object_info:
 		formatted_string += f"**Harvest With:** {object_info['brokenwith']}\n"
@@ -60,10 +73,9 @@ def format_object_info(object_info):
 
 	# creatures
 	if 'aggression' in object_info:
-		# account for special case where Bee has 'NeutralAggressive'
-		formatted_string += f"**Aggression:** {object_info['aggression'].replace('lA', 'l; A')}\n\n"
+		formatted_string += f"**Aggression:** {object_info['aggression']}\n\n"
 	if 'tier' in object_info:
-		# tier does not show up for all creatures, e.g. harmless
+		# some creatures don't have tiers, e.g. harmless
 		formatted_string = remove_extra_newline(formatted_string) + f"**Tier:** {object_info['tier']}\n\n"
 
 	if 'tamewith' in object_info:
@@ -82,7 +94,7 @@ def format_object_info(object_info):
 		formatted_string += f"**Weak Point:** __{object_info['weakpoint']}__\n"
 
 	if 'loot' in object_info:
-		# if no optional fields, remove extra newline added from aggression
+		# if no optional fields, remove extra newline added from above
 		formatted_string = remove_extra_newline(formatted_string) + f"\n**Loot:**\n{object_info['loot']}"
 
 	# building structures

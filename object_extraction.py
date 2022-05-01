@@ -1,77 +1,44 @@
-import requests
-
-from lxml import html
-from helper_functions import *
-from secret_variables import JSON_API_KEY, SEARCH_ENGINE_ID
-from global_variables import SIMILARITY_THRESHOLD, SMOOTHIE_BASES
+from url_processing import get_page_data
+from global_variables import SMOOTHIE_BASES
+from helper_functions import weakness_resistance_processing, compile_counter
 
 
-# returns content of wiki page as an lxml.html.HtmlElement object
-def get_page_data(url):
-	xml_data = html.fromstring(requests.get(url).text)
+# returns dictionary of extracted information for a given status effect or mutation
+# if modifier can't be found, returns None by default
+def get_modifier_info(search_query):
+	urls = ['https://grounded.fandom.com/wiki/Status_Effects', 'https://grounded.fandom.com/wiki/Mutations']
 
-	page_title = xml_data.get_element_by_id('firstHeading').text_content()
-	page_content = xml_data.get_element_by_id('mw-content-text')
+	modifier_info = {}
 
-	return page_title.strip(), page_content
+	for index in range(len(urls)):
+		page_content = get_page_data(urls[index])
+		modifier_list = page_content.xpath('div/table/tbody/tr')
 
+		for modifier in modifier_list:
+			columns = modifier.getchildren()
 
-# returns True if item page exists on the wiki, otherwise returns False
-def check_existing_page(url):
-	page_content = get_page_data(url)[1]
+			# remove superscript footnote text from some mutation names
+			modifier_name = columns[0].text_content().strip().split('[')[0]
 
-	try:
-		# check for specific segment that says page does not exist
-		invalid_text = page_content.find_class('noarticletext')[0]
-		return False
-	except:
-		# will throw an IndexError if the item page exists
-		return True
+			if modifier_name == 'Effect' or modifier_name == 'Mutation':
+				continue
 
+			lowered_query = search_query.lower()
+			prefixed_queries = [lowered_query, f'+{lowered_query}', f'-{lowered_query}']
 
-# returns the most likely wiki URL of the desired object
-# if it cannot be located, it returns None
-# if Google API daily limit is exceeded, it returns False
-def locate_object_url(search_query):
-	url = get_appended_url(search_query)
+			if modifier_name.lower() in prefixed_queries:
+				modifier_info['name'] = modifier_name
+				modifier_info['picture_url'] = list(columns[0].iterlinks())[0][2]
 
-	# the appended URL can fail in the case of typos, shortforms, or some other syntax error in the user input
-	valid = check_existing_page(url)
+				# ignore the second column under mutations, shift to the right by one
+				modifier_info['description'] = columns[1 + index].text_content().strip().replace('\n\n', '\n')
+				modifier_info['source'] = columns[2 + index].text_content().strip()
 
-	# if result != False, then wiki page exists
-	if valid: return url
+				# replace source text for purchasable mutations
+				if 'BURG.L' in modifier_info['source']:
+					modifier_info['source'] = 'Purchase from BURG.L'
 
-	# if URL not correct, then use Google search to try and find the correct page
-	# created a Google Programmable Search Engine that only searches within the Grounded wiki
-	# also generated a Google Custom Search JSON API key that allows 100 queries a day for free
-	url = f'https://www.googleapis.com/customsearch/v1?key={JSON_API_KEY}&cx={SEARCH_ENGINE_ID}&q={search_query}'
-
-	results = requests.get(url).json()
-
-	# check for suggested spelling by Google, in the case of typos
-	if results.get('spelling') is not None:
-		corrected_spelling = results['spelling']['correctedQuery']
-		return locate_object_url(corrected_spelling)
-
-	elif results.get('items') is not None:
-		# Get the top result
-		top_url = results['items'][0]['link']
-
-		# check if the page title and input phrase are similar
-		title = top_url.replace('https://grounded.fandom.com/wiki/', '')
-
-		# return url if strings are similar and item page exists, otherwise return False
-		if string_similarity(search_query, title) > SIMILARITY_THRESHOLD and check_existing_page(top_url):
-			return top_url
-		else:
-			return None
-
-	# check if daily quota is exceeded
-	elif results.get('error') is not None:
-		if results['error']['code'] == 429:
-			return False
-
-	return None
+				return modifier_info
 
 
 # returns dictionary of available info extracted from infobox
@@ -89,8 +56,11 @@ def get_infobox_info(page_content):
 		header = section.get('data-source')
 		content = section.text_content()
 
-		# ignore the actual infobox headers
-		if header is None or header.lower() == content.lower():
+		if header is None:
+			continue
+
+		# ignore actual infobox headers
+		elif content == 'Effect' or header.lower() == content.lower():
 			continue
 
 		standard_headers = ['aggression', 'tamewith', 'effectresistance', 'weakpoint', \
@@ -102,8 +72,8 @@ def get_infobox_info(page_content):
 			object_info[header] = content
 
 		elif header in stat_headers:
-			# wiki layout has something that reuses the 'weight' tag so find the one that is a float
-			# some stats are also written as '.5' without the preceding zero
+			# for base building parts, wiki layout has things that incorrectly reuse the 'weight' label
+			# some item stats are also written as '.5' without the preceding zero
 			# converting them to floats will solve both of the above
 			try:
 				object_info[header] = float(content)
@@ -133,7 +103,7 @@ def get_infobox_info(page_content):
 			object_info[header] = content
 
 		# armor sleek upgrade effect
-		elif header == 'upgradeeffect':
+		elif 'upgradeeffect' in header:
 			object_info['upgradeeffect'] = content
 
 		# ignore the smoothie data fields labelled 'baseeffect'
