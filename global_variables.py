@@ -1,4 +1,7 @@
 
+# symbol to signify bot commands
+BOT_COMMAND_PREFIX = '.'
+
 # symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
 ILLEGAL_URL_SYMBOLS = '[\][}{><|%+]+'
 

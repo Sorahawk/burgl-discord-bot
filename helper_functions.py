@@ -5,6 +5,11 @@ from difflib import SequenceMatcher
 from global_variables import ILLEGAL_URL_SYMBOLS, SMOOTHIE_BASES
 
 
+# removes bot command from front of string input
+def remove_command_prefix(input_string, prefix):
+	return input_string[len(prefix):].strip()
+
+
 # returns page URL, comprised of sanitised search query appended to the base wiki URL
 def get_appended_url(search_query):
 	base_url = 'https://grounded.fandom.com/wiki/'

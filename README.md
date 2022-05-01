@@ -45,11 +45,11 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 
 ## Bot Commands
 
-* `.help` - Display this list
-* `.search <object_name>` - Display any available details of the object, including its picture and description.
-    * The search works with any page with an infobox, e.g. creatures, equipment, resources, building components, resource nodes, landmarks.
+* `.help` - Displays this list
+* `.search <object_name>` - Displays any available details of the object, including its picture and description.
+    * This search works with any Grounded wiki page with an infobox, e.g. creatures, equipment, resources, building components, resource nodes, landmarks.
     * It also supports status effects and mutations.
-* `.card <creature_name>` - Displays the specified creature's bestiary card
+* `.card <creature_name>` - Displays the specified creature's bestiary card.
 
 
 ## Error Codes
@@ -77,7 +77,7 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
     - [X] Specify smoothie type from input, with corresponding base added to recipe
 - [X] Modifiers (Status effects and Mutations) extraction merged into `.search`
 - [X] `.card` command to retrieve creature cards
-- [ ] `.help` command
+- [X] `.help` command to display command list
 - [ ] Hosting on Heroku (or EC2, if Heroku can't upload multiple scripts)
 - [ ] Cache implementation (Ephemeral storage)
     - [ ] Ability to cache dictionary of object information upon successful retrieval
