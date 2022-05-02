@@ -52,7 +52,6 @@ def get_creature_card(search_query):
 	result = iterate_creature_cards(search_query, creature_cards)
 
 	if result != 104:
-		print('first round success')
 		return result[0], result[1]
 
 	# correct any minor typos and predict any missing words in the creature's name
