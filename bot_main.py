@@ -2,20 +2,23 @@ import discord
 
 from bot_functions import *
 from secret_variables import DISCORD_BOT_TOKEN
-from global_variables import BOT_COMMAND_PREFIX
 from helper_functions import remove_command_prefix
+from global_variables import MAIN_CHANNEL_ID, BOT_COMMAND_PREFIX, CUSTOM_EMOJIS
 
 
-client = discord.Client()
+bot = discord.Client()
 
-@client.event
+@bot.event
 async def on_ready():
-	print(f'{client.user} is online.')
+	print(f'{bot.user} is online.')
+
+	channel = bot.get_channel(MAIN_CHANNEL_ID)
+	await channel.send(f"{CUSTOM_EMOJIS['BURG.L']} B-B-BURG.L is online!")
 
 
-@client.event
+@bot.event
 async def on_message(message):
-	if message.author == client.user:
+	if message.author == bot.user:
 		return
 
 	help_command = f'{BOT_COMMAND_PREFIX}help'
@@ -36,4 +39,4 @@ async def on_message(message):
 		await card_function(message, search_query)
 
 
-client.run(DISCORD_BOT_TOKEN)
+bot.run(DISCORD_BOT_TOKEN)

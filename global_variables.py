@@ -1,4 +1,7 @@
 
+# main Discord channel ID  
+MAIN_CHANNEL_ID = 886568148919275532
+
 # symbol to signify bot commands
 BOT_COMMAND_PREFIX = '.'
 
