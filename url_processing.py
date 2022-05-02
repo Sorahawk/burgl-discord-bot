@@ -31,8 +31,9 @@ def check_existing_page(url):
 		return page_content, page_title
 
 
-# returns wiki page content directly if the appended URL works, else the most likely wiki URL of the object
-# if it cannot be located, returns None by default
+# returns wiki page content in a tuple if the appended URL works
+# or returns the most likely wiki URL of the object as a string
+# if the URL cannot be located, returns None by default
 # if Google API daily limit is exceeded, it returns False
 def locate_object_url(search_query):
 	url = get_appended_url(search_query)

@@ -124,3 +124,15 @@ def damage_elemental_emojis(input_string):
 		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]}{keyword}')
 
 	return input_string
+
+
+# iterates through list of creature cards to compare the input with their names
+# returns creature name and picture URL if found, otherwise error code 104
+def iterate_creature_cards(search_query, creature_cards):
+	for creature in creature_cards[::2]:
+		creature_name = creature.getparent().text_content().strip()
+
+		if creature_name.lower().replace('.', '') == search_query.lower().replace('.', ''):
+			return creature_name, creature.get('href')
+
+	return 104

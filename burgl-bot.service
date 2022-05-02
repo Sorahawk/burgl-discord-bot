@@ -1,0 +1,14 @@
+# goes into /etc/systemd/system folder in Ubuntu to run Python script as a service
+
+
+[Unit]
+Description=BURG.L Discord Bot
+After=multi-user.target
+
+[Service]
+User=ubuntu
+ExecStart=/usr/bin/python3 /<path_to_script>/bot_main.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -14,6 +14,7 @@ async def on_ready():
 
 	channel = bot.get_channel(MAIN_CHANNEL_ID)
 	await channel.send(f"{CUSTOM_EMOJIS['BURG.L']} B-B-BURG.L is online!")
+	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='the backyard'))
 
 
 @bot.event

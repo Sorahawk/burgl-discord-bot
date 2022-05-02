@@ -17,6 +17,9 @@ def get_infobox_info(page_content):
 		header = section.get('data-source')
 		content = section.text_content()
 
+		print(header)
+		print(content)
+
 		if header is None:
 			continue
 

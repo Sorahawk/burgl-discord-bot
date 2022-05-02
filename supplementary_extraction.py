@@ -1,4 +1,5 @@
 from url_processing import *
+from helper_functions import iterate_creature_cards
 
 
 # returns dictionary of extracted information for a given status effect or mutation
@@ -21,10 +22,10 @@ def get_modifier_info(search_query):
 			if modifier_name == 'Effect' or modifier_name == 'Mutation':
 				continue
 
-			lowered_query = search_query.lower()
+			lowered_query = search_query.lower().replace(':', '')
 			prefixed_queries = [lowered_query, f'+{lowered_query}', f'-{lowered_query}']
 
-			if modifier_name.lower() in prefixed_queries:
+			if modifier_name.lower().replace(':', '') in prefixed_queries:
 				modifier_info['name'] = modifier_name
 				modifier_info['picture_url'] = list(columns[0].iterlinks())[0][2]
 
@@ -44,30 +45,26 @@ def get_modifier_info(search_query):
 def get_creature_card(search_query):
 	url = 'https://grounded.fandom.com/wiki/Creature_Cards'
 
-	# correct any minor typos and predict any missing words in the creature's name
-	result = locate_object_url(search_query)
-
-	# if result is string URL, then get the creature name from the end of it
-	if isinstance(result, str):
-		search_query_2 = check_existing_page(result)[1]
-	elif isinstance(result, tuple):
-		# take the page title
-		search_query_2 = result[1]
-	else:
-		# result not found
-		search_query_2 = ''
-
-	search_queries = [search_query, search_query_2]
-
 	page_content = get_page_data(url)
 	creature_cards = page_content.find_class('image')
 
-	for creature in creature_cards[::2]:
-		creature_name = creature.getparent().text_content().strip()
+	# try to find the card with the original search query first
+	result = iterate_creature_cards(search_query, creature_cards)
 
-		for query in search_queries:
-			# remove periods because might not get it entirely correct for the robots' names
-			if creature_name.lower().replace('.', '') == query.lower().replace('.', ''):
-				return creature_name, creature.get('href')
+	if result != 104:
+		print('first round success')
+		return result[0], result[1]
 
-	return 104
+	# correct any minor typos and predict any missing words in the creature's name
+	result = locate_object_url(search_query)
+
+	if not result or result is None:
+		return 104
+
+	# if result is string URL, then get the creature name from its resulting page (might have redirects, e.g. Ant Worker -> Red Ant Worker)
+	if isinstance(result, str):
+		search_query = check_existing_page(result)[1]
+	else:  # result is tuple, get page title directly from result
+		search_query = result[1]
+
+	return iterate_creature_cards(search_query, creature_cards)
