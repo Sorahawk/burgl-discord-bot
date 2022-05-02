@@ -1,7 +1,7 @@
 from object_extraction import *
 from supplementary_extraction import get_modifier_info
 from url_processing import get_page_data, locate_object_url
-from helper_functions import detect_smoothie_type, check_info_presence, remove_extra_newline
+from helper_functions import detect_smoothie_type, check_info_presence, remove_extra_newline, damage_elemental_emojis
 
 
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
@@ -64,7 +64,7 @@ def format_object_info(object_info):
 
 	# resource nodes
 	if 'brokenwith' in object_info:
-		formatted_string += f"**Harvest With:** {object_info['brokenwith']}\n"
+		formatted_string += f"**Harvest With:** {damage_elemental_emojis(object_info['brokenwith'])}\n"
 
 	# characters
 	if 'species' in object_info:
@@ -78,19 +78,20 @@ def format_object_info(object_info):
 	if 'tier' in object_info:
 		# some creatures don't have tiers, e.g. harmless
 		formatted_string = remove_extra_newline(formatted_string) + f"**Tier:** {object_info['tier']}\n\n"
-
 	if 'tamewith' in object_info:
 		formatted_string += f"**Tamed With:** {object_info['tamewith']}\n"
+
 	if 'effectresistance' in object_info:
-		formatted_string += f"**Resistance (Effect):** {object_info['effectresistance']}\n"
+		# effect resistance seems to have been removed from the creature infoboxes after arrival of bestiary
+		formatted_string += f"**Effect Resistance:** {object_info['effectresistance']}\n"
 	if 'resistance' in object_info:
-		formatted_string += f"**Resistance (Damage):** {object_info['resistance']}\n"
+		formatted_string += f"**Dmg. Resistance:** {damage_elemental_emojis(object_info['resistance'])}\n"
 	if 'eresistance' in object_info:
-		formatted_string += f"**Resistance (Elemental):** {object_info['eresistance']}\n"
+		formatted_string += f"**Elem. Resistance:** {damage_elemental_emojis(object_info['eresistance'])}\n"
 	if 'weakness' in object_info:
-		formatted_string += f"**Weakness (Damage):** __{object_info['weakness']}__\n"
+		formatted_string += f"**Dmg.  Weakness:** __{damage_elemental_emojis(object_info['weakness'])}__\n".replace(', ', '__, __')
 	if 'eweakness' in object_info:
-		formatted_string += f"**Weakness (Elemental):** __{object_info['eweakness']}__\n"
+		formatted_string += f"**Elem.  Weakness:** __{damage_elemental_emojis(object_info['eweakness'])}__\n".replace(', ', '__, __')
 	if 'weakpoint' in object_info:
 		formatted_string += f"**Weak Point:** __{object_info['weakpoint']}__\n"
 
@@ -121,9 +122,9 @@ def format_object_info(object_info):
 
 	# tools
 	if 'tooltype' in object_info:
-		formatted_string += f"**Damage Type:** {object_info['tooltype']}\n"
+		formatted_string += f"**Damage Type:** {damage_elemental_emojis(object_info['tooltype'])}\n"
 	if 'augmenttype' in object_info:
-		formatted_string += f"**Element Type:** {object_info['augmenttype']}\n"
+		formatted_string += f"**Elemental Type:** {damage_elemental_emojis(object_info['augmenttype'])}\n"
 	if 'damage' in object_info:
 		formatted_string += f"**Damage:** {object_info['damage']}\n"
 	if 'stun' in object_info:

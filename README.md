@@ -78,7 +78,9 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 - [X] Modifiers (Status effects and Mutations) extraction merged into `.search`
 - [X] `.card` command to retrieve creature cards
 - [X] `.help` command to display command list
-- [ ] Hosting on Heroku (or EC2, if Heroku can't upload multiple scripts)
+- [X] Able to send specific custom server emojis to accompany damage and elemental types in-text
+- [ ] Full armor set extraction (put on hold as the pages are expected to be overhauled; they are also inaccurate at this point anyway)
+- [ ] Decide which cloud environment to host the bot on, so that can decide what storage to use
 - [ ] Cache implementation (Ephemeral storage)
     - [ ] Ability to cache dictionary of object information upon successful retrieval
     - [ ] Ability to retrieve dictionary of object information from cache
@@ -95,6 +97,7 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
     - [ ] Generate list of tasks in order of priority, task ID assigned from highest to lowest priority
     - [ ] Allow user to complete tasks
     - [ ] Generate harvesting tasks with priority based on chopping list
+- [ ] Hosting on Heroku (or EC2, if Heroku can't upload multiple scripts)
 - [ ] Tweak Discord BURG.L bot's lines to sound more like in-game BURG.L
     - [ ] Manually record BURG.L's in-game voicelines
 - [ ] Telegram Bot Functionality

@@ -1,7 +1,8 @@
-import re, string
+import re
 
 from collections import Counter
 from difflib import SequenceMatcher
+from global_variables import CUSTOM_EMOJIS
 from global_variables import ILLEGAL_URL_SYMBOLS, SMOOTHIE_BASES
 
 
@@ -14,7 +15,7 @@ def remove_command_prefix(input_string, prefix):
 def get_appended_url(search_query):
 	base_url = 'https://grounded.fandom.com/wiki/'
 
-	# raise all letters for robot names
+	# raise all letters for robot and other device names
 	if '.' in search_query:
 		return f'{base_url}{search_query.upper()}'
 
@@ -28,8 +29,9 @@ def get_appended_url(search_query):
 		search_query = search_query[:-1]
 
 	# capitalise the first letter of every word as the webpage URL is case sensitive
-	# initially used .title() but then realised that it also capitalises the letter after an apostrophe
-	return f'{base_url}{string.capwords(search_query)}'
+	# at one point, used string.capwords() because title() capitalises the letter after an apostrophe, but capwords does not raise anything behind a bracket either
+	search_query = search_query.title().replace("'S", "'s")
+	return f'{base_url}{search_query}'
 
 
 # returns ratio of similarity between two input strings
@@ -114,3 +116,11 @@ def remove_extra_newline(formatted_string):
 	if formatted_string[-2:] == '\n\n':
 		formatted_string = formatted_string[:-1]
 	return formatted_string
+
+
+# suffix custom emoji to damage and elemental types
+def damage_elemental_emojis(input_string):
+	for keyword in CUSTOM_EMOJIS:
+		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]}{keyword}')
+
+	return input_string

@@ -68,6 +68,6 @@ def get_creature_card(search_query):
 		for query in search_queries:
 			# remove periods because might not get it entirely correct for the robots' names
 			if creature_name.lower().replace('.', '') == query.lower().replace('.', ''):
-				return creature.get('href')
+				return creature_name, creature.get('href')
 
 	return 104
