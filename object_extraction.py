@@ -17,9 +17,6 @@ def get_infobox_info(page_content):
 		header = section.get('data-source')
 		content = section.text_content()
 
-		print(header)
-		print(content)
-
 		if header is None:
 			continue
 
@@ -29,7 +26,7 @@ def get_infobox_info(page_content):
 
 		standard_headers = ['aggression', 'tamewith', 'effectresistance', 'weakpoint',
 							'tooltype', 'augmenttype',  'class', 'food', 'water', 'health',
-							'species', 'gender']
+							'species', 'gender', 'description+']
 		stat_headers = ['damage', 'stun', 'speed', 'defense', 'sturdiness', 'weight']
 
 		if header in standard_headers:
@@ -51,8 +48,21 @@ def get_infobox_info(page_content):
 			object_info['category'] = content.replace('Category', '').strip()
 
 		elif header == 'brokenwith':
-			object_info[header] = content.replace('Harvest With', '').strip()
-		elif header == 'tier':
+			section = section.xpath('div')[0]
+			content = section.text_content().strip()
+
+			images = section.xpath('a/img')
+
+			for image in images:
+				image_name = image.get('data-image-name').split('.')[0].lower()
+
+				if 'tier' in image_name:
+					content += f" (Tier {image_name.replace('tier', '')})"
+					break
+
+			object_info[header] = content
+
+		elif header in ['tier', 'tier+']:
 			try:
 				object_info[header] = section.getchildren()[0].get('title').replace('Tier', '').strip()
 			except:

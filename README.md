@@ -75,7 +75,8 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
     - [X] Recipe extraction
     - [X] Repair cost extraction
     - [X] Specify smoothie type from input, with corresponding base added to recipe
-    - [ ] Able to extract info (description and tier) for upgraded items, e.g. Torch+
+    - [X] Retrieve required tier to harvest resource nodes (if available, i.e. higher than Tier 1)
+    - [X] Able to extract info (description and tier) for upgraded items, e.g. Torch+, Canteen+
 - [X] Modifiers (Status effects and Mutations) extraction merged into `.search`
 - [X] `.card` command to retrieve creature cards
 - [X] `.help` command to display command list
