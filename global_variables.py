@@ -1,9 +1,26 @@
 
-# main Discord channel ID  
-MAIN_CHANNEL_ID = 886568148919275532
-
 # symbol to signify bot commands
 BOT_COMMAND_PREFIX = '.'
+
+
+# ID of default Discord server channel that will receive notifications
+MAIN_CHANNEL_ID = 970882023055036426
+
+
+# dictionary to store all the possible Discord statuses for the bot
+# use the activity as the key since the ActivityType might not be unique
+# if ActivityType is streaming, then second item in corresponding tuple is for URL
+# ActivityType 0 is gaming, 1 is streaming, 2 is listening, 3 is watching, 4 is custom, 5 is competing
+ACTIVITY_STATUSES = {'with a pet aphid': (0, ), 'with a pet weevil': (0, ),
+
+					'data to Dr. Tully': (1, 'https://www.youtube.com/watch?v=aueMEZC8uDE'),
+					'broodmother trials': (1, 'https://www.youtube.com/watch?v=tZlcSr5DfRI'),
+
+					'the ladybugs cooing': (2, ), 'audio logs': (2, ),
+
+					'the backyard': (3, ), 'the teens': (3, ), 'the Watcher': (3, ), 'the fungus spread': (3, ),
+
+					'burger flipping': (5, )}
 
 
 # dictionary to store custom server emojis
