@@ -31,6 +31,10 @@ CUSTOM_EMOJIS = {'BURG.L': '<:BURGL_Icon:970544869124755467>', 'Fresh': '<:Eleme
 				'Slashing': '<:DamageType_Slashing:970552106496978964>', 'Stabbing': '<:DamageType_Stabbing:970552122548559872>'}
 
 
+# string of the base wiki URL
+BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
+
+
 # symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
 ILLEGAL_URL_SYMBOLS = '[\][}{><|%+]+'
 

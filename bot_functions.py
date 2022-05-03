@@ -43,7 +43,7 @@ async def search_function(message, search_query):
 # creature card search method
 async def card_function(message, search_query):
 	if search_query == '':
-		await message.channel.send('Please provide an input query.')
+		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Please provide an input query.")
 		return
 
 	result = get_creature_card(search_query)

@@ -26,11 +26,12 @@ async def on_message(message):
 	if message.author == bot.user:
 		return
 
-	help_command = f'{BOT_COMMAND_PREFIX}help'
-	search_command = f'{BOT_COMMAND_PREFIX}search'
-	card_command = f'{BOT_COMMAND_PREFIX}card'
+	# add a whitespace behind the commands so it won't recognise invalid commands, e.g. .helpp
+	help_command = f'{BOT_COMMAND_PREFIX}help '
+	search_command = f'{BOT_COMMAND_PREFIX}search '
+	card_command = f'{BOT_COMMAND_PREFIX}card '
 
-	lowered_content = message.content.lower()
+	lowered_content = message.content.lower() + ' '
 
 	if lowered_content.startswith(help_command):
 		await help_function(message)
