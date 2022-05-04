@@ -8,7 +8,16 @@ from helper_functions import get_appended_url, string_similarity
 
 # returns content of wiki page as an lxml.html.HtmlElement object
 def get_page_data(url, get_title=False):
-	xml_data = html.fromstring(requests.get(url).text)
+
+	# TODO: DATABASE RETRIEVAL FOR URL->HTMLString (page html content as a string)
+
+
+	html_string = requests.get(url).text
+
+	# TODO: DATABASE INSERTION FOR URL->HTMLString (page html content as a string)
+
+
+	xml_data = html.fromstring(html_string)
 
 	page_title = xml_data.get_element_by_id('firstHeading').text_content()
 	page_content = xml_data.get_element_by_id('mw-content-text')
@@ -25,15 +34,14 @@ def check_existing_page(url):
 
 	try:
 		# check for specific segment that says page does not exist
-		invalid_text = page_content.find_class('noarticletext')[0]
+		invalid_text = page_content.find_class('noarticletext')
 		return False
 	except IndexError:  # will throw an IndexError if the item page exists
 		return page_content, page_title
 
 
-# returns wiki page content in a tuple if the appended URL works
-# or returns the most likely wiki URL of the object as a string
-# if the URL cannot be located, returns None by default
+# returns wiki page content in a tuple (content, title)
+# if URL cannot be located, returns None by default
 # if Google API daily limit is exceeded, it returns False
 def locate_object_url(search_query):
 	url = get_appended_url(search_query)
@@ -65,8 +73,8 @@ def locate_object_url(search_query):
 		title = top_url.replace(BASE_WIKI_URL, '')
 
 		# return url if strings are similar and item page exists, otherwise return False
-		if string_similarity(search_query, title) > SIMILARITY_THRESHOLD and check_existing_page(top_url):
-			return top_url
+		if string_similarity(search_query, title) > SIMILARITY_THRESHOLD:
+			return check_existing_page(top_url)
 
 	# check if daily quota is exceeded
 	elif results.get('error') is not None:

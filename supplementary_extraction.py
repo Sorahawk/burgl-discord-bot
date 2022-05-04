@@ -58,13 +58,8 @@ def get_creature_card(search_query):
 	# correct any minor typos and predict any missing words in the creature's name
 	result = locate_object_url(search_query)
 
-	if not result or result is None:
+	if not result:  # if result is False or None
 		return 104
 
-	# if result is string URL, then get the creature name from its resulting page (might have redirects, e.g. Ant Worker -> Red Ant Worker)
-	if isinstance(result, str):
-		search_query = check_existing_page(result)[1]
-	else:  # result is tuple, get page title directly from result
-		search_query = result[1]
-
+	search_query = result[1]
 	return iterate_creature_cards(search_query, creature_cards)

@@ -85,11 +85,11 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 - [X] Set up cloud hosting on EC2
 - [X] BURG.L Discord Presence (Activity Status)
     - [X] Create a few possible statuses, and change it randomly every once in a while
-- [ ] Cache implementation (Ephemeral storage)
-    - [ ] Ability to cache dictionary of object information upon successful retrieval
-    - [ ] Ability to retrieve dictionary of object information from cache
 - [ ] Database implementation (DynamoDB)
     - [ ] Command to manually link search terms to desired URLs (requires elevation)
+    - [ ] Ability to cache string representation of dictionary of object information upon successful retrieval
+    - [ ] Ability to retrieve dictionary of object information from cache
+    - [ ] Functionality to periodically purge cache (customisable period)
 - [ ] Chopping List
     - [ ] Ability to recognise multiple items from a user string, along with their respective quantities
     - [ ] Display the items that were successfully added

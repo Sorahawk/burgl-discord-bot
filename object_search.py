@@ -1,11 +1,17 @@
 from object_extraction import *
+from url_processing import locate_object_url
 from supplementary_extraction import get_modifier_info
-from url_processing import get_page_data, locate_object_url
 from helper_functions import detect_smoothie_type, check_info_presence, remove_extra_newline, damage_elemental_emojis
 
 
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
 def get_object_info(search_query):
+
+	# TODO: DATABASE RETRIEVAL FOR Query->BindedQuery
+
+
+	# TODO: DATABASE RETRIEVAL FOR Query->ObjectInfo (dict as a string via json.loads/dumps)
+
 
 	# check for status effect or modifier first
 	modifier_info = get_modifier_info(search_query)
@@ -22,10 +28,8 @@ def get_object_info(search_query):
 		return 101
 	elif not result:  # Google API daily resource exhausted
 		return 103
-	elif isinstance(result, str):
-		page_content, page_title = get_page_data(result, True)
-	else:
-		page_content, page_title = result[0], result[1]
+
+	page_content, page_title = result[0], result[1]
 
 	try:
 		object_info = get_infobox_info(page_content)
@@ -53,6 +57,10 @@ def get_object_info(search_query):
 		except:
 			# repair cost extraction failed
 			print(f"WARNING: Repair cost extraction for {object_info['name']} failed.")
+
+
+	# TODO: DATABASE INSERTION FOR Query->ObjectInfo (dict as a string via json.loads/dumps)
+
 
 	return object_info
 
