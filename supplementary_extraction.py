@@ -11,9 +11,7 @@ def get_modifier_info(search_query):
 	modifier_info = {}
 
 	for index in range(len(urls)):
-		html_string = get_page_html(urls[index])
-		page_content = convert_html_str(html_string)
-
+		page_content = get_page_data(urls[index])
 		modifier_list = page_content.xpath('div/table/tbody/tr')
 
 		for modifier in modifier_list:
@@ -48,9 +46,7 @@ def get_modifier_info(search_query):
 def get_creature_card(search_query):
 	url = f'{BASE_WIKI_URL}Creature_Cards'
 
-	html_string = get_page_html(url)
-	page_content = convert_html_str(html_string)
-
+	page_content = get_page_data(url)
 	creature_cards = page_content.find_class('image')
 
 	# try to find the card with the original search query first
@@ -60,10 +56,15 @@ def get_creature_card(search_query):
 		return result[0], result[1]
 
 	# correct any minor typos and predict any missing words in the creature's name
-	result = call_google_api(search_query)
+	result = locate_object_url(search_query)
 
 	if not result or result is None:
 		return 104
 
-	search_query = result[1]
+	# if result is string URL, then get the creature name from its resulting page (might have redirects, e.g. Ant Worker -> Red Ant Worker)
+	if isinstance(result, str):
+		search_query = check_existing_page(result)[1]
+	else:  # result is tuple, get page title directly from result
+		search_query = result[1]
+
 	return iterate_creature_cards(search_query, creature_cards)

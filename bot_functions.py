@@ -8,8 +8,8 @@ from global_variables import BOT_COMMAND_PREFIX, CUSTOM_EMOJIS
 # help method
 async def help_function(message):
 	help_message = f"`{BOT_COMMAND_PREFIX}help` - Displays this list\n"\
-				f"`{BOT_COMMAND_PREFIX}search <object_name>` - Displays any available details of the object (works with most things, e.g. creatures, resources, equipment, building components, status effects, mutations)\n"\
-				f"`{BOT_COMMAND_PREFIX}card <creature_name>` - Displays the specified creature's bestiary card\n"
+				f"`{BOT_COMMAND_PREFIX}search <object_name>` - Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components, status effects, mutations.\n"\
+				f"`{BOT_COMMAND_PREFIX}card <creature_name>` - Displays the specified creature's bestiary card.\n"
 
 	await message.channel.send(help_message)
 

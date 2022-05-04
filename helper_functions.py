@@ -1,8 +1,9 @@
 import re
 
-from global_variables import *
 from collections import Counter
 from difflib import SequenceMatcher
+from global_variables import CUSTOM_EMOJIS, BASE_WIKI_URL
+from global_variables import ILLEGAL_URL_SYMBOLS, SMOOTHIE_BASES
 
 
 # removes bot command from front of string input
@@ -15,7 +16,7 @@ def get_appended_url(search_query):
 
 	# raise all letters for robot and other device names
 	if '.' in search_query:
-		return f'{BASE_WIKI_URL}{search_query.upper()}'
+		return f'{base_url}{search_query.upper()}'
 
 	search_query = re.sub(ILLEGAL_URL_SYMBOLS, '', search_query)
 

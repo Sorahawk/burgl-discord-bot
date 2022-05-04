@@ -28,17 +28,16 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
 | Creature Card Search | Retrieves a creature's bestiary card |
 | Chopping List | Consolidates total number of resources required for crafting and building. |
 | Task Scheduler | Keeps track of user-inputted tasks, as well as generating harvesting tasks based on the Chopping List |
-| Database Storage and Caching | Stores permanent data, as well as caching queried data from searches |
 
 
 ## Built With
 
-* [Amazon DynamoDB](https://aws.amazon.com/dynamodb/)
-* [Amazon EC2](https://aws.amazon.com/ec2/)
-* [Custom Search JSON API by Google](https://developers.google.com/custom-search/v1/introduction)
+* [Python](https://www.python.org/)
 * [Discord.py](https://discordpy.readthedocs.io/)
 * [Programmable Search Engine by Google](https://programmablesearchengine.google.com/)
-* [Python](https://www.python.org/)
+* [Custom Search JSON API by Google](https://developers.google.com/custom-search/v1/introduction)
+* [Amazon EC2](https://aws.amazon.com/ec2/)
+* [Amazon DynamoDB](https://aws.amazon.com/dynamodb/) ~~or [Amazon S3](https://aws.amazon.com/s3/)~~
 
 
 

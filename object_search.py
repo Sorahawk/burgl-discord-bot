@@ -1,17 +1,11 @@
-from helper_functions import *
 from object_extraction import *
 from supplementary_extraction import get_modifier_info
-from url_processing import convert_html_str, get_object_page
+from url_processing import get_page_data, locate_object_url
+from helper_functions import detect_smoothie_type, check_info_presence, remove_extra_newline, damage_elemental_emojis
 
 
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
 def get_object_info(search_query):
-
-	# TODO: DATABASE RETRIEVAL - SearchQuery->TweakedSearchQuery
-
-
-	# TODO: DATABASE RETRIEVAL - SearchQuery->ObjectInfo
-
 
 	# check for status effect or modifier first
 	modifier_info = get_modifier_info(search_query)
@@ -22,14 +16,16 @@ def get_object_info(search_query):
 	is_upgraded_tool = '+' == search_query.strip()[-1]
 	search_query, smoothie_type = detect_smoothie_type(search_query)
 
-	result = get_object_page(search_query)
+	result = locate_object_url(search_query)
 
 	if result is None:  # unable to locate URL for item
 		return 101
 	elif not result:  # Google API daily resource exhausted
 		return 103
-
-	page_content, page_title = convert_html_str(result, True)
+	elif isinstance(result, str):
+		page_content, page_title = get_page_data(result, True)
+	else:
+		page_content, page_title = result[0], result[1]
 
 	try:
 		object_info = get_infobox_info(page_content)
@@ -39,7 +35,6 @@ def get_object_info(search_query):
 
 	# if query searching for upgraded tool, check for presence of both description+ and tier+
 	if is_upgraded_tool and 'description+' in object_info and 'tier+' in object_info:
-		object_info['name'] += '+'
 		object_info['description'] = object_info['description+']
 		object_info['tier'] = object_info['tier+']
 
@@ -58,14 +53,6 @@ def get_object_info(search_query):
 		except:
 			# repair cost extraction failed
 			print(f"WARNING: Repair cost extraction for {object_info['name']} failed.")
-
-
-
-
-
-	# TODO: DATABASE INSERTION - SearchQuery->ObjectInfo
-
-
 
 	return object_info
 
