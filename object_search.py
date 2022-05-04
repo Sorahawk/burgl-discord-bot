@@ -1,13 +1,17 @@
+from helper_functions import *
 from object_extraction import *
 from supplementary_extraction import get_modifier_info
 from url_processing import get_object_page
-from helper_functions import detect_smoothie_type, check_info_presence, remove_extra_newline, damage_elemental_emojis
 
 
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
 def get_object_info(search_query):
 
 	# TODO: DATABASE RETRIEVAL - SearchQuery->TweakedSearchQuery
+
+
+	# TODO: DATABASE RETRIEVAL - SearchQuery->ObjectInfo
+
 
 	# check for status effect or modifier first
 	modifier_info = get_modifier_info(search_query)
@@ -54,6 +58,14 @@ def get_object_info(search_query):
 		except:
 			# repair cost extraction failed
 			print(f"WARNING: Repair cost extraction for {object_info['name']} failed.")
+
+
+
+
+
+	# TODO: DATABASE INSERTION - SearchQuery->ObjectInfo
+
+
 
 	return object_info
 

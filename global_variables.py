@@ -1,12 +1,4 @@
 
-# symbol to signify bot commands
-BOT_COMMAND_PREFIX = '.'
-
-
-# ID of default Discord server channel that will receive notifications
-MAIN_CHANNEL_ID = 970882023055036426
-
-
 # dictionary to store all the possible Discord statuses for the bot
 # use the activity as the key since the ActivityType might not be unique
 # if ActivityType is streaming, then second item in corresponding tuple is for URL
@@ -23,6 +15,14 @@ ACTIVITY_STATUSES = {'with a pet aphid': (0, ), 'with a pet weevil': (0, ),
 					'burger flipping': (5, )}
 
 
+# string of the base wiki URL
+BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
+
+
+# symbol to signify bot commands
+BOT_COMMAND_PREFIX = '.'
+
+
 # dictionary to store custom server emojis
 CUSTOM_EMOJIS = {'BURG.L': '<:BURGL_Icon:970544869124755467>', 'Fresh': '<:ElementalType_Fresh:970550878966796308>',\
 				'Salty': '<:ElementalType_Salty:970550879226847302>', 'Spicy': '<:ElementalType_Spicy:970551950405947453>',\
@@ -31,12 +31,12 @@ CUSTOM_EMOJIS = {'BURG.L': '<:BURGL_Icon:970544869124755467>', 'Fresh': '<:Eleme
 				'Slashing': '<:DamageType_Slashing:970552106496978964>', 'Stabbing': '<:DamageType_Stabbing:970552122548559872>'}
 
 
-# string of the base wiki URL
-BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
-
-
 # symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
 ILLEGAL_URL_SYMBOLS = '[\][}{><|%+]+'
+
+
+# ID of default Discord server channel that will receive notifications
+MAIN_CHANNEL_ID = 970882023055036426
 
 
 # sets the minimum threshold of similarity between search query and predicted result

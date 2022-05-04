@@ -2,9 +2,9 @@ import discord, random
 
 from bot_functions import *
 from discord.ext import tasks
+from global_variables import *
 from secret_variables import DISCORD_BOT_TOKEN
 from helper_functions import remove_command_prefix
-from global_variables import BOT_COMMAND_PREFIX, MAIN_CHANNEL_ID, ACTIVITY_STATUSES, CUSTOM_EMOJIS
 
 
 bot = discord.Client()

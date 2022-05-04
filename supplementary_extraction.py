@@ -1,6 +1,6 @@
 from url_processing import *
-from helper_functions import iterate_creature_cards
 from global_variables import BASE_WIKI_URL
+from helper_functions import iterate_creature_cards
 
 
 # returns dictionary of extracted information for a given status effect or mutation
@@ -11,7 +11,9 @@ def get_modifier_info(search_query):
 	modifier_info = {}
 
 	for index in range(len(urls)):
-		page_content = get_page_data(urls[index], False)
+		html_string = get_page_html(urls[index])[0]
+		page_content = convert_html_str(html_string)
+
 		modifier_list = page_content.xpath('div/table/tbody/tr')
 
 		for modifier in modifier_list:
@@ -46,7 +48,9 @@ def get_modifier_info(search_query):
 def get_creature_card(search_query):
 	url = f'{BASE_WIKI_URL}Creature_Cards'
 
-	page_content = get_page_data(url, False)
+	html_string = get_page_html(url)[0]
+	page_content = convert_html_str(html_string)
+
 	creature_cards = page_content.find_class('image')
 
 	# try to find the card with the original search query first

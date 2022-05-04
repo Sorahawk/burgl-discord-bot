@@ -1,9 +1,8 @@
 import re
 
+from global_variables import *
 from collections import Counter
 from difflib import SequenceMatcher
-from global_variables import CUSTOM_EMOJIS, BASE_WIKI_URL
-from global_variables import ILLEGAL_URL_SYMBOLS, SMOOTHIE_BASES
 
 
 # removes bot command from front of string input
