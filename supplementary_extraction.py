@@ -11,7 +11,7 @@ def get_modifier_info(search_query):
 	modifier_info = {}
 
 	for index in range(len(urls)):
-		html_string = get_page_html(urls[index])[0]
+		html_string = get_page_html(urls[index])
 		page_content = convert_html_str(html_string)
 
 		modifier_list = page_content.xpath('div/table/tbody/tr')
@@ -48,7 +48,7 @@ def get_modifier_info(search_query):
 def get_creature_card(search_query):
 	url = f'{BASE_WIKI_URL}Creature_Cards'
 
-	html_string = get_page_html(url)[0]
+	html_string = get_page_html(url)
 	page_content = convert_html_str(html_string)
 
 	creature_cards = page_content.find_class('image')
@@ -60,7 +60,7 @@ def get_creature_card(search_query):
 		return result[0], result[1]
 
 	# correct any minor typos and predict any missing words in the creature's name
-	result = get_object_page(search_query)
+	result = call_google_api(search_query)
 
 	if not result or result is None:
 		return 104

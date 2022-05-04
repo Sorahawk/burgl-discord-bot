@@ -1,7 +1,7 @@
 from helper_functions import *
 from object_extraction import *
 from supplementary_extraction import get_modifier_info
-from url_processing import get_object_page
+from url_processing import convert_html_str, get_object_page
 
 
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
@@ -29,7 +29,7 @@ def get_object_info(search_query):
 	elif not result:  # Google API daily resource exhausted
 		return 103
 
-	page_content, page_title = result[0], result[1]
+	page_content, page_title = convert_html_str(result, True)
 
 	try:
 		object_info = get_infobox_info(page_content)
