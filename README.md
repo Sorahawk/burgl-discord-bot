@@ -50,6 +50,9 @@ The BURG.L Discord Bot is a resource manager that aids [Grounded](https://ground
     * This search works with any Grounded wiki page with an infobox, e.g. creatures, equipment, resources, building components, resource nodes, landmarks.
     * It also supports status effects and mutations.
 * `.card <creature_name>` - Displays the specified creature's bestiary card.
+* `.bind <full_object_name>, <shortcut_1>, <shortcut_2>, ...` - Binds one or more shortcut phrases to a full object name.
+    * Each parameter is case-insensitive and must be separated by a comma.
+
 
 
 ## Error Codes

@@ -1,5 +1,6 @@
 import boto3
 
+from global_variables import DDB_TABLE_HEADERS
 from secret_variables import AWS_ACCESS_KEY, AWS_SECRET_KEY
 
 
@@ -10,20 +11,7 @@ def ddb_create_session():
 
 # returns tuple consisting of table key and attribute headers
 def get_table_headers(table_name):
-	if table_name == 'WikiURL-PageHTML':
-		key_header = 'wiki_url'
-		attribute_header = 'page_html'
-
-	else:
-		key_header = 'search_query'
-
-		if table_name == 'SearchQuery-FullName':
-			attribute_header = 'full_name'
-
-		elif table_name == 'SearchQuery-ObjectInfo':
-			attribute_header = 'object_info'
-
-	return (key_header, attribute_header)
+	return DDB_TABLE_HEADERS[table_name]
 
 
 # inserts specified key and attribute values into specified table

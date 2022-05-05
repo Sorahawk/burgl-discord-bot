@@ -1,24 +1,17 @@
 import string
 
 from object_search import *
+from global_variables import *
+from storage_functions import *
 from card_search import get_creature_card
-from global_variables import BOT_COMMAND_PREFIX, CUSTOM_EMOJIS
-
-
-# help method
-async def help_function(message):
-	help_message = f"`{BOT_COMMAND_PREFIX}help` - Displays this list\n"\
-				f"`{BOT_COMMAND_PREFIX}search <object_name>` - Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components, status effects, mutations.\n"\
-				f"`{BOT_COMMAND_PREFIX}card <creature_name>` - Displays the specified creature's bestiary card.\n"
-
-	await message.channel.send(help_message)
 
 
 # object search method
-async def search_function(message, search_query):
-	if search_query == '':
-		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Please provide an input query.")
-		return
+async def search_method(message, search_query):
+	shortcut_query = ddb_retrieve_item(SHORTCUT_STORAGE, search_query)
+	attribute_header = get_table_headers(SHORTCUT_STORAGE)[1]
+	if shortcut_query:
+		search_query = shortcut_query[attribute_header]
 
 	result = get_object_info(search_query)
 
@@ -41,10 +34,11 @@ async def search_function(message, search_query):
 
 
 # creature card search method
-async def card_function(message, search_query):
-	if search_query == '':
-		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Please provide an input query.")
-		return
+async def card_method(message, search_query):
+
+
+	# TODO: DATABASE RETRIEVAL FOR SearchQuery->FullName
+
 
 	result = get_creature_card(search_query)
 
@@ -60,3 +54,23 @@ async def card_function(message, search_query):
 	else:
 		await message.channel.send(f'**Creature Name:** {result[0]}')
 		await message.channel.send(result[1])
+
+
+# linking shortcut query method
+async def bind_method(message, user_input):
+
+	# remove any edge commas before splitting by comma
+	user_input = user_input.lower().strip(',').split(',')
+
+	if len(user_input) < 2:
+		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} A minimum of two parameters are required.")
+
+	full_name = user_input[0]
+	shortcuts = user_input[1:]
+
+	bind_query_name(full_name, shortcuts)
+
+	formatted_string = f"Case-insensitive shortcuts added for **'{full_name}'**:"
+	formatted_string += ''.join(shortcuts).replace(' ','\n-')
+
+	await message.channel.send(formatted_string)

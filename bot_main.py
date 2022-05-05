@@ -2,17 +2,15 @@ import discord, random
 
 from bot_functions import *
 from discord.ext import tasks
+from global_variables import *
 from secret_variables import DISCORD_BOT_TOKEN
 from helper_functions import remove_command_prefix
-from global_variables import BOT_COMMAND_PREFIX, MAIN_CHANNEL_ID, ACTIVITY_STATUSES, CUSTOM_EMOJIS
 
 
 bot = discord.Client()
 
 @bot.event
 async def on_ready():
-	await bot.wait_until_ready()
-
 	print(f'{bot.user} is online.')
 
 	channel = bot.get_channel(MAIN_CHANNEL_ID)
@@ -26,23 +24,21 @@ async def on_message(message):
 	if message.author == bot.user:
 		return
 
-	# add a whitespace behind the commands so it won't recognise invalid commands, e.g. .helpp
-	help_command = f'{BOT_COMMAND_PREFIX}help '
-	search_command = f'{BOT_COMMAND_PREFIX}search '
-	card_command = f'{BOT_COMMAND_PREFIX}card '
-
 	lowered_content = message.content.lower() + ' '
 
-	if lowered_content.startswith(help_command):
-		await help_function(message)
+	# help method
+	if lowered_content.startswith(BOT_COMMAND_LIST['help_method']):
+		await message.channel.send(HELP_MESSAGE)
 
-	elif lowered_content.startswith(search_command):
-		search_query = remove_command_prefix(message.content, search_command)
-		await search_function(message, search_query)
+	else:
+		for function, command in BOT_COMMAND_LIST.items():
+			if lowered_content.startswith(command):
+				user_input = remove_command_prefix(message.content, command)
 
-	elif lowered_content.startswith(card_command):
-		search_query = remove_command_prefix(message.content, card_command)
-		await card_function(message, search_query)
+				if user_input == '':
+					await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Please provide input parameters.")
+				else:
+					await eval(function)(message, user_input)
 
 
 # automatically rotate bot's Discord status every 10 minutes

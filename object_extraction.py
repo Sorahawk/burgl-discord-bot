@@ -1,5 +1,5 @@
 from url_processing import get_page_data
-from global_variables import SMOOTHIE_BASES
+from global_variables import BASE_WIKI_URL, SMOOTHIE_BASES
 from helper_functions import weakness_resistance_processing, compile_counter
 
 

@@ -1,13 +1,13 @@
 import re
 
+from global_variables import *
 from collections import Counter
 from difflib import SequenceMatcher
-from global_variables import CUSTOM_EMOJIS, BASE_WIKI_URL, ILLEGAL_URL_SYMBOLS, SMOOTHIE_BASES
 
 
 # removes bot command from front of string input
-def remove_command_prefix(input_string, prefix):
-	return input_string[len(prefix):].strip()
+def remove_command_prefix(input_string, command):
+	return input_string[len(command):].strip()
 
 
 # returns page URL, comprised of sanitised search query appended to the base wiki URL

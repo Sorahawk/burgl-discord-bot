@@ -28,16 +28,17 @@ def get_page_data(wiki_url, get_title=False):
 	return page_content
 
 
-# returns extracted page content and title if item page exists on the wiki, otherwise returns False
+# returns extracted page content and title if item page exists on the wiki, otherwise returns None
 def check_existing_page(wiki_url):
 	page_content, page_title = get_page_data(wiki_url, True)
 
-	try:
-		# check for specific segment that says page does not exist
-		invalid_text = page_content.find_class('noarticletext')
-		return False
-	except IndexError:  # will throw an IndexError if the item page exists
+	# check for specific segment that says page does not exist
+	invalid_text = page_content.find_class('noarticletext')
+
+	if not invalid_text:
 		return page_content, page_title
+
+	return None
 
 
 # returns wiki page content in a tuple (content, title)
@@ -46,7 +47,7 @@ def check_existing_page(wiki_url):
 def locate_object_url(search_query):
 	url = get_appended_url(search_query)
 
-	# the appended URL can fail in the case of typos, shortforms, or some other syntax error in the user input
+	# the appended URL can fail in the case of typos, nicknames, or some other syntax error in the user input
 	result = check_existing_page(url)
 
 	# if result != False, wiki page exists, so return the extracted page content and title
