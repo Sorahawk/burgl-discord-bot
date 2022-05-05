@@ -1,0 +1,84 @@
+import boto3
+
+from secret_variables import AWS_ACCESS_KEY, AWS_SECRET_KEY
+
+
+# initialises and returns DynamoDB session
+def ddb_create_session():
+	return boto3.resource('dynamodb', region_name='ap-southeast-1', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+
+
+# returns tuple consisting of table key and attribute headers
+def get_table_headers(table_name):
+	if table_name == 'WikiURL-PageHTML':
+		key_header = 'wiki_url'
+		attribute_header = 'page_html'
+
+	else:
+		key_header = 'search_query'
+
+		if table_name == 'SearchQuery-FullName':
+			attribute_header = 'full_name'
+
+		elif table_name == 'SearchQuery-ObjectInfo':
+			attribute_header = 'object_info'
+
+	return (key_header, attribute_header)
+
+
+# inserts specified key and attribute values into specified table
+# works for updating too, as entire entry will be overwritten even if that primary key already exists
+def ddb_insert_item(table_name, key, attribute):
+	table = ddb_create_session().Table(table_name)
+	key_header, attribute_header = get_table_headers(table_name)
+
+	table.put_item(Item={
+		key_header: key,
+		attribute_header: attribute})
+
+
+# returns entry of a specified primary key in a specified table if it exists
+# otherwise, returns False
+def ddb_retrieve_item(table_name, key):
+	table = ddb_create_session().Table(table_name)
+	key_header = get_table_headers(table_name)[0]
+
+	response = table.get_item(Key={key_header: key})
+
+	try:
+		return response['Item']
+	except KeyError:  # entry with that primary key does not exist
+		return False
+
+
+# returns list of dictionaries representing all entries in specified table
+# if table is empty, returns an empty list
+def ddb_retrieve_all(table_name):
+	table = ddb_create_session().Table(table_name)
+	return table.scan()['Items']
+
+
+# deletes entries of specified primary keys from specified table
+# does not throw any exception even if the primary key does not exist
+def ddb_remove_items(table_name, key_list):
+	table = ddb_create_session().Table(table_name)
+	key_header = get_table_headers(table_name)[0]
+
+	# make sure that key_list is a list
+	if isinstance(key_list, str):
+		key_list = [key_list]
+
+	for key in key_list:
+		table.delete_item(Key={key_header: key})
+
+
+# deletes all entries from specified table
+# does not throw any exception even if table is already empty
+def ddb_remove_all(table_name):
+	table = ddb_create_session().Table(table_name)
+	key_header = get_table_headers(table_name)[0]
+
+	items = table.scan()['Items']
+	for item in items:
+		table.delete_item(Key={
+			key_header: item[key_header]})

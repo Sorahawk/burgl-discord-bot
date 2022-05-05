@@ -1,16 +1,17 @@
 from object_extraction import *
 from url_processing import locate_object_url
-from supplementary_extraction import get_modifier_info
 from helper_functions import detect_smoothie_type, check_info_presence, remove_extra_newline, damage_elemental_emojis
 
 
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
 def get_object_info(search_query):
 
-	# TODO: DATABASE RETRIEVAL FOR Query->BindedQuery
+	# TODO: DATABASE RETRIEVAL FOR SearchQuery->FullName
+	# SearchQuery key should always be lowered, esp upon insertion
+	# FullName should be case sensitive (but not that important cuz might change too much)
 
 
-	# TODO: DATABASE RETRIEVAL FOR Query->ObjectInfo (dict as a string via json.loads/dumps)
+	# TODO: DATABASE RETRIEVAL FOR SearchQuery->ObjectInfo (dict as a string via json.loads/dumps)
 
 
 	# check for status effect or modifier first
@@ -59,7 +60,7 @@ def get_object_info(search_query):
 			print(f"WARNING: Repair cost extraction for {object_info['name']} failed.")
 
 
-	# TODO: DATABASE INSERTION FOR Query->ObjectInfo (dict as a string via json.loads/dumps)
+	# TODO: DATABASE INSERTION FOR SearchQuery->ObjectInfo (dict as a string via json.loads/dumps)
 
 
 	return object_info

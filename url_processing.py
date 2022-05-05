@@ -7,14 +7,14 @@ from helper_functions import get_appended_url, string_similarity
 
 
 # returns content of wiki page as an lxml.html.HtmlElement object
-def get_page_data(url, get_title=False):
+def get_page_data(wiki_url, get_title=False):
 
-	# TODO: DATABASE RETRIEVAL FOR URL->HTMLString (page html content as a string)
+	# TODO: DATABASE RETRIEVAL FOR URL->PageHTML (HTML as a string)
 
 
-	html_string = requests.get(url).text
+	html_string = requests.get(wiki_url).text
 
-	# TODO: DATABASE INSERTION FOR URL->HTMLString (page html content as a string)
+	# TODO: DATABASE INSERTION FOR URL->PageHTML (HTML as a string)
 
 
 	xml_data = html.fromstring(html_string)
@@ -29,8 +29,8 @@ def get_page_data(url, get_title=False):
 
 
 # returns extracted page content and title if item page exists on the wiki, otherwise returns False
-def check_existing_page(url):
-	page_content, page_title = get_page_data(url, True)
+def check_existing_page(wiki_url):
+	page_content, page_title = get_page_data(wiki_url, True)
 
 	try:
 		# check for specific segment that says page does not exist

@@ -1,7 +1,7 @@
 import string
 
 from object_search import *
-from supplementary_extraction import get_creature_card
+from card_search import get_creature_card
 from global_variables import BOT_COMMAND_PREFIX, CUSTOM_EMOJIS
 
 

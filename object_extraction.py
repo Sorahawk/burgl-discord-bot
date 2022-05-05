@@ -1,5 +1,44 @@
+from url_processing import get_page_data
 from global_variables import SMOOTHIE_BASES
 from helper_functions import weakness_resistance_processing, compile_counter
+
+
+# returns dictionary of extracted information for a given status effect or mutation
+# if modifier can't be found, returns None by default
+def get_modifier_info(search_query):
+	urls = [f'{BASE_WIKI_URL}Status_Effects', f'{BASE_WIKI_URL}Mutations']
+
+	modifier_info = {}
+
+	for index in range(len(urls)):
+		page_content = get_page_data(urls[index])
+		modifier_list = page_content.xpath('div/table/tbody/tr')
+
+		for modifier in modifier_list:
+			columns = modifier.getchildren()
+
+			# remove superscript footnote text from some mutation names
+			modifier_name = columns[0].text_content().strip().split('[')[0]
+
+			if modifier_name == 'Effect' or modifier_name == 'Mutation':
+				continue
+
+			lowered_query = search_query.lower().replace(':', '')
+			prefixed_queries = [lowered_query, f'+{lowered_query}', f'-{lowered_query}']
+
+			if modifier_name.lower().replace(':', '') in prefixed_queries:
+				modifier_info['name'] = modifier_name
+				modifier_info['picture_url'] = list(columns[0].iterlinks())[0][2]
+
+				# ignore the second column under mutations, shift to the right by one
+				modifier_info['description'] = columns[1 + index].text_content().strip().replace('\n\n', '\n')
+				modifier_info['source'] = columns[2 + index].text_content().strip()
+
+				# replace source text for purchasable mutations
+				if 'BURG.L' in modifier_info['source']:
+					modifier_info['source'] = 'Purchase from BURG.L'
+
+				return modifier_info
 
 
 # returns dictionary of available info extracted from infobox

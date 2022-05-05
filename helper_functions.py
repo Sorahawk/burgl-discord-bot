@@ -12,14 +12,13 @@ def remove_command_prefix(input_string, prefix):
 
 # returns page URL, comprised of sanitised search query appended to the base wiki URL
 def get_appended_url(search_query):
-
-	# raise all letters for robot and other device names
 	if '.' in search_query:
+		# raise all letters for robot and device names, e.g. BURG.L, TAYZ.T, MIX.R
 		return f'{base_url}{search_query.upper()}'
 
 	search_query = re.sub(ILLEGAL_URL_SYMBOLS, '', search_query)
 
-	# replace ? with %3F
+	# replace ? with %3F, e.g. Smoothie?
 	search_query = search_query.replace('?', '%3F')
 
 	# check if 'arrows' is the last word and remove the trailing S
@@ -122,21 +121,3 @@ def damage_elemental_emojis(input_string):
 		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]}{keyword}')
 
 	return input_string
-
-
-# iterates through list of creature cards to compare the input with their names
-# returns creature name and picture URL if found, otherwise error code 104
-def iterate_creature_cards(search_query, creature_cards):
-	for creature in creature_cards:
-		picture_url = creature.get('href')
-
-		# ignore gold card and creature tier images
-		if 'cardgold' in picture_url.lower() or 'creaturetier' in picture_url.lower():
-			continue
-
-		creature_name = creature.getparent().text_content().strip()
-
-		if creature_name.lower().replace('.', '') == search_query.lower().replace('.', ''):
-			return creature_name, picture_url
-
-	return 104
