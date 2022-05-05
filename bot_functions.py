@@ -8,10 +8,9 @@ from card_search import get_creature_card
 
 # object search method
 async def search_method(message, search_query):
-	shortcut_query = ddb_retrieve_item(SHORTCUT_STORAGE, search_query)
-	attribute_header = get_table_headers(SHORTCUT_STORAGE)[1]
-	if shortcut_query:
-		search_query = shortcut_query[attribute_header]
+
+	# check for existing shortcut binding
+	search_query = get_full_name(search_query)
 
 	result = get_object_info(search_query)
 
@@ -35,15 +34,14 @@ async def search_method(message, search_query):
 
 # creature card search method
 async def card_method(message, search_query):
-
-
-	# TODO: DATABASE RETRIEVAL FOR SearchQuery->FullName
-
-
+	search_query = get_full_name(search_query)
 	result = get_creature_card(search_query)
 
+	if result == 103:
+		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} **ERROR 103:** Google API daily limit exceeded. Type in the exact name of the object.")
+
 	# card cannot be found
-	if result == 104:
+	elif result == 104:
 		if '.' in search_query:
 			search_query = search_query.upper()
 		else:
@@ -65,12 +63,5 @@ async def bind_method(message, user_input):
 	if len(user_input) < 2:
 		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} A minimum of two parameters are required.")
 
-	full_name = user_input[0]
-	shortcuts = user_input[1:]
-
-	bind_query_name(full_name, shortcuts)
-
-	formatted_string = f"Case-insensitive shortcuts added for **'{full_name}'**:"
-	formatted_string += ''.join(shortcuts).replace(' ','\n-')
-
+	formatted_string = bind_query_name(user_input[0], user_input[1:])
 	await message.channel.send(formatted_string)

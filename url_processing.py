@@ -14,6 +14,7 @@ def get_page_data(wiki_url, get_title=False):
 
 	html_string = requests.get(wiki_url).text
 
+
 	# TODO: DATABASE INSERTION FOR URL->PageHTML (HTML as a string)
 
 
@@ -24,11 +25,11 @@ def get_page_data(wiki_url, get_title=False):
 
 	if get_title:
 		return page_content, page_title.strip()
-	
-	return page_content
+	else:
+		return page_content
 
 
-# returns extracted page content and title if item page exists on the wiki, otherwise returns None
+# returns extracted page content and title if item page exists on the wiki, otherwise returns None by default
 def check_existing_page(wiki_url):
 	page_content, page_title = get_page_data(wiki_url, True)
 
@@ -37,8 +38,6 @@ def check_existing_page(wiki_url):
 
 	if not invalid_text:
 		return page_content, page_title
-
-	return None
 
 
 # returns wiki page content in a tuple (content, title)

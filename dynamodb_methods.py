@@ -20,9 +20,15 @@ def ddb_insert_item(table_name, key, attribute):
 	table = ddb_create_session().Table(table_name)
 	key_header, attribute_header = get_table_headers(table_name)
 
-	table.put_item(Item={
-		key_header: key,
-		attribute_header: attribute})
+	try:
+		table.put_item(Item={
+			key_header: key,
+			attribute_header: attribute})
+
+		return True
+
+	except:  # can fail if key input is empty
+		return False
 
 
 # returns entry of a specified primary key in a specified table if it exists

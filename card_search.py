@@ -1,10 +1,13 @@
 from global_variables import BASE_WIKI_URL
+from helper_functions import string_similarity
 from url_processing import get_page_data, locate_object_url
 
 
 # iterates through list of creature cards to compare the input with their names
 # returns creature name and picture URL if found, otherwise error code 104
 def iterate_creature_cards(search_query, creature_cards):
+	highest_ratio, most_similar = 0, None
+
 	for creature in creature_cards:
 		picture_url = creature.get('href')
 
@@ -14,10 +17,21 @@ def iterate_creature_cards(search_query, creature_cards):
 
 		creature_name = creature.getparent().text_content().strip()
 
-		if creature_name.lower().replace('.', '') == search_query.lower().replace('.', ''):
+		lowered_name = creature_name.lower().replace('.', '')
+		lowered_query = search_query.lower().replace('.', '')
+		ratio = string_similarity(lowered_name, lowered_query)
+
+		if lowered_name == lowered_query:
 			return creature_name, picture_url
 
-	return 104
+		elif ratio > highest_ratio:
+			highest_ratio = ratio
+			most_similar = creature_name, picture_url
+
+	if highest_ratio >= 0.5:
+		return most_similar
+	else:
+		return 104
 
 
 # returns creature card image URL of the specified creature
@@ -37,8 +51,10 @@ def get_creature_card(search_query):
 	# correct any minor typos and predict any missing words in the creature's name
 	result = locate_object_url(search_query)
 
-	if not result:  # if result is False or None
+	if result is None:  # unable to locate URL
 		return 104
+	elif not result:  # Google API daily resource exhausted
+		return 103
 
 	search_query = result[1]
 	return iterate_creature_cards(search_query, creature_cards)
