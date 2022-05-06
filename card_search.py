@@ -1,6 +1,6 @@
-from global_variables import BASE_WIKI_URL
 from helper_functions import string_similarity
 from url_processing import get_page_data, locate_object_url
+from global_variables import BASE_WIKI_URL, SIMILAR_THRESHOLD_CARD
 
 
 # iterates through list of creature cards to compare the input with their names
@@ -28,7 +28,7 @@ def iterate_creature_cards(search_query, creature_cards):
 			highest_ratio = ratio
 			most_similar = creature_name, picture_url
 
-	if highest_ratio >= 0.5:
+	if highest_ratio > SIMILAR_THRESHOLD_CARD:
 		return most_similar
 	else:
 		return 104

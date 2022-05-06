@@ -2,8 +2,8 @@ import requests
 
 from lxml import html
 from secret_variables import JSON_API_KEY, SEARCH_ENGINE_ID
-from global_variables import BASE_WIKI_URL, SIMILARITY_THRESHOLD
 from helper_functions import get_appended_url, string_similarity
+from global_variables import BASE_WIKI_URL, SIMILAR_THRESHOLD_API
 
 
 # returns content of wiki page as an lxml.html.HtmlElement object
@@ -73,7 +73,7 @@ def locate_object_url(search_query):
 		title = top_url.replace(BASE_WIKI_URL, '')
 
 		# return url if strings are similar and item page exists, otherwise return False
-		if string_similarity(search_query, title) > SIMILARITY_THRESHOLD:
+		if string_similarity(search_query, title) > SIMILAR_THRESHOLD_API:
 			return check_existing_page(top_url)
 
 	# check if daily quota is exceeded

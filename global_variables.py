@@ -69,7 +69,11 @@ MAIN_CHANNEL_ID = 970882023055036426
 
 
 # sets the minimum threshold of similarity between search query and predicted result
-SIMILARITY_THRESHOLD = 0.35
+SIMILAR_THRESHOLD_API = 0.35
+
+
+# sets the minimum threshold of similarity between search query and predicted result
+SIMILAR_THRESHOLD_CARD = 0.5
 
 
 # dictionary of smoothie bases and their base ingredients
