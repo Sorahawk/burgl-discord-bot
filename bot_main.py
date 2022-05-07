@@ -14,7 +14,7 @@ async def on_ready():
 	print(f'{bot.user} is online.')
 
 	channel = bot.get_channel(MAIN_CHANNEL_ID)
-	await channel.send(f"{CUSTOM_EMOJIS['BURG.L']} B-B-BURG.L is online!")
+	await channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Hello there! Acting science manager B-B-B-BURG.L at your service!")
 
 	rotate_status.start()
 
