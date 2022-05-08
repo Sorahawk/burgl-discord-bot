@@ -1,6 +1,3 @@
-<!-- MARKER FOR 'BACK TO TOP' BUTTON -->
-<div id="top"></div>
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -41,7 +38,6 @@ The overall roadmap and development tracker for this project can be found on Tre
 * [Discord.py](https://discordpy.readthedocs.io/)
 * [Programmable Search Engine by Google](https://programmablesearchengine.google.com/)
 * [Python](https://www.python.org/)
-* [Trello](https://trello.com/)
 
 
 
@@ -66,10 +62,6 @@ The overall roadmap and development tracker for this project can be found on Tre
 | 102 | Wiki page for the object has an unsupported layout. |
 | 103 | Daily limit of 100 queries for Google Custom Search JSON API has been exceeded. |
 | 104 | Bestiary card for the creature cannot be located. |
-
-
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 ---
 

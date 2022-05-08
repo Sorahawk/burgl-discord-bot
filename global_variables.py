@@ -30,11 +30,12 @@ BOT_COMMAND_LIST = {'help_method': f'{BOT_COMMAND_PREFIX}help ', 'search_method'
 
 
 # dictionary of custom server emojis
-CUSTOM_EMOJIS = {'BURG.L': '<:BURGL_Icon:970544869124755467>', 'Fresh': '<:ElementalType_Fresh:970550878966796308>',\
-				'Salty': '<:ElementalType_Salty:970550879226847302>', 'Spicy': '<:ElementalType_Spicy:970551950405947453>',\
-				'Busting': '<:DamageType_Busting:970552005250646036>', 'Chopping': '<:DamageType_Chopping:970552005883998269>',\
-				'Digging': '<:DamageType_Digging:970552065577328650>', 'Explosive': '<:DamageType_Explosive:970552089493262346>',\
-				'Slashing': '<:DamageType_Slashing:970552106496978964>', 'Stabbing': '<:DamageType_Stabbing:970552122548559872>'}
+CUSTOM_EMOJIS = {'BURG.L': '<:BURGL_Icon:970544869124755467>', 'Fresh': '<:ElementalType_Fresh:970550878966796308>',
+				'Salty': '<:ElementalType_Salty:970550879226847302>', 'Spicy': '<:ElementalType_Spicy:970551950405947453>',
+				'Busting': '<:DamageType_Busting:970552005250646036>', 'Chopping': '<:DamageType_Chopping:970552005883998269>',
+				'Digging': '<:DamageType_Digging:970552065577328650>', 'Explosive': '<:DamageType_Explosive:970552089493262346>',
+				'Slashing': '<:DamageType_Slashing:970552106496978964>', 'Stabbing': '<:DamageType_Stabbing:970552122548559872>',
+				'Aphid': '<:Pet_Aphid:972070087265747004>', 'Weevil': '<:Pet_Weevil:972070125639450624>'}
 
 
 # DynamoDB table names as strings, and a dictionary of their corresponding key and attribute headers
@@ -73,7 +74,7 @@ SIMILAR_THRESHOLD_API = 0.35
 
 
 # sets the minimum threshold of similarity between search query and predicted result
-SIMILAR_THRESHOLD_CARD = 0.5
+SIMILAR_THRESHOLD_CARD = 0.75
 
 
 # dictionary of smoothie bases and their base ingredients

@@ -115,8 +115,14 @@ def remove_extra_newline(formatted_string):
 	return formatted_string
 
 
+
+# suffix pet icon emoji to the name of corresponding tameable creature
+def pet_icon_emoji(formatted_string, creature_name):
+	return formatted_string.replace(creature_name, f'{creature_name} {CUSTOM_EMOJIS[creature_name]}')
+
+
 # suffix custom emoji to damage and elemental types
-def damage_elemental_emojis(input_string):
+def damage_elemental_emoji(input_string):
 	for keyword in CUSTOM_EMOJIS:
 		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]}{keyword}')
 
