@@ -45,13 +45,15 @@ The overall roadmap and development tracker for this project can be found on Tre
 
 ## Bot Commands
 
-* `.help` - Displays this list
+* `.help` - Displays help message.
 * `.search <object_name>` - Displays any available details of the object, including its picture and description.
-    * This search works with any Grounded wiki page with an infobox, e.g. creatures, equipment, resources, building components, resource nodes, landmarks.
-    * It also supports status effects and mutations.
+    * _This search works with any Grounded wiki page with an infobox, e.g. creatures, equipment, resources, building components, resource nodes, landmarks._
+    * _Use flag `-m` to search for status effects and mutations._
+    * _Use flag `-f` to force the search to bypass any binded shortcuts._
 * `.card <creature_name>` - Displays the specified creature's bestiary card.
+    * _Use flag `-f` to force the search to bypass any binded shortcuts._
 * `.bind <full_object_name>, <shortcut_1>, <shortcut_2>, ...` - Binds one or more shortcut phrases to a full object name.
-    * Each parameter is case-insensitive and must be separated by a comma.
+    * _Each parameter is case-insensitive and must be separated by a comma._
 
 
 ## Error Codes

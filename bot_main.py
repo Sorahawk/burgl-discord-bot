@@ -28,10 +28,11 @@ async def on_message(message):
 
 	# help method
 	if lowered_content.startswith(BOT_COMMAND_LIST['help_method']):
-		await message.channel.send(HELP_MESSAGE)
+		await message.channel.send('\n\n'.join(BOT_HELP_MESSAGE))
 
 	else:
 		for function, command in BOT_COMMAND_LIST.items():
+
 			if lowered_content.startswith(command):
 				user_input = remove_command_prefix(message.content, command)
 

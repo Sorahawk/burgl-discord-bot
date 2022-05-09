@@ -1,21 +1,23 @@
 import requests
 
 from lxml import html
+from global_variables import *
+from dynamodb_methods import ddb_insert_item
+from storage_functions import retrieve_page_html
 from secret_variables import JSON_API_KEY, SEARCH_ENGINE_ID
 from helper_functions import get_appended_url, string_similarity
-from global_variables import BASE_WIKI_URL, SIMILAR_THRESHOLD_API
 
 
 # returns content of wiki page as an lxml.html.HtmlElement object
 def get_page_data(wiki_url, get_title=False):
 
-	# TODO: DATABASE RETRIEVAL FOR URL->PageHTML (HTML as a string)
+	# check if HTML of the wiki page has already been cached
+	html_string = retrieve_page_html(wiki_url)
 
-
-	html_string = requests.get(wiki_url).text
-
-
-	# TODO: DATABASE INSERTION FOR URL->PageHTML (HTML as a string)
+	if not html_string:
+		# retrieve and cache page HTML
+		html_string = requests.get(wiki_url).text
+		ddb_insert_item(PAGE_HTML_CACHE, wiki_url, html_string)
 
 
 	xml_data = html.fromstring(html_string)

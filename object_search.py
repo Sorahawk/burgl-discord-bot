@@ -4,20 +4,23 @@ from url_processing import locate_object_url
 
 
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
-def get_object_info(search_query):
+def get_object_info(search_query, is_modifier):
 
 
 	# TODO: DATABASE RETRIEVAL FOR SearchQuery->ObjectInfo (dict as a string via json.loads/dumps)
 
+	if is_modifier:
+		# check for status effect or modifier first
+		modifier_info = get_modifier_info(search_query)
 
-	# check for status effect or modifier first
-	modifier_info = get_modifier_info(search_query)
-	if modifier_info is not None:
-		return modifier_info
+		if modifier_info:
+			return modifier_info
 
-	# check for query modifiers, e.g. upgraded tools, special smoothie types
+
+	# check for special queries, e.g. upgraded tools, special smoothie types
 	is_upgraded_tool = '+' == search_query.strip()[-1]
 	search_query, smoothie_type = detect_smoothie_type(search_query)
+
 
 	result = locate_object_url(search_query)
 
@@ -26,6 +29,7 @@ def get_object_info(search_query):
 	elif not result:  # Google API daily resource exhausted
 		return 103
 
+
 	page_content, page_title = result[0], result[1]
 
 	try:
@@ -33,6 +37,7 @@ def get_object_info(search_query):
 	except:
 		# page layout not supported
 		return (102, page_title)
+
 
 	# if query searching for upgraded tool, check for presence of both description+ and tier+
 	if is_upgraded_tool and 'description+' in object_info and 'tier+' in object_info:

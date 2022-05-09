@@ -10,13 +10,29 @@ def remove_command_prefix(input_string, command):
 	return input_string[len(command):].strip()
 
 
+# check for a specified command flag, and returns True/False, along with modified search query
+def check_command_flag(search_query, flag_key):
+	command_flag = BOT_COMMAND_FLAGS[flag_key]
+
+	result = False
+	if command_flag in search_query.lower():
+		result = True
+
+	# if flag not in query, replacing won't affect the string
+	search_query = search_query.replace(command_flag, '').replace(command_flag.upper(), '')
+	return result, search_query
+
+
 # returns page URL, comprised of sanitised search query appended to the base wiki URL
 def get_appended_url(search_query):
 	if '.' in search_query:
 		# raise all letters for robot and device names, e.g. BURG.L, TAYZ.T, MIX.R
 		return f'{base_url}{search_query.upper()}'
 
-	search_query = re.sub(ILLEGAL_URL_SYMBOLS, '', search_query)
+	# symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
+	illegal_symbols = '[\][}{><|%+]+'
+
+	search_query = re.sub(illegal_symbols, '', search_query)
 
 	# replace ? with %3F, e.g. Smoothie?
 	search_query = search_query.replace('?', '%3F')

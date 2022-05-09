@@ -4,15 +4,20 @@ from object_search import *
 from global_variables import *
 from storage_functions import *
 from card_search import get_creature_card
+from helper_functions import check_command_flag
 
 
 # object search method
 async def search_method(message, search_query):
 
-	# check for existing shortcut binding
-	search_query = get_full_name(search_query)
+	# check for modifier (status effects & mutations) flag
+	is_modifier, search_query = check_command_flag(search_query, 'modifier')
 
-	result = get_object_info(search_query)
+	# check for existing shortcut binding in database
+	search_query = retrieve_full_name(search_query)
+
+
+	result = get_object_info(search_query, is_modifier)
 
 	if isinstance(result, tuple):
 		# item page format is not supported
@@ -34,7 +39,7 @@ async def search_method(message, search_query):
 
 # creature card search method
 async def card_method(message, search_query):
-	search_query = get_full_name(search_query)
+	search_query = retrieve_full_name(search_query)  # check for existing shortcut binding in database
 	result = get_creature_card(search_query)
 
 	if result == 103:
