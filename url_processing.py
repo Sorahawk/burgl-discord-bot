@@ -11,12 +11,20 @@ from helper_functions import get_appended_url, string_similarity
 # returns content of wiki page as an lxml.html.HtmlElement object
 def get_page_data(wiki_url, get_title=False):
 
+	# many search queries can refer to the same object, thus caching the page HTML itself helps to speed up response times
 	# check if HTML of the wiki page has already been cached
 	html_string = retrieve_page_html(wiki_url)
 
 	if not html_string:
-		# retrieve and cache page HTML
+		# retrieve page HTML
 		html_string = requests.get(wiki_url).text
+
+		# cut out massive redundant parts of the page HTML to save on DynamoDB read/write units
+		html_string = html_string.split('page-header__title-wrapper">')[1]  # slice off unnecessary headers up till page title
+		html_string = html_string.split('<table cellspacing="0" class="navbox"')[0]  # slice off everything after unique page content ends
+		html_string = html_string.split('<div class="page-footer')[0]  # slice off footer for pages which don't have the navbox used above
+
+		# cache shortened page HTML
 		ddb_insert_item(PAGE_HTML_CACHE, wiki_url, html_string)
 
 

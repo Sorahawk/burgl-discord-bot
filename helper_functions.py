@@ -27,7 +27,7 @@ def check_command_flag(search_query, flag_key):
 def get_appended_url(search_query):
 	if '.' in search_query:
 		# raise all letters for robot and device names, e.g. BURG.L, TAYZ.T, MIX.R
-		return f'{base_url}{search_query.upper()}'
+		return f'{BASE_WIKI_URL}{search_query.upper()}'
 
 	# symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
 	illegal_symbols = '[\][}{><|%+]+'
