@@ -20,7 +20,7 @@ def bind_query_name(full_name, shortcuts):
 	return formatted_string
 
 
-# returns corresponding full name if it exists, otherwise just returns the original input
+# returns corresponding full name if it exists in table, otherwise just returns the original input
 # if command flag to bypass shortcuts is present, then just return the original query
 def retrieve_full_name(search_query):
 
@@ -39,12 +39,10 @@ def retrieve_full_name(search_query):
 	return search_query
 
 
-# returns corresponding page HTML if it exists, otherwise None by default
-def retrieve_page_html(wiki_url):
-	table_name = PAGE_HTML_CACHE
+# returns corresponding attribute value if it exists in table, otherwise None by default
+def retrieve_from_cache(table_name, key):
 	attribute_header = get_table_headers(table_name)[1]
+	result = ddb_retrieve_item(table_name, key)
 
-	html_string = ddb_retrieve_item(table_name, wiki_url)
-
-	if html_string:
-		return html_string[attribute_header]
+	if result:
+		return result[attribute_header]

@@ -5,23 +5,17 @@ from url_processing import locate_object_url
 
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
 def get_object_info(search_query, is_modifier):
-
-
-	# TODO: DATABASE RETRIEVAL FOR SearchQuery->ObjectInfo (dict as a string via json.loads/dumps)
-
-	if is_modifier:
-		# check for status effect or modifier first
+	if is_modifier:  # check for status effect or modifier first
 		modifier_info = get_modifier_info(search_query)
 
 		if modifier_info:
 			return modifier_info
 
-
 	# check for special queries, e.g. upgraded tools, special smoothie types
 	is_upgraded_tool = '+' == search_query.strip()[-1]
 	search_query, smoothie_type = detect_smoothie_type(search_query)
 
-
+	# get most likely wiki URL of object
 	result = locate_object_url(search_query)
 
 	if result is None:  # unable to locate URL for item
@@ -29,14 +23,13 @@ def get_object_info(search_query, is_modifier):
 	elif not result:  # Google API daily resource exhausted
 		return 103
 
-
 	page_content, page_title = result[0], result[1]
 
 	try:
 		object_info = get_infobox_info(page_content)
 	except:
 		# page layout not supported
-		return (102, page_title)
+		return [102, page_title]
 
 
 	# if query searching for upgraded tool, check for presence of both description+ and tier+
@@ -59,10 +52,6 @@ def get_object_info(search_query, is_modifier):
 		except:
 			# repair cost extraction failed
 			print(f"WARNING: Repair cost extraction for {object_info['name']} failed.")
-
-
-	# TODO: DATABASE INSERTION FOR SearchQuery->ObjectInfo (dict as a string via json.loads/dumps)
-
 
 	return object_info
 

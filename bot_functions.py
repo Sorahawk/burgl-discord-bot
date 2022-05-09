@@ -1,9 +1,10 @@
-import string
+import json, string
 
 from object_search import *
 from global_variables import *
 from storage_functions import *
 from card_search import get_creature_card
+from dynamodb_methods import ddb_insert_item
 from helper_functions import check_command_flag
 
 
@@ -16,10 +17,35 @@ async def search_method(message, search_query):
 	# check for existing shortcut binding in database
 	search_query = retrieve_full_name(search_query)
 
+	# check if corresponding object info exists in cache
+	result = retrieve_from_cache(OBJECT_INFO_CACHE, search_query)
 
-	result = get_object_info(search_query, is_modifier)
+	if result:
+		# load dictionary from stored string
+		result = json.loads(result)
 
-	if isinstance(result, tuple):
+		if isinstance(result, dict):
+			# reinitialise collections.Counter for relevant attributes
+			counter_list = ['recipe', 'repair_cost']
+
+			for attribute in counter_list:
+				if attribute in result:
+					result[attribute] = Counter(result[attribute])
+
+		elif is_modifier:
+			# if user searches for a modifier without the -m flag, it will cache 101 or 102 error, which will make any subsequent queries with the -m flag to fail as well
+			# thus if cache contains error, but query has -m flag, override cache and extract modifier info
+			result = None
+
+	if not result:
+		# extract object info
+		result = get_object_info(search_query, is_modifier)
+
+		# cache results
+		ddb_insert_item(OBJECT_INFO_CACHE, search_query, json.dumps(result))
+
+
+	if isinstance(result, list):
 		# item page format is not supported
 		if result[0] == 102:
 			await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} **ERROR 102:** Wiki page for '{result[1]}' has an unsupported layout.")

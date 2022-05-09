@@ -3,7 +3,7 @@ import requests
 from lxml import html
 from global_variables import *
 from dynamodb_methods import ddb_insert_item
-from storage_functions import retrieve_page_html
+from storage_functions import retrieve_from_cache
 from secret_variables import JSON_API_KEY, SEARCH_ENGINE_ID
 from helper_functions import get_appended_url, string_similarity
 
@@ -13,7 +13,7 @@ def get_page_data(wiki_url, get_title=False):
 
 	# many search queries can refer to the same object, thus caching the page HTML itself helps to speed up response times
 	# check if HTML of the wiki page has already been cached
-	html_string = retrieve_page_html(wiki_url)
+	html_string = retrieve_from_cache(PAGE_HTML_CACHE, wiki_url)
 
 	if not html_string:
 		# retrieve page HTML
