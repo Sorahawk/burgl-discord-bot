@@ -34,7 +34,7 @@ async def search_method(message, search_query):
 			# thus if cache contains error, but query has -m flag, override cache and extract modifier info
 			result = None
 
-	# create a new if branch rather than using else because of the is_modifier case right above
+	# create a new 'if' rather than using 'else' because of the is_modifier case right above
 	if not result:
 		# check for existing shortcut binding in database
 		full_name = retrieve_full_name(search_query)

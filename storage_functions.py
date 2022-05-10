@@ -5,14 +5,16 @@ from helper_functions import check_command_flag
 
 # binds one or more shortcut phrases to a full name
 def bind_query_name(full_name, shortcuts):
-	table_name = SHORTCUT_STORAGE
 	added_items = []
 
 	formatted_string = f"Case-insensitive shortcuts added for **'{full_name}'**:\n"
 
 	for shortcut in shortcuts:
 		shortcut = shortcut.strip()  # remove preceding whitespace before each word, e.g. 'a, b, c'
-		result = ddb_insert_item(table_name, shortcut, full_name)
+		result = ddb_insert_item(SHORTCUT_STORAGE, shortcut, full_name)
+
+		# remove entry from object info cache with shortcut as the key, if any
+		ddb_remove_item(OBJECT_INFO_CACHE, shortcut)
 
 		if result:
 			formatted_string += f"-{shortcut}\n"
@@ -46,3 +48,11 @@ def retrieve_from_cache(table_name, key):
 
 	if result:
 		return result[attribute_header]
+
+
+# purge the cache tables (query-object info and url-HTML)
+def purge_cache():
+	tables = [OBJECT_INFO_CACHE, PAGE_HTML_CACHE]
+
+	for table_name in tables:
+		ddb_remove_all(table_name)

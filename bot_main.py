@@ -3,6 +3,7 @@ import discord, random
 from bot_functions import *
 from discord.ext import tasks
 from global_variables import *
+from storage_functions import purge_cache
 from dynamodb_methods import ddb_remove_all
 from datetime import time, timedelta, timezone
 from secret_variables import DISCORD_BOT_TOKEN
@@ -25,7 +26,13 @@ async def on_ready():
 	await channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Hello there! Acting science manager B-B-B-BURG.L at your service!")
 
 	rotate_status.start()
-	purge_cache.start()
+
+	# if script becomes inactive for any reason, on_ready will be called again once active
+	# but tasks with specific timings can't be started more than once
+	try:
+		purge_cache.start()
+	except:
+		pass
 
 
 @bot.event
@@ -68,10 +75,7 @@ async def rotate_status():
 timezone = timezone(timedelta(hours=8))
 @tasks.loop(time=time(hour=6, tzinfo=timezone))
 async def purge_cache():
-	tables = [OBJECT_INFO_CACHE, PAGE_HTML_CACHE]
-
-	for table_name in tables:
-		ddb_remove_all(table_name)
+	purge_cache()
 
 	channel = bot.get_channel(MAIN_CHANNEL_ID)
 	await channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Data caches have been purged.")

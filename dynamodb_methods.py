@@ -52,18 +52,13 @@ def ddb_retrieve_all(table_name):
 	return table.scan()['Items']
 
 
-# deletes entries of specified primary keys from specified table
-# does not throw any exception even if the primary key does not exist
-def ddb_remove_items(table_name, key_list):
+# deletes specified primary key from specified table
+# does not throw any exception even if the key does not exist
+def ddb_remove_item(table_name, key):
 	table = ddb_create_session().Table(table_name)
 	key_header = get_table_headers(table_name)[0]
 
-	# make sure that key_list is a list
-	if isinstance(key_list, str):
-		key_list = [key_list]
-
-	for key in key_list:
-		table.delete_item(Key={key_header: key})
+	table.delete_item(Key={key_header: key})
 
 
 # deletes all entries from specified table

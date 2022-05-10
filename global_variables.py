@@ -26,7 +26,8 @@ BOT_COMMAND_PREFIX = '.'
 # dictionary of bot commands, keys are the exact names of the corresponding methods
 # add a whitespace behind the commands so it won't recognise invalid commands, e.g. .helpp
 BOT_COMMAND_LIST = {'help_method': f'{BOT_COMMAND_PREFIX}help ', 'search_method': f'{BOT_COMMAND_PREFIX}search ',
-					'card_method': f'{BOT_COMMAND_PREFIX}card ', 'bind_method': f'{BOT_COMMAND_PREFIX}bind '}
+					'card_method': f'{BOT_COMMAND_PREFIX}card ', 'bind_method': f'{BOT_COMMAND_PREFIX}bind ',
+					'purge_method': f'{BOT_COMMAND_PREFIX}purge '}
 
 
 # dictionary of command flags
@@ -42,7 +43,9 @@ BOT_HELP_MESSAGE = [f"**`{BOT_COMMAND_LIST['help_method']}`**\nDisplays this lis
 				f"**`{BOT_COMMAND_LIST['card_method']}<creature_name>`**\nDisplays the specified creature's bestiary card.\n"\
 				"*Use flag `-f` to force the search to bypass any binded shortcuts.*",
 
-				f"**`{BOT_COMMAND_LIST['bind_method']}<full_object_name>, <shortcut_1>, <shortcut_2>, ...`**\nBinds one or more shortcut phrases to a full object name.\n*Each parameter is case-insensitive and must be separated by a comma.*"]
+				f"**`{BOT_COMMAND_LIST['bind_method']}<full_object_name>, <shortcut_1>, <shortcut_2>, ...`**\nBinds one or more shortcut phrases to a full object name.\n*Each parameter is case-insensitive and must be separated by a comma.*",
+
+				f"**`{BOT_COMMAND_LIST['purge_method']}`**\nPurges the webpage data and object information caches."]
 
 
 # dictionary of custom server emojis

@@ -54,6 +54,7 @@ The overall roadmap and development tracker for this project can be found on Tre
     * _Use flag `-f` to force the search to bypass any binded shortcuts._
 * `.bind <full_object_name>, <shortcut_1>, <shortcut_2>, ...` - Binds one or more shortcut phrases to a full object name.
     * _Each parameter is case-insensitive and must be separated by a comma._
+* `.purge` - Purges the webpage data and object information caches.
 
 
 ## Error Codes
