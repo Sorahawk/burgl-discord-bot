@@ -13,6 +13,7 @@ def remove_command_prefix(input_string, command):
 # check for a specified command flag, and returns True/False, along with modified search query
 def check_command_flag(search_query, flag_key):
 	command_flag = BOT_COMMAND_FLAGS[flag_key]
+	search_query = search_query + ' '
 
 	result = False
 	if command_flag in search_query.lower():
@@ -20,7 +21,7 @@ def check_command_flag(search_query, flag_key):
 
 	# if flag not in query, replacing won't affect the string
 	search_query = search_query.replace(command_flag, '').replace(command_flag.upper(), '')
-	return result, search_query
+	return result, search_query.strip()
 
 
 # returns page URL, comprised of sanitised search query appended to the base wiki URL

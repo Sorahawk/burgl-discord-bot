@@ -14,9 +14,6 @@ async def search_method(message, search_query):
 	# check for modifier (status effects & mutations) flag
 	is_modifier, search_query = check_command_flag(search_query, 'modifier')
 
-	# check for existing shortcut binding in database
-	search_query = retrieve_full_name(search_query)
-
 	# check if corresponding object info exists in cache
 	result = retrieve_from_cache(OBJECT_INFO_CACHE, search_query)
 
@@ -37,13 +34,17 @@ async def search_method(message, search_query):
 			# thus if cache contains error, but query has -m flag, override cache and extract modifier info
 			result = None
 
+	# create a new if branch rather than using else because of the is_modifier case right above
 	if not result:
+		# check for existing shortcut binding in database
+		full_name = retrieve_full_name(search_query)
+
 		# extract object info
-		result = get_object_info(search_query, is_modifier)
+		result = get_object_info(full_name, is_modifier)
 
-		# cache results
-		ddb_insert_item(OBJECT_INFO_CACHE, search_query, json.dumps(result))
-
+		# cache results except Google API error (the API could become available again at any time)
+		if result != 103:
+			ddb_insert_item(OBJECT_INFO_CACHE, search_query, json.dumps(result))
 
 	if isinstance(result, list):
 		# item page format is not supported
@@ -93,6 +94,7 @@ async def bind_method(message, user_input):
 
 	if len(user_input) < 2:
 		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} A minimum of two parameters are required.")
+		return
 
 	formatted_string = bind_query_name(user_input[0], user_input[1:])
 	await message.channel.send(formatted_string)

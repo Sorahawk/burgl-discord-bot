@@ -31,7 +31,6 @@ def get_object_info(search_query, is_modifier):
 		# page layout not supported
 		return [102, page_title]
 
-
 	# if query searching for upgraded tool, check for presence of both description+ and tier+
 	if is_upgraded_tool and 'description+' in object_info and 'tier+' in object_info:
 		object_info['description'] = object_info['description+']

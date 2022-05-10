@@ -72,7 +72,13 @@ def ddb_remove_all(table_name):
 	table = ddb_create_session().Table(table_name)
 	key_header = get_table_headers(table_name)[0]
 
-	items = table.scan()['Items']
-	for item in items:
-		table.delete_item(Key={
-			key_header: item[key_header]})
+	# scan has a size limit of 1MB, so repeat until it is empty
+	while True:
+		items = table.scan()['Items']
+
+		if not items:
+			break
+
+		for item in items:
+			table.delete_item(Key={
+				key_header: item[key_header]})

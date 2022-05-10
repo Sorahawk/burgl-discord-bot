@@ -27,7 +27,6 @@ def get_page_data(wiki_url, get_title=False):
 		# cache shortened page HTML
 		ddb_insert_item(PAGE_HTML_CACHE, wiki_url, html_string)
 
-
 	xml_data = html.fromstring(html_string)
 
 	page_title = xml_data.get_element_by_id('firstHeading').text_content()

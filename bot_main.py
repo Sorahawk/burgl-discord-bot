@@ -3,11 +3,19 @@ import discord, random
 from bot_functions import *
 from discord.ext import tasks
 from global_variables import *
+from dynamodb_methods import ddb_remove_all
+from datetime import time, timedelta, timezone
 from secret_variables import DISCORD_BOT_TOKEN
 from helper_functions import remove_command_prefix
 
 
-bot = discord.Client()
+# declare bot intents
+intents = discord.Intents.default()
+intents.message_content = True
+
+# initialise client
+bot = discord.Client(intents=intents)
+
 
 @bot.event
 async def on_ready():
@@ -17,6 +25,7 @@ async def on_ready():
 	await channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Hello there! Acting science manager B-B-B-BURG.L at your service!")
 
 	rotate_status.start()
+	purge_cache.start()
 
 
 @bot.event
@@ -43,7 +52,7 @@ async def on_message(message):
 
 
 # automatically rotate bot's Discord status every 10 minutes
-@tasks.loop(seconds=600)
+@tasks.loop(minutes=10)
 async def rotate_status():
 	chosen_activity, activity_info = random.choice(list(ACTIVITY_STATUSES.items()))
 
@@ -53,6 +62,19 @@ async def rotate_status():
 		activity = discord.Activity(type=activity_info[0], name=chosen_activity)
 	
 	await bot.change_presence(activity=activity)
+
+
+# automatically purges caches at 6am UTC+8
+timezone = timezone(timedelta(hours=8))
+@tasks.loop(time=time(hour=6, tzinfo=timezone))
+async def purge_cache():
+	tables = [OBJECT_INFO_CACHE, PAGE_HTML_CACHE]
+
+	for table_name in tables:
+		ddb_remove_all(table_name)
+
+	channel = bot.get_channel(MAIN_CHANNEL_ID)
+	await channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Data caches have been purged.")
 
 
 bot.run(DISCORD_BOT_TOKEN)

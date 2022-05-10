@@ -6,7 +6,7 @@
   </a>
   <h3 align="center">BURG.L Discord Bot</h3>
   <p align="center">
-    Discord resource management bot that augments the Grounded gaming experience
+    A Discord resource management bot that augments the Grounded gaming experience.
   </p>
 </div>
 
