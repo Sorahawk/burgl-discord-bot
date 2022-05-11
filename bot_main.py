@@ -30,7 +30,7 @@ async def on_ready():
 	# if script becomes inactive for any reason, on_ready will be called again once active
 	# but tasks with specific timings can't be started more than once
 	try:
-		purge_cache.start()
+		daily_purge_cache.start()
 	except:
 		pass
 
@@ -46,6 +46,11 @@ async def on_message(message):
 	if lowered_content.startswith(BOT_COMMAND_LIST['help_method']):
 		await message.channel.send('\n\n'.join(BOT_HELP_MESSAGE))
 
+	# purge method
+	elif lowered_content.startswith(BOT_COMMAND_LIST['purge_method']):
+		purge_cache()
+		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Data caches have been purged.")
+	
 	else:
 		for function, command in BOT_COMMAND_LIST.items():
 
@@ -74,7 +79,7 @@ async def rotate_status():
 # automatically purges caches at 6am UTC+8
 timezone = timezone(timedelta(hours=8))
 @tasks.loop(time=time(hour=6, tzinfo=timezone))
-async def purge_cache():
+async def daily_purge_cache():
 	purge_cache()
 
 	channel = bot.get_channel(MAIN_CHANNEL_ID)

@@ -71,6 +71,8 @@ def ddb_remove_all(table_name):
 	while True:
 		items = table.scan()['Items']
 
+		print(items)
+
 		if not items:
 			break
 
