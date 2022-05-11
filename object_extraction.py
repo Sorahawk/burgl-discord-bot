@@ -1,6 +1,7 @@
+from collections import Counter
 from url_processing import get_page_data
 from global_variables import BASE_WIKI_URL, SMOOTHIE_BASES
-from helper_functions import weakness_resistance_processing, compile_counter
+from string_processing import weakness_resistance_processing
 
 
 # returns dictionary of extracted information for a given status effect or mutation
@@ -134,6 +135,25 @@ def get_infobox_info(page_content):
 					object_info['effects'].append(content)
 
 	return object_info
+
+
+# returns a Counter() of the compiled materials and their quantities
+# collections.Counter will make it much easier to recursively sum up materials for chopping list in future
+def compile_counter(item_list, recipe_type=None):
+	counter = Counter()
+	value = None
+
+	for item in item_list:
+		if item.strip():
+			if recipe_type == 'Smoothie':
+				counter[item] = 1
+			elif value is None:
+				value = item
+			else:
+				counter[value] = int(item)
+				value = None
+
+	return counter
 
 
 # returns object's crafting recipe as a Counter()

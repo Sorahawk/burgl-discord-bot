@@ -1,4 +1,4 @@
-from helper_functions import string_similarity
+from string_processing import string_similarity
 from url_processing import get_page_data, locate_object_url
 from global_variables import BASE_WIKI_URL, SIMILAR_THRESHOLD_CARD
 

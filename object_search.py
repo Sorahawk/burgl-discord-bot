@@ -1,6 +1,23 @@
-from helper_functions import *
 from object_extraction import *
+from string_processing import *
+
 from url_processing import locate_object_url
+
+
+# returns booleans representing presence of recipe and repair costs on an object's page
+def check_info_presence(page_content):
+	has_recipe = True
+	has_repair_cost = False
+
+	try:
+		page_content.get_element_by_id('Recipe')
+	except KeyError:
+		has_recipe = False
+
+	if 'Repair Cost' in page_content.itertext():
+		has_repair_cost = True
+
+	return has_recipe, has_repair_cost
 
 
 # returns dictionary of extracted information for an input object, or error codes if an error occurs

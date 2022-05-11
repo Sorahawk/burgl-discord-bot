@@ -46,6 +46,7 @@ def ddb_retrieve_item(table_name, key):
 
 
 # returns list of dictionaries representing all entries in specified table
+# scan() has a size limit of 1MB
 # if table is empty, returns an empty list
 def ddb_retrieve_all(table_name):
 	table = ddb_create_session().Table(table_name)
@@ -67,11 +68,9 @@ def ddb_remove_all(table_name):
 	table = ddb_create_session().Table(table_name)
 	key_header = get_table_headers(table_name)[0]
 
-	# scan has a size limit of 1MB, so repeat until it is empty
+	# scan() has a size limit of 1MB, so repeat until it is empty
 	while True:
 		items = table.scan()['Items']
-
-		print(items)
 
 		if not items:
 			break

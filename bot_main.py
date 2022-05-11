@@ -1,13 +1,14 @@
-import discord, random
+import discord
 
 from bot_functions import *
-from discord.ext import tasks
 from global_variables import *
-from storage_functions import purge_cache
+
+from random import choice
+from discord.ext import tasks
 from dynamodb_methods import ddb_remove_all
 from datetime import time, timedelta, timezone
 from secret_variables import DISCORD_BOT_TOKEN
-from helper_functions import check_command_flags, remove_command
+from string_processing import check_command, check_flags
 
 
 # declare bot intents
@@ -23,7 +24,7 @@ async def on_ready():
 	print(f'{bot.user} is online.')
 
 	channel = bot.get_channel(MAIN_CHANNEL_ID)
-	await channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Hello there! Acting science manager B-B-B-BURG.L at your service!")
+	await channel.send(burgl_message('hello'))
 
 	rotate_status.start()
 
@@ -37,39 +38,32 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-	if message.author == bot.user:
+	prefix_length = len(BOT_COMMAND_PREFIX)  # prefix might not always be single character
+
+	# ignore any messages sent from the bot itself, or messages that don't start with the command prefix
+	if message.author == bot.user or message.content[:prefix_length] != BOT_COMMAND_PREFIX:
+		return
+
+	# check for any valid command if the message starts with the prefix symbol
+	result = check_command(message.content[prefix_length:])
+
+	if result:
+		command_method, user_input = result[0], result[1]
+	else:
 		return
 
 	# check for presence of any command flags
 	# in the process also removes any excess whitespace
-	user_input, flag_presence = check_command_flags(message.content)
+	flag_presence, user_input = check_flags(user_input)
 
-	lowered_content = user_input.lower() + ' '
-
-	# help method
-	if lowered_content.startswith(BOT_COMMAND_LIST['help_method']):
-		await message.channel.send('\n\n'.join(BOT_HELP_MESSAGE))
-
-	# purge method
-	elif lowered_content.startswith(BOT_COMMAND_LIST['purge_method']):
-		purge_cache()
-		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Data caches have been purged.")
-	
-	else:
-		for function, command in BOT_COMMAND_LIST.items():
-			if lowered_content.startswith(command):
-				user_input = remove_command(user_input, command)
-
-				if user_input == '':
-					await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Please provide input parameters.")
-				else:
-					await eval(function)(message, user_input, flag_presence)
+	# call corresponding method
+	await eval(command_method)(message, user_input, flag_presence)
 
 
 # automatically rotate bot's Discord status every 10 minutes
 @tasks.loop(minutes=10)
 async def rotate_status():
-	chosen_activity, activity_info = random.choice(list(ACTIVITY_STATUSES.items()))
+	chosen_activity, activity_info = choice(list(ACTIVITY_STATUSES.items()))
 
 	if activity_info[0] == 1:
 		activity = discord.Streaming(name=chosen_activity, url=activity_info[1])
@@ -86,7 +80,7 @@ async def daily_purge_cache():
 	purge_cache()
 
 	channel = bot.get_channel(MAIN_CHANNEL_ID)
-	await channel.send(f"{CUSTOM_EMOJIS['BURG.L']} Data caches have been purged.")
+	await channel.send(burgl_message('purged'))
 
 
 bot.run(DISCORD_BOT_TOKEN)

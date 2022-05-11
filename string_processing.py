@@ -1,34 +1,65 @@
 import re
 
 from global_variables import *
-from collections import Counter
+
 from difflib import SequenceMatcher
+
+
+# determines which command is being used, if any (remember that bot reads all messages)
+# returns a tuple containing firstly, the name of the corresponding method of the bot command as a string to be called by eval()
+# and secondly, the commandless user input
+# otherwise returns None by default if no command given
+def check_command(user_input):
+	lowered_input = user_input.lower() + ' '
+
+	for command_name in BOT_COMMAND_LIST:
+		command = command_name + ' '
+
+		if lowered_input.startswith(command):
+			# have to slice by index instead of using replace because have to be case insensitive
+			user_input = user_input[len(command):]
+
+			return f'{command_name}_method', user_input
 
 
 # check for presence of any command flags in user input
 # returns a tuple containing firstly, a dictionary of booleans indicating presence of each command flag
 # and secondly, the flagless user input
-def check_command_flags(search_query):
+def check_flags(user_input):
 	flag_presence = {}
-	search_query += ' '
+	user_input += ' '
 
 	for flag_key, flag in BOT_COMMAND_FLAGS.items():
 		flag_presence[flag_key] = False
+		flag = f' {flag} '  # flag must be standalone with surrounding whitespace
 
-		if flag in search_query.lower():
+		if flag in user_input.lower():
 			flag_presence[flag_key] = True
 
 		# if flag not in query, replacing won't affect the string
-		search_query = search_query.replace(flag, ' ').replace(flag.upper(), ' ')
+		user_input = user_input.replace(flag, ' ').replace(flag.upper(), ' ')
 
-	# remove any excess whitespace
-	search_query = ' '.join(search_query.split())
-	return search_query, flag_presence
+	# remove any excess whitespace, have to be done here instead of when checking command because clean up after replacing the flags
+	user_input = ' '.join(user_input.split())
+	return flag_presence, user_input
 
 
-# removes bot command from front of string input
-def remove_command(input_string, command):
-	return input_string[len(command):].strip()
+# returns string with BURG.L emoji inserted to front of specified voiceline
+def burgl_message(key):
+	return f"{CUSTOM_EMOJIS['BURG.L']} {BOT_VOICELINES[key]}"
+
+
+# insert pet icon emoji behind the name of corresponding tameable creature
+def pet_icon_emoji(input_string, creature_name):
+	return input_string.replace(creature_name, f'{creature_name} {CUSTOM_EMOJIS[creature_name]}')
+
+
+# insert corresponding custom emoji for damage and elemental types
+def damage_elemental_emoji(input_string):
+	for keyword in CUSTOM_EMOJIS:
+		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]}{keyword}')
+
+	return input_string
 
 
 # returns page URL, comprised of sanitised search query appended to the base wiki URL
@@ -60,40 +91,6 @@ def string_similarity(a, b):
 	return SequenceMatcher(None, a.lower(), b.lower()).ratio()
 
 
-# processes the many variations of (e)weakness and (e)resistance labels with a single function
-# returns the specific header (out of 4 possibilities) and the processed string
-def weakness_resistance_processing(header, content):
-	if 'weakness' in header:
-		keyword = 'weakness'
-	else:
-		keyword = 'resistance'
-
-	header = header.split(keyword)
-	if header[0] == 'e':
-		keyword = f'e{keyword}'
-
-	return keyword, content.replace('-or-', ', ')
-
-
-# returns a Counter() of the compiled materials and their quantities
-# collections.Counter will make it much easier to recursively sum up materials for chopping list in future
-def compile_counter(item_list, recipe_type=None):
-	counter = Counter()
-	value = None
-
-	for item in item_list:
-		if item.strip():
-			if recipe_type == 'Smoothie':
-				counter[item] = 1
-			elif value is None:
-				value = item
-			else:
-				counter[value] = int(item)
-				value = None
-
-	return counter
-
-
 # detect special smoothie type from user input and remove it
 # returns new search query and the smoothie type as two separate variables
 # returns 'basic' by default since don't expect basic to be explicitly stated for smoothies
@@ -115,39 +112,24 @@ def detect_smoothie_type(search_query):
 	return search_query, smoothie_type
 
 
-# returns booleans representing presence of recipe and repair costs on an object's page
-def check_info_presence(page_content):
-	has_recipe = True
-	has_repair_cost = False
-
-	try:
-		page_content.get_element_by_id('Recipe')
-	except KeyError:
-		has_recipe = False
-
-	if 'Repair Cost' in page_content.itertext():
-		has_repair_cost = True
-
-	return has_recipe, has_repair_cost
-
-
 # removes one newline from the end of the string if there are two
 # returns processed string
-def remove_extra_newline(formatted_string):
-	if formatted_string[-2:] == '\n\n':
-		formatted_string = formatted_string[:-1]
-	return formatted_string
-
-
-
-# suffix pet icon emoji to the name of corresponding tameable creature
-def pet_icon_emoji(formatted_string, creature_name):
-	return formatted_string.replace(creature_name, f'{creature_name} {CUSTOM_EMOJIS[creature_name]}')
-
-
-# suffix custom emoji to damage and elemental types
-def damage_elemental_emoji(input_string):
-	for keyword in CUSTOM_EMOJIS:
-		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]}{keyword}')
-
+def remove_extra_newline(input_string):
+	if input_string[-2:] == '\n\n':
+		input_string = input_string[:-1]
 	return input_string
+
+
+# processes the many variations of (e)weakness and (e)resistance labels with a single function
+# returns the specific header (out of 4 possibilities) and the processed string
+def weakness_resistance_processing(header, content):
+	if 'weakness' in header:
+		keyword = 'weakness'
+	else:
+		keyword = 'resistance'
+
+	header = header.split(keyword)
+	if header[0] == 'e':
+		keyword = f'e{keyword}'
+
+	return keyword, content.replace('-or-', ', ')

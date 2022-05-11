@@ -1,25 +1,38 @@
-import json, string
-
 from object_search import *
 from global_variables import *
 from storage_functions import *
+
+from json import dumps, loads
 from card_search import get_creature_card
+from string_processing import burgl_message
 from dynamodb_methods import ddb_insert_item
 
 
+# all bot methods here have to correspond to an item in BOT_COMMAND_LIST
+# and must share the same name, followed by '_method'
+
+
+# help message method
+async def help_method(message, user_input, flag_presence):
+	await message.channel.send('\n'.join(BOT_HELP_MESSAGE))
+
+
 # object search method
-async def search_method(message, search_query, flag_presence):
+async def search_method(message, user_input, flag_presence):
+	if user_input == '':
+		return await message.channel.send(burgl_message('empty'))
+
 	result = None
 
 	# if user forces search of actual query, then bypass both shortcut as well as cache
 	if not flag_presence['force_search']:
 
 		# check if corresponding object info exists in cache
-		result = retrieve_from_cache(OBJECT_INFO_CACHE, search_query)
+		result = retrieve_from_cache(OBJECT_INFO_CACHE, user_input)
 
 		if result:
 			# load dictionary from stored string
-			result = json.loads(result)
+			result = loads(result)
 
 			if isinstance(result, dict):
 				# reinitialise collections.Counter for relevant attributes
@@ -37,30 +50,30 @@ async def search_method(message, search_query, flag_presence):
 	# if query not in cache, -f flag present or -m flag present with error stored in cache
 	if not result:
 		if flag_presence['force_search']:
-			full_name = search_query
+			full_name = user_input
 		else:
-			full_name = retrieve_full_name(search_query)
+			full_name = retrieve_full_name(user_input)
 
 		# extract object info
 		result = get_object_info(full_name, flag_presence['modifier'])
 
 		# cache results except Google API error (the API could become available again at any time) and -f searches
 		if result != 103 and not flag_presence['force_search']:
-			ddb_insert_item(OBJECT_INFO_CACHE, search_query, json.dumps(result))
+			ddb_insert_item(OBJECT_INFO_CACHE, user_input, dumps(result))
 
 	if isinstance(result, list):
 		# item page format is not supported
 		if result[0] == 102:
-			await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} **ERROR 102:** Wiki page for '{result[1]}' has an unsupported layout.")
+			await message.channel.send(burgl_message(102).replace('VAR1', result[1]))
 
 	# unable to locate item page URL
 	elif result == 101:
-		search_query = search_query.title().replace("'S", "'s")
-		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} **ERROR 101:** Unable to locate '{search_query}'. Try typing in the object's full name.")
+		user_input = user_input.title().replace("'S", "'s")
+		await message.channel.send(burgl_message(101).replace('VAR1', user_input))
 
 	# daily quota for Google API exhausted
 	elif result == 103:
-		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} **ERROR 103:** Google API daily limit exceeded. Type in the exact name of the object.")
+		await message.channel.send(burgl_message(103))
 
 	else:
 		await message.channel.send(result['picture_url'])
@@ -68,25 +81,27 @@ async def search_method(message, search_query, flag_presence):
 
 
 # creature card search method
-async def card_method(message, search_query, flag_presence):
+async def card_method(message, user_input, flag_presence):
+	if user_input == '':
+		return await message.channel.send(burgl_message('empty'))
 
 	# check for existing shortcut binding in database if no -f flag
 	if not flag_presence['force_search']:
-		full_name = retrieve_full_name(search_query)
+		full_name = retrieve_full_name(user_input)
 
 	result = get_creature_card(full_name)
 
 	if result == 103:
-		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} **ERROR 103:** Google API daily limit exceeded. Type in the exact name of the object.")
+		await message.channel.send(burgl_message(103))
 
 	# card cannot be found
 	elif result == 104:
-		if '.' in search_query:
-			search_query = search_query.upper()
+		if '.' in user_input:
+			user_input = user_input.upper()
 		else:
-			search_query = search_query.title().replace("'S", "'s")
+			user_input = user_input.title().replace("'S", "'s")
 
-		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} **ERROR 104:** Unable to locate Creature Card for '{search_query}'. Type in the exact name of the creature.")
+		await message.channel.send(burgl_message(104).replace('VAR1', user_input))
 
 	else:
 		await message.channel.send(f'**Creature Name:** {result[0]}')
@@ -95,13 +110,17 @@ async def card_method(message, search_query, flag_presence):
 
 # linking shortcut query method
 async def bind_method(message, user_input, flag_presence):
-
-	# remove any edge commas before splitting by comma
-	user_input = user_input.lower().strip(',').split(',')
+	user_input = user_input.lower().strip(',').split(',')  # remove any edge commas, then split by comma
 
 	if len(user_input) < 2:
-		await message.channel.send(f"{CUSTOM_EMOJIS['BURG.L']} A minimum of two parameters are required.")
-		return
+		return await message.channel.send(burgl_message('insufficient'))
 
 	formatted_string = bind_query_name(user_input[0], user_input[1:])
 	await message.channel.send(formatted_string)
+
+
+# purge cache method
+async def purge_method(message, user_input, flag_presence):
+	purge_cache()
+
+	await message.channel.send(burgl_message('purged'))
