@@ -1,6 +1,5 @@
 from dynamodb_methods import *
 from global_variables import *
-from helper_functions import check_command_flag
 
 
 # binds one or more shortcut phrases to a full name
@@ -23,20 +22,15 @@ def bind_query_name(full_name, shortcuts):
 
 
 # returns corresponding full name if it exists in table, otherwise just returns the original input
-# if command flag to bypass shortcuts is present, then just return the original query
 def retrieve_full_name(search_query):
+	table_name = SHORTCUT_STORAGE
+	attribute_header = get_table_headers(table_name)[1]
 
-	# check for command flag that signals to ignore any shortcut bindings
-	search_actual, search_query = check_command_flag(search_query, 'force_search')
+	full_name = ddb_retrieve_item(table_name, search_query.lower())
 
-	if not search_actual:
-		table_name = SHORTCUT_STORAGE
-		attribute_header = get_table_headers(table_name)[1]
-
-		full_name = ddb_retrieve_item(table_name, search_query.lower())
-
-		if full_name:
-			return full_name[attribute_header]
+	# if entry exists in cache
+	if full_name:
+		search_query = full_name[attribute_header]
 
 	return search_query
 

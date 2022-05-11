@@ -5,23 +5,30 @@ from collections import Counter
 from difflib import SequenceMatcher
 
 
+# check for presence of any command flags in user input
+# returns a tuple containing firstly, a dictionary of booleans indicating presence of each command flag
+# and secondly, the flagless user input
+def check_command_flags(search_query):
+	flag_presence = {}
+	search_query += ' '
+
+	for flag_key, flag in BOT_COMMAND_FLAGS.items():
+		flag_presence[flag_key] = False
+
+		if flag in search_query.lower():
+			flag_presence[flag_key] = True
+
+		# if flag not in query, replacing won't affect the string
+		search_query = search_query.replace(flag, ' ').replace(flag.upper(), ' ')
+
+	# remove any excess whitespace
+	search_query = ' '.join(search_query.split())
+	return search_query, flag_presence
+
+
 # removes bot command from front of string input
-def remove_command_prefix(input_string, command):
+def remove_command(input_string, command):
 	return input_string[len(command):].strip()
-
-
-# check for a specified command flag, and returns True/False, along with modified search query
-def check_command_flag(search_query, flag_key):
-	command_flag = BOT_COMMAND_FLAGS[flag_key]
-	search_query = search_query + ' '
-
-	result = False
-	if command_flag in search_query.lower():
-		result = True
-
-	# if flag not in query, replacing won't affect the string
-	search_query = search_query.replace(command_flag, '').replace(command_flag.upper(), '')
-	return result, search_query.strip()
 
 
 # returns page URL, comprised of sanitised search query appended to the base wiki URL

@@ -31,7 +31,7 @@ BOT_COMMAND_LIST = {'help_method': f'{BOT_COMMAND_PREFIX}help ', 'search_method'
 
 
 # dictionary of command flags
-BOT_COMMAND_FLAGS = {'force_search': '-f ', 'modifier': '-m '}
+BOT_COMMAND_FLAGS = {'force_search': ' -f ', 'modifier': ' -m '}
 
 
 # list of formatted strings to display as help message
