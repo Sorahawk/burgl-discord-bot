@@ -57,23 +57,23 @@ async def on_message(message):
 	flag_presence, user_input = check_flags(user_input)
 
 	# call corresponding method
-	await eval(command_method)(message, user_input, flag_presence)
+	await eval(command_method)(bot, message, user_input, flag_presence)
 
 
 # automatically rotate bot's Discord status every 10 minutes
 @tasks.loop(minutes=10)
 async def rotate_status():
-	chosen_activity, activity_info = choice(list(ACTIVITY_STATUSES.items()))
+	activity, activity_type = choice(list(ACTIVITY_STATUSES.items()))
 
-	if activity_info[0] == 1:
-		activity = discord.Streaming(name=chosen_activity, url=activity_info[1])
+	if isinstance(activity_type, str):
+		activity_status = discord.Streaming(url=activity_type, name=activity)
 	else:
-		activity = discord.Activity(type=activity_info[0], name=chosen_activity)
-	
-	await bot.change_presence(activity=activity)
+		activity_status = discord.Activity(type=activity_type, name=activity)
+
+	await bot.change_presence(activity=activity_status)
 
 
-# automatically purges caches at 6am UTC+8
+# automatically purge caches at 6am UTC+8
 timezone = timezone(timedelta(hours=8))
 @tasks.loop(time=time(hour=6, tzinfo=timezone))
 async def daily_purge_cache():

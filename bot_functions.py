@@ -1,12 +1,13 @@
 from object_search import *
+from bind_functions import *
 from global_variables import *
 from storage_functions import *
 
 from discord import Embed
 from json import dumps, loads
 from card_search import get_creature_card
-from string_processing import burgl_message
 from dynamodb_methods import ddb_insert_item
+from string_processing import burgl_message, capitalise_object_name
 
 
 # all bot methods here have to correspond to an item in BOT_COMMAND_LIST
@@ -14,8 +15,8 @@ from dynamodb_methods import ddb_insert_item
 
 
 # help menu method
-async def help_method(message, user_input, flag_presence):
-	help_menu = Embed(title='Help Menu', description=f"{CUSTOM_EMOJIS['BURG.L']} {BOT_VOICELINES['hello']}", colour=0x6542E1)
+async def help_method(bot, message, user_input, flag_presence):
+	help_menu = Embed(description=f"{CUSTOM_EMOJIS['BURG.L']} **Command List**", colour=0x6542E1)
 
 	for command in BOT_HELP_MESSAGE:
 		help_menu.add_field(name=command[0], value='\n'.join(command[1:]), inline=False)
@@ -24,7 +25,7 @@ async def help_method(message, user_input, flag_presence):
 
 
 # object search method
-async def search_method(message, user_input, flag_presence):
+async def search_method(bot, message, user_input, flag_presence):
 	if user_input == '':
 		return await message.channel.send(burgl_message('empty'))
 
@@ -74,7 +75,7 @@ async def search_method(message, user_input, flag_presence):
 
 	# unable to locate item page URL
 	elif result == 101:
-		user_input = user_input.title().replace("'S", "'s")
+		user_input = capitalise_object_name(user_input)
 		await message.channel.send(burgl_message(101).replace('VAR1', user_input))
 
 	# daily quota for Google API exhausted
@@ -87,7 +88,7 @@ async def search_method(message, user_input, flag_presence):
 
 
 # creature card search method
-async def card_method(message, user_input, flag_presence):
+async def card_method(bot, message, user_input, flag_presence):
 	if user_input == '':
 		return await message.channel.send(burgl_message('empty'))
 
@@ -102,11 +103,7 @@ async def card_method(message, user_input, flag_presence):
 
 	# card cannot be found
 	elif result == 104:
-		if '.' in user_input:
-			user_input = user_input.upper()
-		else:
-			user_input = user_input.title().replace("'S", "'s")
-
+		user_input = capitalise_object_name(user_input)
 		await message.channel.send(burgl_message(104).replace('VAR1', user_input))
 
 	else:
@@ -116,19 +113,23 @@ async def card_method(message, user_input, flag_presence):
 		await message.channel.send(embed=embedded_card)
 
 
-# linking shortcut query method
-async def bind_method(message, user_input, flag_presence):
-	user_input = user_input.lower().strip(',').split(',')  # remove any edge commas, then split by comma
+# shortcut binding method
+async def bind_method(bot, message, user_input, flag_presence):
+	if flag_presence['view_bindings']:
+		await bind_view(bot, message, user_input)
 
-	if len(user_input) < 2:
-		return await message.channel.send(burgl_message('insufficient'))
+	elif flag_presence['delete_binding']:
+		await bind_delete(message, user_input)
 
-	formatted_string = bind_query_name(user_input[0], user_input[1:])
-	await message.channel.send(formatted_string)
+	elif flag_presence['reset_bindings']:
+		await bind_reset(message, user_input)
+
+	else:
+		await bind_default(message, user_input)
 
 
 # purge cache method
-async def purge_method(message, user_input, flag_presence):
+async def purge_method(bot, message, user_input, flag_presence):
 	purge_cache()
 
 	await message.channel.send(burgl_message('purged'))

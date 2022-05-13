@@ -11,23 +11,24 @@ BOT_COMMAND_PREFIX = '.'
 BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'purge']
 
 
-# dictionary of command flags, can only be one letter, following a dash
-BOT_COMMAND_FLAGS = {'force_search': '-f', 'modifier': '-m'}
+# dictionary of command flags
+# each flag can only be a single letter
+BOT_COMMAND_FLAGS = {'delete_binding': 'd', 'force_search': 'f', 'modifier': 'm', 'reset_bindings': 'r', 'view_bindings': 'v'}
 
 
 # list containing lists of strings to populate the embedded help menu
-BOT_HELP_MESSAGE = [['**`.help`**', 'Displays this menu.'],
+BOT_HELP_MESSAGE = [['**.help**', 'Displays this help menu.'],
 
-					['**`.search <object_name>`**', 'Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
-						'*Use flag `-m` to search for status effects or mutations.*', '*Use flag `-f` to force the search to bypass any binded shortcuts.*'],
+					['**.search <object_name>**', 'Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
+						'*+Use flag `-m` to search for status effects or mutations.*', '*+Use flag `-f` to force the search to bypass any binded shortcuts.*'],
 
-					['**`.card <creature_name>`**', "Displays the specified creature's bestiary card.",
-						'*Use flag `-f` to force the search to bypass any binded shortcuts.*'],
+					['**.card <creature_name>**', "Displays the specified creature's bestiary card.",
+						'*+Use flag `-f` to force the search to bypass any binded shortcuts.*'],
 
-					['**`.bind <full_object_name>, <shortcut_1>, <shortcut_2>, ...`**', 'Binds one or more shortcut phrases to a full object name.',
-						'*Each parameter is case-insensitive and must be separated by a comma.*'],
+					['**.bind <full_object_name>, <shortcut_1>, [shortcut_2], ...**', 'Binds one or more shortcut phrases to a full object name.',
+						'*+Each parameter is case-insensitive and must be separated by a comma.*'],
 
-					['**`.purge`**', 'Purges the webpage data and object information caches.']]
+					['**.purge**', 'Purges the webpage data and object information caches.']]
 
 
 # dictionary of typical messages used by the bot, including warning and error messages
@@ -37,16 +38,18 @@ BOT_VOICELINES = {'hello': 'Hello there! Acting science manager B-B-B-BURG.L at 
 				103: '**ERROR 103:** Google API daily limit exceeded. Type in the exact name of the object.', 104: "**ERROR 104:** Unable to locate Creature Card for 'VAR1'. Type in the exact name of the creature."}
 
 
-# dictionary of all the possible Discord statuses for the bot
-# use the activity as the key since the ActivityType might not be unique
-# if ActivityType is streaming, then second item in corresponding tuple is for URL
-# ActivityType 0 is gaming, 1 is streaming, 2 is listening, 3 is watching, 4 is custom, 5 is competing
-ACTIVITY_STATUSES = {'with a pet aphid': (0, ), 'with a pet weevil': (0, ),
-					'data to Dr. Tully': (1, 'https://www.youtube.com/watch?v=aueMEZC8uDE'),
-					'broodmother trials': (1, 'https://www.youtube.com/watch?v=tZlcSr5DfRI'),
-					'the ladybugs cooing': (2, ), 'audio logs': (2, ),
-					'the backyard': (3, ), 'the teens': (3, ), 'the Watcher': (3, ), 'the fungus spread': (3, ),
-					'burger flipping': (5, )}
+# dictionary of the available Discord statuses for the bot
+# if activity (key) is meant to be a 'Streaming' activity, then corresponding value is a string URL
+# otherwise corresponding value is the respective ActivityType
+
+# available ActivityTypes: 0 is gaming (Playing), 1 is streaming (Streaming), 2 is listening (Listening to),
+# 3 is watching (Watching), 4 is custom, 5 is competing (Competing in)
+ACTIVITY_STATUSES = {'with a pet aphid': 0, 'with a pet weevil': 0,
+					'the ladybugs cooing': 2, 'audio logs': 2,
+					'the backyard': 3, 'the teens': 3, 'the Watcher': 3, 'the fungus spread': 3,
+					'burger flipping': 5,
+					'data to Dr. Tully': 'https://www.youtube.com/watch?v=aueMEZC8uDE',
+					'broodmother trials': 'https://www.youtube.com/watch?v=tZlcSr5DfRI'}
 
 
 # dictionary of custom server emojis
@@ -64,6 +67,10 @@ BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
 
 # dictionary of smoothie bases and their base ingredients
 SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
+
+
+# list of words which have atypical capitalisation, excluding robot and device names like BURG.L or TAYZ.T
+SPECIAL_NAMES = ['AARTZ', 'BLT', 'EverChar', 'of', 'on', 'the']
 
 
 # sets the minimum threshold of similarity between search query and predicted result

@@ -16,7 +16,7 @@ def check_command(user_input):
 		command = command_name + ' '
 
 		if lowered_input.startswith(command):
-			# have to slice by index instead of using replace because have to be case insensitive
+			# have to slice by index instead of using replace because have to be case-insensitive
 			user_input = user_input[len(command):]
 
 			return f'{command_name}_method', user_input
@@ -27,11 +27,13 @@ def check_command(user_input):
 # and secondly, the flagless user input
 def check_flags(user_input):
 	flag_presence = {}
-	user_input += ' '
+
+	# insert surrounding whitespace so leading and trailing flags can be detected
+	user_input = f' {user_input} '
 
 	for flag_key, flag in BOT_COMMAND_FLAGS.items():
 		flag_presence[flag_key] = False
-		flag = f' {flag} '  # flag must be standalone with surrounding whitespace
+		flag = f' -{flag} '  # flag must be standalone with surrounding whitespace
 
 		if flag in user_input.lower():
 			flag_presence[flag_key] = True
@@ -41,12 +43,13 @@ def check_flags(user_input):
 
 	# remove any excess whitespace, have to be done here instead of when checking command because clean up after replacing the flags
 	user_input = ' '.join(user_input.split())
+
 	return flag_presence, user_input
 
 
 # returns string with BURG.L emoji inserted to front of specified voiceline
 def burgl_message(key):
-	return f"{CUSTOM_EMOJIS['BURG.L']} {BOT_VOICELINES[key]}"
+	return f"{CUSTOM_EMOJIS['BURG.L']} *{BOT_VOICELINES[key]}*"
 
 
 # insert pet icon emoji behind the name of corresponding tameable creature
@@ -62,11 +65,24 @@ def damage_elemental_emoji(input_string):
 	return input_string
 
 
+# returns properly capitalised object name, accounting for names with periods, e.g. BURG.L, MIX.R
+def capitalise_object_name(object_name):
+	if '.' in object_name and '. ' not in object_name + ' ':  # make sure not shortform like Asst.
+		object_name = object_name.upper()
+	else:
+		object_name = object_name.title().replace("'S", "'s")
+
+	for phrase in SPECIAL_NAMES:
+		titled_phrase = f' {phrase.title()} '  # make sure the phrase is standalone and not part of a word
+
+		if titled_phrase in f' {object_name} ':
+			object_name = object_name.replace(phrase.title(), phrase)
+
+	return object_name
+
+
 # returns page URL, comprised of sanitised search query appended to the base wiki URL
 def get_appended_url(search_query):
-	if '.' in search_query:
-		# raise all letters for robot and device names, e.g. BURG.L, TAYZ.T, MIX.R
-		return f'{BASE_WIKI_URL}{search_query.upper()}'
 
 	# symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
 	illegal_symbols = '[\][}{><|%+]+'
@@ -80,9 +96,7 @@ def get_appended_url(search_query):
 	if search_query.strip()[-6:].lower() == 'arrows':
 		search_query = search_query[:-1]
 
-	# capitalise the first letter of every word as the webpage URL is case sensitive
-	# at one point, used string.capwords() because title() capitalises the letter after an apostrophe, but capwords does not raise anything behind a bracket either
-	search_query = search_query.title().replace("'S", "'s")
+	search_query = capitalise_object_name(search_query)
 	return f'{BASE_WIKI_URL}{search_query}'
 
 
