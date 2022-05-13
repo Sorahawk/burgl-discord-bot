@@ -2,6 +2,7 @@ from object_search import *
 from global_variables import *
 from storage_functions import *
 
+from discord import Embed
 from json import dumps, loads
 from card_search import get_creature_card
 from string_processing import burgl_message
@@ -12,9 +13,14 @@ from dynamodb_methods import ddb_insert_item
 # and must share the same name, followed by '_method'
 
 
-# help message method
+# help menu method
 async def help_method(message, user_input, flag_presence):
-	await message.channel.send('\n'.join(BOT_HELP_MESSAGE))
+	help_menu = Embed(title='Help Menu', description=f"{CUSTOM_EMOJIS['BURG.L']} {BOT_VOICELINES['hello']}", colour=0x6542E1)
+
+	for command in BOT_HELP_MESSAGE:
+		help_menu.add_field(name=command[0], value='\n'.join(command[1:]), inline=False)
+
+	await message.channel.send(embed=help_menu)
 
 
 # object search method
@@ -104,8 +110,10 @@ async def card_method(message, user_input, flag_presence):
 		await message.channel.send(burgl_message(104).replace('VAR1', user_input))
 
 	else:
-		await message.channel.send(f'**Creature Name:** {result[0]}')
-		await message.channel.send(result[1])
+		embedded_card = Embed(title=result[0], description='Creature Card', colour=0x6542E1)
+		embedded_card.set_image(url=result[1])
+
+		await message.channel.send(embed=embedded_card)
 
 
 # linking shortcut query method

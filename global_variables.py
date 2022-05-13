@@ -15,19 +15,19 @@ BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'purge']
 BOT_COMMAND_FLAGS = {'force_search': '-f', 'modifier': '-m'}
 
 
-# list of formatted strings to display as help message
-BOT_HELP_MESSAGE = ['**`.help`**', 'Displays this list.\n',
+# list containing lists of strings to populate the embedded help menu
+BOT_HELP_MESSAGE = [['**`.help`**', 'Displays this menu.'],
 
-					'**`.search <object_name>`**', 'Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
-					'*Use flag `-m` to search for status effects or mutations.*', '*Use flag `-f` to force the search to bypass any binded shortcuts.*\n',
+					['**`.search <object_name>`**', 'Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
+						'*Use flag `-m` to search for status effects or mutations.*', '*Use flag `-f` to force the search to bypass any binded shortcuts.*'],
 
-					'**`.card <creature_name>`**', "Displays the specified creature's bestiary card.",
-					'*Use flag `-f` to force the search to bypass any binded shortcuts.*\n',
+					['**`.card <creature_name>`**', "Displays the specified creature's bestiary card.",
+						'*Use flag `-f` to force the search to bypass any binded shortcuts.*'],
 
-					'**`.bind <full_object_name>, <shortcut_1>, <shortcut_2>, ...`**', 'Binds one or more shortcut phrases to a full object name.',
-					'*Each parameter is case-insensitive and must be separated by a comma.*\n',
+					['**`.bind <full_object_name>, <shortcut_1>, <shortcut_2>, ...`**', 'Binds one or more shortcut phrases to a full object name.',
+						'*Each parameter is case-insensitive and must be separated by a comma.*'],
 
-					'**`.purge`**', 'Purges the webpage data and object information caches.\n']
+					['**`.purge`**', 'Purges the webpage data and object information caches.']]
 
 
 # dictionary of typical messages used by the bot, including warning and error messages
