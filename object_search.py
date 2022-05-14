@@ -1,6 +1,7 @@
 from object_extraction import *
 from string_processing import *
 
+from discord import Embed
 from url_processing import locate_object_url
 
 
@@ -72,107 +73,102 @@ def get_object_info(search_query, is_modifier):
 	return object_info
 
 
-# returns a formatted string, displaying the extracted object information in a presentable format
+# returns a discord.Embed message, displaying the extracted object information in a presentable format
 def format_object_info(object_info):
-	formatted_string = f"**Name:** {object_info['name']}\n"
+	object_name = object_info['name']
+
+	# append pet icon if the object is a tameable creature
+	if 'tamewith' in object_info:
+		object_name = pet_icon_emoji(object_name)
+
+	# append elemental icon if the object is an elemental weapon
+	elif 'augmenttype' in object_info:
+		object_name = elemental_weapon_emoji(object_name, object_info['augmenttype'])
+
+	embedded_info = Embed(title=object_name, colour=0x6542E1)
+	embedded_info.set_image(url=object_info['picture_url'])
+
+
+	# subfunction to add field to embed message
+	# if no special_name given, then the displayed name will just be capitalised attribute name
+	# if special_value is provided, it will override the dictionary value
+	def insert_embed_field(attribute, inline, special_name=None, special_value=None):
+
+		# check if attribute exists for that object
+		if attribute in object_info:
+
+			if special_name:
+				attribute_name = special_name
+			else:
+				attribute_name = attribute.title()
+
+			if special_value:
+				value = special_value
+			else:
+				value = object_info[attribute]
+
+			embedded_info.add_field(name=attribute_name, value=value, inline=inline)
+
 
 	if 'description' in object_info:
-		formatted_string += f"**Description:** {object_info['description']}\n"
-	if 'category' in object_info:
-		formatted_string += f"**Category:** {object_info['category']}\n\n"
+		embedded_info.add_field(name='Description', value=f"*{object_info['description']}*", inline=False)
 
-	# status effects / mutations
-	if 'source' in object_info:
-		formatted_string += f"\n**Source:**\n{object_info['source']}\n"
+	# modifiers
+	insert_embed_field('source', False, special_name='Source(s)')
+
+	# common flow
+	for attribute in ['category', 'aggression', 'tier']:
+		insert_embed_field(attribute, False)
 
 	# resource nodes
-	if 'brokenwith' in object_info:
-		formatted_string += f"**Harvest With:** {damage_elemental_emoji(object_info['brokenwith'])}\n"
-
-	# characters
-	if 'species' in object_info:
-		formatted_string += f"**Species:** {object_info['species']}\n"
-	if 'gender' in object_info:
-		formatted_string += f"**Gender:** {object_info['gender']}\n"
+	insert_embed_field('brokenwith', False, special_name='Harvest with')
 
 	# creatures
-	if 'aggression' in object_info:
-		formatted_string += f"**Aggression:** {object_info['aggression']}\n\n"
-
-	if 'tier' in object_info:
-		# some creatures don't have tiers, e.g. harmless
-		formatted_string = remove_extra_newline(formatted_string) + f"**Tier:** {object_info['tier']}\n\n"
-
-	if 'tamewith' in object_info:
-		formatted_string = pet_icon_emoji(formatted_string, object_info['name']) + f"**Tamed With:** {object_info['tamewith']}\n"
-
-	if 'effectresistance' in object_info:
-		# effect resistance seems to have been removed from the creature infoboxes after arrival of bestiary
-		formatted_string += f"**Effect Resistance:** {object_info['effectresistance']}\n"
+	insert_embed_field('tamewith', False, special_name='Tame with')
+	insert_embed_field('effectresistance', False, special_name='Effect Resistance')
 
 	if 'resistance' in object_info:
-		formatted_string += f"**Dmg. Resistance:** {damage_elemental_emoji(object_info['resistance'])}\n"
+		embedded_info.add_field(name='Dmg. Resistance', value=damage_elemental_emoji(object_info['resistance']), inline=False)
 	if 'eresistance' in object_info:
-		formatted_string += f"**Elem. Resistance:** {damage_elemental_emoji(object_info['eresistance'])}\n"
+		embedded_info.add_field(name='Elem. Resistance', value=damage_elemental_emoji(object_info['eresistance']), inline=False)
 	if 'weakness' in object_info:
-		formatted_string += f"**Dmg.  Weakness:** __{damage_elemental_emoji(object_info['weakness'])}__\n".replace(', ', '__, __')
+		embedded_info.add_field(name='Dmg. Weakness', value=f"__{damage_elemental_emoji(object_info['weakness'])}__".replace(', ', '__, __'), inline=False)
 	if 'eweakness' in object_info:
-		formatted_string += f"**Elem.  Weakness:** __{damage_elemental_emoji(object_info['eweakness'])}__\n".replace(', ', '__, __')
+		embedded_info.add_field(name='Elem. Weakness', value=f"__{damage_elemental_emoji(object_info['eweakness'])}__".replace(', ', '__, __'), inline=False)
 	if 'weakpoint' in object_info:
-		formatted_string += f"**Weak Point:** __{object_info['weakpoint']}__\n"
+		embedded_info.add_field(name='Weak Point', value=f"__{object_info['weakpoint']}__", inline=False)
 
-	if 'loot' in object_info:
-		# if no optional fields, remove extra newline added from above
-		formatted_string = remove_extra_newline(formatted_string) + f"\n**Loot:**\n{object_info['loot']}"
+	# items
+	if 'tooltype' in object_info:
+		embedded_info.add_field(name='Dmg. Type', value=damage_elemental_emoji(object_info['tooltype']), inline=False)
 
-	# building structures
-	if 'sturdiness' in object_info:
-		formatted_string += f"**Sturdiness:** {object_info['sturdiness']}\n"
-	if 'weight' in object_info:
-		formatted_string += f"**Weight:** {object_info['weight']}\n"
+	insert_embed_field('class', False, special_name='Armor Class')
 
-	# consumables
 	if 'food' in object_info:
 		# account for special cases of food with Fresh versions
-		formatted_string += f"**Food:** {object_info['food'].replace(')+', '); +')}\n"
-	if 'water' in object_info:
-		formatted_string += f"**Water:** {object_info['water']}\n"
-	if 'health' in object_info:
-		formatted_string += f"**Health:** {object_info['health']}\n"
+		embedded_info.add_field(name='Food', value=object_info['food'].replace(')+', '); +'), inline=False)
 
-	# armor
-	if 'class' in object_info:
-		formatted_string += f"**Armor Class:** {object_info['class']}\n"
-	if 'defense' in object_info:
-		formatted_string += f"**Defense:** {object_info['defense']}\n"
-
-	# tools
-	if 'tooltype' in object_info:
-		formatted_string += f"**Damage Type:** {damage_elemental_emoji(object_info['tooltype'])}\n"
-	if 'augmenttype' in object_info:
-		formatted_string += f"**Elemental Type:** {damage_elemental_emoji(object_info['augmenttype'])}\n"
-	if 'damage' in object_info:
-		formatted_string += f"**Damage:** {object_info['damage']}\n"
-	if 'stun' in object_info:
-		formatted_string += f"**Stun:** {object_info['stun']}\n"
-	if 'speed' in object_info:
-		formatted_string += f"**Speed:** {object_info['speed']}\n"
+	# common flow
+	for attribute in ['loot', 'damage', 'stun', 'speed', 'defense', 'water', 'health', 'sturdiness', 'weight', 'species', 'gender']:
+		insert_embed_field(attribute, False)
 
 	if 'effects' in object_info:
-		formatted_string += f"**Effects:** {', '.join(object_info['effects'])}\n"
-	if 'upgradeeffect' in object_info:
-		formatted_string += f"**Sleek Upgrade Effect:** {object_info['upgradeeffect']}\n"
+		embedded_info.add_field(name='Effects', value=', '.join(object_info['effects']), inline=False)
+
+	insert_embed_field('upgradeeffect', False, special_name='Sleek Upgrade Effect')
 
 	if 'recipe' in object_info:
-		formatted_string = remove_extra_newline(formatted_string) + f"\n**Recipe:** {object_info['recipe_name']}\n"
+		recipe_name = 'Recipe'
 
-		for item in sorted(object_info['recipe'].items()):
-			formatted_string += f"{item[1]} {item[0]}\n"
+		# check if recipe crafts multiple items
+		if object_info['recipe_name']:
+			recipe_name += f": {object_info['recipe_name']}"
+
+		recipe_list = generate_recipe_string(object_info['recipe'])
+		embedded_info.add_field(name=recipe_name, value=recipe_list, inline=False)
 
 	if 'repair_cost' in object_info:
-		formatted_string = remove_extra_newline(formatted_string) + f"\n**Repair Cost:**\n"
+		repair_list = generate_recipe_string(object_info['repair_cost'])
+		embedded_info.add_field(name='Repair Cost', value=repair_list, inline=False)
 
-		for item in sorted(object_info['repair_cost'].items()):
-			formatted_string += f"{item[1]} {item[0]}\n"
-
-	return formatted_string
+	return embedded_info

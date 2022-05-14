@@ -9,7 +9,7 @@ def bind_shortcuts(full_name, shortcuts):
 	added_items = []
 	display_name = capitalise_object_name(full_name)
 
-	formatted_string = f"Case-insensitive shortcuts added for **'{display_name}'**:\n"
+	formatted_string = f"Case-insensitive shortcuts added for **{display_name}**:\n"
 
 	for short_name in shortcuts:
 		short_name = short_name.strip()  # remove preceding whitespace before each word, e.g. 'a, b, c'

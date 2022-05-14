@@ -92,10 +92,10 @@ def get_infobox_info(page_content):
 			section = section.xpath('div')[0]
 			content = section.text_content().strip()
 
-			images = section.xpath('a/img')
+			images = section.find_class('image')
 
 			for image in images:
-				image_name = image.get('data-image-name').split('.')[0].lower()
+				image_name = image.getchildren()[0].get('data-image-name').split('.')[0].lower()
 
 				if 'tier' in image_name:
 					content += f" (Tier {image_name.replace('tier', '')})"

@@ -83,8 +83,7 @@ async def search_method(bot, message, user_input, flag_presence):
 		await message.channel.send(burgl_message(103))
 
 	else:
-		await message.channel.send(result['picture_url'])
-		await message.channel.send(format_object_info(result))
+		await message.channel.send(embed=format_object_info(result))
 
 
 # creature card search method

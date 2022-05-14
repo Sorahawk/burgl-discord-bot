@@ -72,7 +72,7 @@ SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum
 
 
 # list of words which have atypical capitalisation, excluding robot and device names like BURG.L or TAYZ.T
-SPECIAL_NAMES = ['AARTZ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the']
+SPECIAL_NAMES = ['AARTZ', 'BBQ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the']
 
 
 # sets the minimum threshold of similarity between search query and predicted result

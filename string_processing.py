@@ -53,8 +53,19 @@ def burgl_message(key):
 
 
 # insert pet icon emoji behind the name of corresponding tameable creature
-def pet_icon_emoji(input_string, creature_name):
-	return input_string.replace(creature_name, f'{creature_name} {CUSTOM_EMOJIS[creature_name]}')
+def pet_icon_emoji(creature_name):
+	if creature_name in CUSTOM_EMOJIS:
+		return f'{creature_name} {CUSTOM_EMOJIS[creature_name]}'
+	else:
+		return creature_name
+
+
+# insert elemental icon emoji behind the name of elemental weapons
+def elemental_weapon_emoji(weapon_name, elemental_type):
+	if elemental_type in CUSTOM_EMOJIS:
+		return f'{weapon_name} {CUSTOM_EMOJIS[elemental_type]}'
+	else:
+		return weapon_name
 
 
 # insert corresponding custom emoji for damage and elemental types
@@ -126,14 +137,6 @@ def detect_smoothie_type(search_query):
 	return search_query, smoothie_type
 
 
-# removes one newline from the end of the string if there are two
-# returns processed string
-def remove_extra_newline(input_string):
-	if input_string[-2:] == '\n\n':
-		input_string = input_string[:-1]
-	return input_string
-
-
 # processes the many variations of (e)weakness and (e)resistance labels with a single function
 # returns the specific header (out of 4 possibilities) and the processed string
 def weakness_resistance_processing(header, content):
@@ -147,3 +150,13 @@ def weakness_resistance_processing(header, content):
 		keyword = f'e{keyword}'
 
 	return keyword, content.replace('-or-', ', ')
+
+
+# returns a string representation of a recipe or repair cost list
+def generate_recipe_string(recipe_list):
+	recipe_string = ''
+
+	for item in sorted(recipe_list.items()):
+		recipe_string += f'{item[1]} {item[0]}\n'
+
+	return recipe_string
