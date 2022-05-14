@@ -1,2 +1,6 @@
-secret_variables.py
 __pycache__/
+
+cloud-hosting/ec2.pem
+cloud-hosting/ip.txt
+
+secret_variables.py

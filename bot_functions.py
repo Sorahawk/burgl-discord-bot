@@ -107,8 +107,9 @@ async def card_method(bot, message, user_input, flag_presence):
 		await message.channel.send(burgl_message(104).replace('VAR1', user_input))
 
 	else:
-		embedded_card = Embed(title=result[0], description='Creature Card', colour=0x6542E1)
+		embedded_card = Embed(title=f'{result[0]}', colour=0x6542E1)
 		embedded_card.set_image(url=result[1])
+		embedded_card.set_footer(text='Creature Card')
 
 		await message.channel.send(embed=embedded_card)
 
