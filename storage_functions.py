@@ -5,21 +5,21 @@ from string_processing import capitalise_object_name
 
 
 # binds one or more shortcut phrases to a full name
-def bind_query_name(full_name, shortcuts):
+def bind_shortcuts(full_name, shortcuts):
 	added_items = []
 	display_name = capitalise_object_name(full_name)
 
 	formatted_string = f"Case-insensitive shortcuts added for **'{display_name}'**:\n"
 
-	for shortcut in shortcuts:
-		shortcut = shortcut.strip()  # remove preceding whitespace before each word, e.g. 'a, b, c'
-		result = ddb_insert_item(SHORTCUT_STORAGE, shortcut, full_name)
-
-		# remove entry from object info cache with shortcut as the key, if any
-		ddb_remove_item(OBJECT_INFO_CACHE, shortcut)
+	for short_name in shortcuts:
+		short_name = short_name.strip()  # remove preceding whitespace before each word, e.g. 'a, b, c'
+		result = ddb_insert_item(SHORTCUT_STORAGE, short_name, full_name)
 
 		if result:
-			formatted_string += f"- {shortcut}\n"
+			formatted_string += f"- {short_name}\n"
+
+			# remove entry from object info cache with short_name as the key, if any
+			ddb_remove_item(OBJECT_INFO_CACHE, short_name)
 
 	return formatted_string
 
@@ -58,6 +58,33 @@ def retrieve_all_shortcuts():
 			shortcuts[full_name].sort()
 
 	return sorted(shortcuts.items())
+
+
+# delete all shortcuts from one or more given full names
+def delete_shortcuts(full_names):
+	string_header = 'All shortcuts removed for the following:\n'
+	formatted_string = ''
+
+	shortcuts = dict(retrieve_all_shortcuts())
+
+	for full_name in full_names:
+		full_name = capitalise_object_name(full_name)
+
+		# check if given full name exists in storage
+		if full_name in shortcuts:
+
+			# for each binded shortcut, remove it from storage 
+			for short_name in shortcuts[full_name]:
+				result = ddb_remove_item(SHORTCUT_STORAGE, short_name)
+
+				if not result:
+					# if deletion of any shortcut fails, break out of the loop
+					break
+
+			if result:
+				formatted_string += f'- **{capitalise_object_name(full_name)}**\n'
+
+	return string_header + formatted_string if formatted_string else None
 
 
 # returns corresponding attribute value if it exists in table, otherwise None by default

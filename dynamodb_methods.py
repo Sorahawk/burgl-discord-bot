@@ -54,12 +54,17 @@ def ddb_retrieve_all(table_name):
 
 
 # deletes specified primary key from specified table
-# does not throw any exception even if the key does not exist
+# does not throw any exception even if the key does not exist, but will throw if key input is empty
 def ddb_remove_item(table_name, key):
 	table = ddb_create_session().Table(table_name)
 	key_header = get_table_headers(table_name)[0]
 
-	table.delete_item(Key={key_header: key})
+	try:
+		table.delete_item(Key={key_header: key})
+		return True
+
+	except:  # can fail if key input is empty
+		return False
 
 
 # deletes all entries from specified table

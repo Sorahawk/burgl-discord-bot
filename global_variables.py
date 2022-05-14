@@ -13,7 +13,7 @@ BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'purge']
 
 # dictionary of command flags
 # each flag can only be a single letter
-BOT_COMMAND_FLAGS = {'delete_binding': 'd', 'force_search': 'f', 'modifier': 'm', 'reset_bindings': 'r', 'view_bindings': 'v'}
+BOT_COMMAND_FLAGS = {'delete_binding': 'd', 'force_search': 'f', 'modifier': 'm', 'view_bindings': 'v'}
 
 
 # list containing lists of strings to populate the embedded help menu
@@ -25,7 +25,8 @@ BOT_HELP_MESSAGE = [['**.help**', 'Displays this help menu.'],
 					['**.card <creature_name>**', "Displays the specified creature's bestiary card.",
 						'*+Use flag `-f` to force the search to bypass any binded shortcuts.*'],
 
-					['**.bind <full_object_name>, <shortcut_1>, [shortcut_2], ...**', 'Binds one or more shortcut phrases to a full object name.',
+					['**.bind <object_name>, <shortcut_1>, [shortcut_2], ...**', 'Binds an object name to one or more shortcut phrases.',
+						'*+Use flag `-v` to view all binded shortcuts (no arguments required).*', '*+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).*',
 						'*+Each parameter is case-insensitive and must be separated by a comma.*'],
 
 					['**.purge**', 'Purges the webpage data and object information caches.']]
@@ -34,6 +35,7 @@ BOT_HELP_MESSAGE = [['**.help**', 'Displays this help menu.'],
 # dictionary of typical messages used by the bot, including warning and error messages
 BOT_VOICELINES = {'hello': 'Hello there! Acting science manager B-B-B-BURG.L at your service!', 'purged': 'Data caches have been purged.',
 				'empty': 'Please provide input parameters.', 'insufficient': 'A minimum of two comma-separated parameters are required.',
+				'invalid_bind': 'Specified bindings not found.',
 				101: "**ERROR 101:** Unable to locate 'VAR1'. Try typing in the object's full name.", 102: "**ERROR 102:** Wiki page for 'VAR1' has an unsupported layout.",
 				103: '**ERROR 103:** Google API daily limit exceeded. Type in the exact name of the object.', 104: "**ERROR 104:** Unable to locate Creature Card for 'VAR1'. Type in the exact name of the creature."}
 
@@ -70,7 +72,7 @@ SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum
 
 
 # list of words which have atypical capitalisation, excluding robot and device names like BURG.L or TAYZ.T
-SPECIAL_NAMES = ['AARTZ', 'BLT', 'EverChar', 'of', 'on', 'the']
+SPECIAL_NAMES = ['AARTZ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the']
 
 
 # sets the minimum threshold of similarity between search query and predicted result
@@ -89,3 +91,7 @@ PAGE_HTML_CACHE = 'WikiURL-PageHTML'
 DDB_TABLE_HEADERS = {SHORTCUT_STORAGE: ('short_name', 'full_name'),
 					OBJECT_INFO_CACHE: ('search_query', 'object_info'),
 					PAGE_HTML_CACHE: ('wiki_url', 'page_html')}
+
+
+# max number of fields per embed page when viewing binded shortcuts
+MAX_EMBED_FIELDS = 15

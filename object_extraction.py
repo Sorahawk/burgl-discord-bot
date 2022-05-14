@@ -18,8 +18,8 @@ def get_modifier_info(search_query):
 		for modifier in modifier_list:
 			columns = modifier.getchildren()
 
-			# remove superscript footnote text from some mutation names
-			modifier_name = columns[0].text_content().strip().split('[')[0]
+			# remove superscript footnote text present on some mutation names
+			modifier_name = columns[0].text_content().split('[')[0].strip()
 
 			if modifier_name == 'Effect' or modifier_name == 'Mutation':
 				continue
@@ -32,8 +32,9 @@ def get_modifier_info(search_query):
 				modifier_info['picture_url'] = list(columns[0].iterlinks())[0][2]
 
 				# ignore the second column under mutations, shift to the right by one
-				modifier_info['description'] = columns[1 + index].text_content().strip().replace('\n\n', '\n')
-				modifier_info['source'] = columns[2 + index].text_content().strip()
+				# also remove superscript footnote text present on some mutation descriptions and sources
+				modifier_info['description'] = columns[1 + index].text_content().split('[')[0].replace('\n\n', '\n').strip()
+				modifier_info['source'] = columns[2 + index].text_content().split('[')[0].strip()
 
 				# replace source text for purchasable mutations
 				if 'BURG.L' in modifier_info['source']:

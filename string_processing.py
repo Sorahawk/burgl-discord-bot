@@ -78,7 +78,7 @@ def capitalise_object_name(object_name):
 		if titled_phrase in f' {object_name} ':
 			object_name = object_name.replace(phrase.title(), phrase)
 
-	return object_name
+	return object_name.strip()
 
 
 # returns page URL, comprised of sanitised search query appended to the base wiki URL

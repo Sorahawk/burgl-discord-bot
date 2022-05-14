@@ -119,10 +119,10 @@ async def bind_method(bot, message, user_input, flag_presence):
 		await bind_view(bot, message, user_input)
 
 	elif flag_presence['delete_binding']:
-		await bind_delete(message, user_input)
+		if user_input == '':
+			return await message.channel.send(burgl_message('empty'))
 
-	elif flag_presence['reset_bindings']:
-		await bind_reset(message, user_input)
+		await bind_delete(message, user_input)
 
 	else:
 		await bind_default(message, user_input)
