@@ -3,4 +3,4 @@ __pycache__/
 cloud-hosting/ec2.pem
 cloud-hosting/ip.txt
 
-secret_variables.py
+python-scripts/secret_variables.py

@@ -1,6 +1,7 @@
 from dynamodb_methods import *
 from global_variables import *
 
+from secret_variables import DEBUG_MODE
 from string_processing import capitalise_object_name
 
 
@@ -31,7 +32,7 @@ def retrieve_full_name(search_query):
 
 	full_name = ddb_retrieve_item(table_name, search_query.lower())
 
-	# if entry exists in cache
+	# if entry exists in table
 	if full_name:
 		search_query = full_name[attribute_header]
 
@@ -89,11 +90,12 @@ def delete_shortcuts(full_names):
 
 # returns corresponding attribute value if it exists in table, otherwise None by default
 def retrieve_from_cache(table_name, key):
-	attribute_header = get_table_headers(table_name)[1]
-	result = ddb_retrieve_item(table_name, key)
+	if not DEBUG_MODE:
+		attribute_header = get_table_headers(table_name)[1]
+		result = ddb_retrieve_item(table_name, key)
 
-	if result:
-		return result[attribute_header]
+		if result:
+			return result[attribute_header]
 
 
 # purge the cache tables (query-object info and url-HTML)

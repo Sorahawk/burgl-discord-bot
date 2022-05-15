@@ -57,7 +57,6 @@ The overall roadmap and development tracker for this project can be found on the
   - Displays the help menu.
 - `.search <object_name>`
   - Displays any available details of the object, including its picture and description. Works with any Grounded wiki page with an infobox, e.g. creatures, equipment, resources, building components, resource nodes, landmarks.
-  - _Use flag `-m` to search for status effects and mutations._
   - _Use flag `-f` to force the search to bypass any binded shortcuts._
 - `.card <creature_name>`
   - Displays the specified creature's bestiary card.

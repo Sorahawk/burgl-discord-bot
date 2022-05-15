@@ -5,8 +5,8 @@ from global_variables import *
 from lxml import html
 from dynamodb_methods import ddb_insert_item
 from storage_functions import retrieve_from_cache
-from secret_variables import JSON_API_KEY, SEARCH_ENGINE_ID
 from string_processing import get_appended_url, string_similarity
+from secret_variables import DEBUG_MODE, JSON_API_KEY, SEARCH_ENGINE_ID
 
 
 # returns content of wiki page as an lxml.html.HtmlElement object
@@ -26,7 +26,8 @@ def get_page_data(wiki_url, get_title=False):
 		html_string = html_string.split('<div class="page-footer')[0]  # slice off footer for pages which don't have the navbox used above
 
 		# cache shortened page HTML
-		ddb_insert_item(PAGE_HTML_CACHE, wiki_url, html_string)
+		if not DEBUG_MODE:
+			ddb_insert_item(PAGE_HTML_CACHE, wiki_url, html_string)
 
 	xml_data = html.fromstring(html_string)
 
@@ -50,7 +51,7 @@ def check_existing_page(wiki_url):
 		return page_content, page_title
 
 
-# returns wiki page content in a tuple (content, title)
+# returns wiki page content in a tuple (content, title, url)
 # if URL cannot be located, returns None by default
 # if Google API daily limit is exceeded, it returns False
 def locate_object_url(search_query):
@@ -61,7 +62,7 @@ def locate_object_url(search_query):
 
 	# if result != False, wiki page exists, so return the extracted page content and title
 	if result:
-		return result
+		return result[0], result[1], url
 
 	# if URL not correct, then use Google search to try and find the correct page
 	# created a Google Programmable Search Engine that only searches within the Grounded wiki
@@ -84,7 +85,12 @@ def locate_object_url(search_query):
 
 		# return url if strings are similar and item page exists, otherwise return False
 		if string_similarity(search_query, title) > SIMILAR_THRESHOLD_API:
-			return check_existing_page(top_url)
+			result = check_existing_page(top_url)
+
+			if result:
+				return result[0], result[1], top_url
+			else:
+				return result
 
 	# check if daily quota is exceeded
 	elif results.get('error') is not None:

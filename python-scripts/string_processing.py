@@ -41,6 +41,10 @@ def check_flags(user_input):
 		# if flag not in query, replacing won't affect the string
 		user_input = user_input.replace(flag, ' ').replace(flag.upper(), ' ')
 
+	# remove any other 'flags', a dash followed by a single letter, even if they are not valid
+	other_flags = '-[a-zA-Z] '
+	user_input = re.sub(other_flags, ' ', user_input + ' ')
+
 	# remove any excess whitespace, have to be done here instead of when checking command because clean up after replacing the flags
 	user_input = ' '.join(user_input.split())
 
@@ -61,7 +65,7 @@ def pet_icon_emoji(creature_name):
 
 
 # insert elemental icon emoji behind the name of elemental weapons
-def elemental_weapon_emoji(weapon_name, elemental_type):
+def elem_weapon_emoji(weapon_name, elemental_type):
 	if elemental_type in CUSTOM_EMOJIS:
 		return f'{weapon_name} {CUSTOM_EMOJIS[elemental_type]}'
 	else:
@@ -69,11 +73,16 @@ def elemental_weapon_emoji(weapon_name, elemental_type):
 
 
 # insert corresponding custom emoji for damage and elemental types
-def damage_elemental_emoji(input_string):
+def dmg_elem_emoji(input_string):
 	for keyword in CUSTOM_EMOJIS:
 		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]}{keyword}')
 
 	return input_string
+
+
+# returns string surrounded by double underscores, which is the syntax for underlined text on Discord
+def underline_text(input_string):
+	return f"__{input_string}__" 
 
 
 # returns properly capitalised object name, accounting for names with periods, e.g. BURG.L, MIX.R
@@ -108,7 +117,7 @@ def get_appended_url(search_query):
 		search_query = search_query[:-1]
 
 	search_query = capitalise_object_name(search_query)
-	return f'{BASE_WIKI_URL}{search_query}'
+	return f'{BASE_WIKI_URL}{search_query}'.replace(' ', '_')
 
 
 # returns ratio of similarity between two input strings
@@ -139,7 +148,7 @@ def detect_smoothie_type(search_query):
 
 # processes the many variations of (e)weakness and (e)resistance labels with a single function
 # returns the specific header (out of 4 possibilities) and the processed string
-def weakness_resistance_processing(header, content):
+def res_weakness_processing(header, content):
 	if 'weakness' in header:
 		keyword = 'weakness'
 	else:
@@ -149,7 +158,7 @@ def weakness_resistance_processing(header, content):
 	if header[0] == 'e':
 		keyword = f'e{keyword}'
 
-	return keyword, content.replace('-or-', ', ')
+	return keyword, content.replace('-or-', '\n')
 
 
 # returns a string representation of a recipe or repair cost list

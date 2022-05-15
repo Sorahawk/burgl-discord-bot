@@ -7,8 +7,8 @@ from random import choice
 from discord.ext import tasks
 from dynamodb_methods import ddb_remove_all
 from datetime import time, timedelta, timezone
-from secret_variables import DISCORD_BOT_TOKEN
 from string_processing import check_command, check_flags
+from secret_variables import DEBUG_MODE, DISCORD_BOT_TOKEN
 
 
 # declare bot intents
@@ -26,11 +26,13 @@ async def on_ready():
 	channel = bot.get_channel(MAIN_CHANNEL_ID)
 	await channel.send(burgl_message('hello'))
 
-	rotate_status.start()
+	if DEBUG_MODE:
+		await channel.send(burgl_message('debug'))
 
 	# if script becomes inactive for any reason, on_ready will be called again once active
 	# but tasks with specific timings can't be started more than once
 	try:
+		rotate_status.start()
 		daily_purge_cache.start()
 	except:
 		pass

@@ -5,6 +5,7 @@ from storage_functions import *
 
 from discord import Embed
 from json import dumps, loads
+from secret_variables import DEBUG_MODE
 from card_search import get_creature_card
 from dynamodb_methods import ddb_insert_item
 from string_processing import burgl_message, capitalise_object_name
@@ -31,7 +32,7 @@ async def search_method(bot, message, user_input, flag_presence):
 
 	result = None
 
-	# if user forces search of actual query, then bypass both shortcut as well as cache
+	# if user forces search of actual query, then bypass both shortcut table as well as cache
 	if not flag_presence['force_search']:
 
 		# check if corresponding object info exists in cache
@@ -49,12 +50,7 @@ async def search_method(bot, message, user_input, flag_presence):
 					if attribute in result:
 						result[attribute] = Counter(result[attribute])
 
-			elif flag_presence['modifier']:
-				# if user searches for a modifier without the -m flag, it will cache 101 or 102 error, which will make any subsequent queries with the -m flag to fail as well
-				# thus if cache stored an error, but query has -m flag, override cache and extract modifier info
-				result = None
-
-	# if query not in cache, -f flag present or -m flag present with error stored in cache
+	# if query not in cache or -f flag present
 	if not result:
 		if flag_presence['force_search']:
 			full_name = user_input
@@ -62,10 +58,10 @@ async def search_method(bot, message, user_input, flag_presence):
 			full_name = retrieve_full_name(user_input)
 
 		# extract object info
-		result = get_object_info(full_name, flag_presence['modifier'])
+		result = get_object_info(full_name)
 
 		# cache results except Google API error (the API could become available again at any time) and -f searches
-		if result != 103 and not flag_presence['force_search']:
+		if result != 103 and not flag_presence['force_search'] and not DEBUG_MODE:
 			ddb_insert_item(OBJECT_INFO_CACHE, user_input, dumps(result))
 
 	if isinstance(result, list):

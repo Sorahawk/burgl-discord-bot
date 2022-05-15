@@ -1,7 +1,7 @@
 from collections import Counter
 from url_processing import get_page_data
 from global_variables import BASE_WIKI_URL, SMOOTHIE_BASES
-from string_processing import weakness_resistance_processing
+from string_processing import res_weakness_processing
 
 
 # returns dictionary of extracted information for a given status effect or mutation
@@ -40,6 +40,8 @@ def get_modifier_info(search_query):
 				if 'BURG.L' in modifier_info['source']:
 					modifier_info['source'] = 'Purchase from BURG.L'
 
+				# insert wiki URL depending on whether modifier is status effect or mutation
+				modifier_info['page_url'] = urls[index]
 				return modifier_info
 
 
@@ -66,7 +68,7 @@ def get_infobox_info(page_content):
 			continue
 
 		standard_headers = ['aggression', 'tamewith', 'effectresistance', 'weakpoint',
-							'tooltype', 'augmenttype',  'class', 'food', 'water', 'health',
+							'tooltype', 'augmenttype',  'class', 'water', 'health',
 							'species', 'gender', 'description+']
 		stat_headers = ['damage', 'stun', 'speed', 'defense', 'sturdiness', 'weight']
 
@@ -85,7 +87,7 @@ def get_infobox_info(page_content):
 		# when extracting smoothie info, content will include the header names, so have to remove 
 		elif header in ['description', 'info']:
 			object_info['description'] = content.replace('Description', '').strip()
-		elif header in ['category', 'subcat']:
+		elif header in ['category', 'subcat', 'type']:
 			object_info['category'] = content.replace('Category', '').strip()
 
 		elif header == 'brokenwith':
@@ -113,8 +115,12 @@ def get_infobox_info(page_content):
 		elif header == 'loot':
 			object_info[header] = content.strip().replace(')', ')\n').replace('\n ', '\n')
 
+		# account for special cases of food with Fresh versions
+		elif header == 'food':
+			object_info[header] = content.strip().replace(')+', ')\n+')
+
 		elif 'weakness' in header or 'resistance' in header:
-			header, content = weakness_resistance_processing(header, content)
+			header, content = res_weakness_processing(header, content)
 			object_info[header] = content
 
 		# armor sleek upgrade effect
@@ -134,6 +140,10 @@ def get_infobox_info(page_content):
 				# ignore any duplicate effects, e.g. during smoothie extraction
 				if content not in object_info['effects']:
 					object_info['effects'].append(content)
+
+	# if present, convert effects list into a string
+	if 'effects' in object_info:
+		object_info['effects'] = '\n'.join(object_info['effects'])
 
 	return object_info
 

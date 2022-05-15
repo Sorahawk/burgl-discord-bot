@@ -24,7 +24,7 @@ async def bind_view(bot, message, user_input):
 
 	# returns True if emoji reaction by user to the specific embed message is one of the specified emojis
 	def multipage_emoji_check(reaction, user):
-		return user != bot.user and reaction.message.id == embed_message.id and reaction.emoji in [left_arrow, right_arrow]
+		return user != bot.user and reaction.message.id == embedded_message.id and reaction.emoji in [left_arrow, right_arrow]
 
 
 	shortcut_list = retrieve_all_shortcuts()
@@ -34,7 +34,7 @@ async def bind_view(bot, message, user_input):
 	number_pages = (len(shortcut_list) // MAX_EMBED_FIELDS) + 1
 
 	for page in range(number_pages):
-		shortcut_embed = Embed(title='**Binded Shortcuts**', colour=0x6542E1)
+		shortcut_embed = Embed(title='**Binded Shortcuts**', color=0x6542E1)
 
 		start_index = page * MAX_EMBED_FIELDS
 		end_index = start_index + MAX_EMBED_FIELDS
@@ -47,10 +47,10 @@ async def bind_view(bot, message, user_input):
 		embed_list.append(shortcut_embed)
 
 	current_page = 0
-	embed_message = await message.channel.send(embed=embed_list[current_page])
+	embedded_message = await message.channel.send(embed=embed_list[current_page])
 
-	await embed_message.add_reaction(left_arrow)
-	await embed_message.add_reaction(right_arrow)
+	await embedded_message.add_reaction(left_arrow)
+	await embedded_message.add_reaction(right_arrow)
 
 	while True:
 		try:
@@ -62,14 +62,14 @@ async def bind_view(bot, message, user_input):
 			elif reaction.emoji == left_arrow and current_page != 0:
 				current_page -= 1
 
-			await embed_message.edit(embed=embed_list[current_page])
-			await embed_message.remove_reaction(reaction, user)
+			await embedded_message.edit(embed=embed_list[current_page])
+			await embedded_message.remove_reaction(reaction, user)
 
 		except TimeoutError:
 			try:
 				# after specified timeout period, remove arrow 'buttons' from the message
 				# leaves the info on screen, but also informs the user that pages can no longer be navigated
-				await embed_message.clear_reactions()
+				await embedded_message.clear_reactions()
 				break
 
 			except:  # other errors, like discord.errors.NotFound: Unknown Message (if message is deleted)
