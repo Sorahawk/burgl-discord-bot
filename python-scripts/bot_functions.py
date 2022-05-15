@@ -7,6 +7,7 @@ from discord import Embed
 from json import dumps, loads
 from secret_variables import DEBUG_MODE
 from card_search import get_creature_card
+from global_variables import CUSTOM_EMOJIS
 from dynamodb_methods import ddb_insert_item
 from string_processing import burgl_message, capitalise_object_name
 
@@ -22,7 +23,28 @@ async def help_method(bot, message, user_input, flag_presence):
 	for command in BOT_HELP_MESSAGE:
 		help_menu.add_field(name=command[0], value='\n'.join(command[1:]), inline=False)
 
-	await message.channel.send(embed=help_menu)
+	embedded_message = await message.channel.send(embed=help_menu)
+	await embedded_message.add_reaction(CUSTOM_EMOJIS['CrossMark'])
+
+
+	# returns True if emoji reaction by user to the specific help message is the cross mark
+	def cross_emoji_check(reaction, user):
+		return user != bot.user and reaction.message.id == embedded_message.id and reaction.emoji == CUSTOM_EMOJIS['CrossMark']
+
+
+	while True:
+		try:
+			reaction, user = await bot.wait_for('reaction_add', timeout=60, check=cross_emoji_check)
+
+			await embedded_message.clear_reactions()
+			return await embedded_message.edit(content=burgl_message('embed_close'), embed=None)
+
+		except TimeoutError:
+			try:
+				# remove cross 'button' from the message
+				return await embedded_message.clear_reactions()
+			except:
+				return
 
 
 # object search method
@@ -91,8 +113,9 @@ async def card_method(bot, message, user_input, flag_presence):
 	if not flag_presence['force_search']:
 		full_name = retrieve_full_name(user_input)
 
-	result = get_creature_card(full_name)
+	result = get_creature_card(full_name, flag_presence['get_gold'])
 
+	# daily quota for Google API exhausted
 	if result == 103:
 		await message.channel.send(burgl_message(103))
 

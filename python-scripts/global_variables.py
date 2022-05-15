@@ -13,7 +13,7 @@ BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'purge']
 
 # dictionary of command flags
 # each flag can only be a single letter
-BOT_COMMAND_FLAGS = {'delete_binding': 'd', 'force_search': 'f', 'view_bindings': 'v'}
+BOT_COMMAND_FLAGS = {'delete_binding': 'd', 'force_search': 'f', 'get_gold': 'g', 'view_bindings': 'v'}
 
 
 # list containing lists of strings to populate the embedded help menu
@@ -42,6 +42,8 @@ BOT_VOICELINES = {
 	'empty': 'Please provide input parameters.',
 	'insufficient': 'A minimum of two comma-separated parameters are required.',
 	'invalid_bind': 'Specified bindings not found.',
+	'embed_close': 'Menu has been closed.',
+
 	101: "**ERROR 101:** Unable to locate 'VAR1'. Try typing in the object's full name.",
 	102: "**ERROR 102:** Wiki page for 'VAR1' has an unsupported layout.",
 	103: '**ERROR 103:** Google API daily limit exceeded. Type in the exact name of the object.',
@@ -69,8 +71,12 @@ ACTIVITY_STATUSES = {
 }
 
 
-# dictionary of custom server emojis
+# dictionary of custom emojis
 CUSTOM_EMOJIS = {
+	'LeftArrow': '◀️',
+	'RightArrow': '▶️',
+	'CrossMark': '❎',
+
 	'BURG.L': '<:BURGL_Icon:970544869124755467>',
 	'Fresh': '<:ElementalType_Fresh:970550878966796308>',
 	'Salty': '<:ElementalType_Salty:970550879226847302>',

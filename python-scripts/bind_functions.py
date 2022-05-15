@@ -1,9 +1,10 @@
 from storage_functions import *
 
 from discord import Embed
+from global_variables import *
+
 from asyncio import TimeoutError
 from string_processing import burgl_message
-from global_variables import MAX_EMBED_FIELDS
 
 
 # default subfunction to bind at least one shortcut to a full object name
@@ -19,12 +20,14 @@ async def bind_default(message, user_input):
 
 # view all existing bindings
 async def bind_view(bot, message, user_input):
-	left_arrow = '◀️'
-	right_arrow = '▶️'
+	left_arrow = CUSTOM_EMOJIS['LeftArrow']
+	cross_mark = CUSTOM_EMOJIS['CrossMark']
+	right_arrow = CUSTOM_EMOJIS['RightArrow']
+
 
 	# returns True if emoji reaction by user to the specific embed message is one of the specified emojis
 	def multipage_emoji_check(reaction, user):
-		return user != bot.user and reaction.message.id == embedded_message.id and reaction.emoji in [left_arrow, right_arrow]
+		return user != bot.user and reaction.message.id == embedded_message.id and reaction.emoji in [left_arrow, cross_mark, right_arrow]
 
 
 	shortcut_list = retrieve_all_shortcuts()
@@ -47,33 +50,45 @@ async def bind_view(bot, message, user_input):
 		embed_list.append(shortcut_embed)
 
 	current_page = 0
-	embedded_message = await message.channel.send(embed=embed_list[current_page])
 
+	embedded_message = await message.channel.send(embed=embed_list[current_page])
 	await embedded_message.add_reaction(left_arrow)
+	await embedded_message.add_reaction(cross_mark)
 	await embedded_message.add_reaction(right_arrow)
 
 	while True:
 		try:
 			reaction, user = await bot.wait_for('reaction_add', timeout=60, check=multipage_emoji_check)
 
-			if reaction.emoji == right_arrow and current_page != number_pages - 1:
-				current_page += 1
+			if reaction.emoji == cross_mark:
+				await embedded_message.clear_reactions()
+				return await embedded_message.edit(content=burgl_message('embed_close'), embed=None)
 
-			elif reaction.emoji == left_arrow and current_page != 0:
-				current_page -= 1
+			elif reaction.emoji == left_arrow:
+				if current_page == 0:
+					# wrap-around to the end
+					current_page = number_pages - 1
+				else:
+					current_page -= 1
+
+			elif reaction.emoji == right_arrow:
+				if current_page == number_pages - 1:
+					# wrap-around to the start
+					current_page = 0
+				else:
+					current_page += 1
 
 			await embedded_message.edit(embed=embed_list[current_page])
 			await embedded_message.remove_reaction(reaction, user)
 
 		except TimeoutError:
 			try:
-				# after specified timeout period, remove arrow 'buttons' from the message
+				# after specified timeout period, remove 'buttons' from the message
 				# leaves the info on screen, but also informs the user that pages can no longer be navigated
-				await embedded_message.clear_reactions()
-				break
+				return await embedded_message.clear_reactions()
 
 			except:  # other errors, like discord.errors.NotFound: Unknown Message (if message is deleted)
-				break
+				return
 
 
 # delete all shortcuts for one or more specified object names
