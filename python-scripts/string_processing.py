@@ -75,7 +75,7 @@ def elem_weapon_emoji(weapon_name, elemental_type):
 # insert corresponding custom emoji for damage and elemental types
 def dmg_elem_emoji(input_string):
 	for keyword in CUSTOM_EMOJIS:
-		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]}{keyword}')
+		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]} {keyword}')
 
 	return input_string
 
