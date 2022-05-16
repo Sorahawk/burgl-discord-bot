@@ -24,7 +24,7 @@ BOT_HELP_MESSAGE = [
 		'*+Use flag `-f` to force the search to bypass any binded shortcuts.*'],
 
 	['**.card <creature_name>**', "Displays the specified creature's bestiary card.",
-		'*+Use flag `-f` to force the search to bypass any binded shortcuts.*'],
+		"*+Use flag `-g` to display the creature's gold bestiary card.*", '*+Use flag `-f` to force the search to bypass any binded shortcuts.*'],
 
 	['**.bind <object_name>, <shortcut_1>, [shortcut_2], ...**', 'Binds an object name to one or more shortcut phrases.',
 		'*+Use flag `-v` to view all binded shortcuts (no arguments required).*', '*+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).*',
@@ -77,18 +77,34 @@ CUSTOM_EMOJIS = {
 	'RightArrow': '▶️',
 	'CrossMark': '❎',
 
-	'BURG.L': '<:BURGL_Icon:970544869124755467>',
-	'Fresh': '<:ElementalType_Fresh:970550878966796308>',
-	'Salty': '<:ElementalType_Salty:970550879226847302>',
-	'Spicy': '<:ElementalType_Spicy:970551950405947453>',
-	'Busting': '<:DamageType_Busting:970552005250646036>',
-	'Chopping': '<:DamageType_Chopping:970552005883998269>',
-	'Digging': '<:DamageType_Digging:970552065577328650>',
-	'Explosive': '<:DamageType_Explosive:970552089493262346>',
-	'Slashing': '<:DamageType_Slashing:970552106496978964>',
-	'Stabbing': '<:DamageType_Stabbing:970552122548559872>',
-	'Aphid': '<:Pet_Aphid:973157551141158962>',
-	'Weevil': '<:Pet_Weevil:973157551279575111>'
+	'BURG.L': '<:BURGL_Icon:975802756881338428>',
+
+	'Aphid': '<:Pet_Aphid:975803016735256677>',
+	'Weevil': '<:Pet_Weevil:975803016819146842>',
+
+	'Light': '<:ArmorClass_Light:975802864930795550>',
+	'Medium': '<:ArmorClass_Medium:975802874518974534>',
+	'Heavy': '<:ArmorClass_Heavy:975802883364773918>',
+
+	'Fresh': '<:ElementalType_Fresh:975802950351978567>',
+	'Spicy': '<:ElementalType_Spicy:975802950565892206>',
+	'Salty': '<:ElementalType_Salty:975802950305853480>',
+	'Sour': '<:ElementalType_Sour:975802950234538024>',
+
+	'Busting': '<:DamageType_Busting:975802970027479100>',
+	'Chopping': '<:DamageType_Chopping:975802970073624586>',
+	'Digging': '<:DamageType_Digging:975802970073600010>',
+	'Explosive': '<:DamageType_Explosive:975802970950205481>',
+	'Slashing': '<:DamageType_Slashing:975802970174275674>',
+	'Stabbing': '<:DamageType_Stabbing:975802970031685733>',
+	'Repair': '<:DamageType_Repair:975802970019102811>',
+
+	'Eyes': '<:WeakPoint_Eyes:975802994941636628>',
+	'Back': '<:WeakPoint_Back:975802994866135140>',
+	'Guts': '<:WeakPoint_Guts:975802995012943913>',
+	'Legs': '<:WeakPoint_Legs:975802994899714050>',
+	'Rump': '<:WeakPoint_Rump:975802995210067998>',
+	'RobotBack': '<:WeakPoint_RobotBack:975802994971000965>'
 }
 
 

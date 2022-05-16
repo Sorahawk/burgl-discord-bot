@@ -60,6 +60,7 @@ The overall roadmap and development tracker for this project can be found on the
   - _Use flag `-f` to force the search to bypass any binded shortcuts._
 - `.card <creature_name>`
   - Displays the specified creature's bestiary card.
+  - _Use flag `-g` to display the creature's gold bestiary card._
   - _Use flag `-f` to force the search to bypass any binded shortcuts._
 - `.bind <object_name>, <shortcut_1>, [shortcut_2], ...`
   - Binds an object name to one or more shortcut phrases.
