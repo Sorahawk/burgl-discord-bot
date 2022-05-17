@@ -73,9 +73,12 @@ def append_elem_emoji(weapon_name, elemental_type):
 
 
 # insert corresponding custom emoji for specific attributes
-def prefix_emoji(input_string):
+def prefix_emoji(input_string, is_robot=False):
 	for keyword in CUSTOM_EMOJIS:
-		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]} {keyword}')
+		if is_robot and keyword == 'RobotBack':  # check if weak point is a robot's back
+			input_string = input_string.replace('Back', f"{CUSTOM_EMOJIS['RobotBack']} Back")
+		elif not (is_robot and keyword == 'Back'):
+			input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]} {keyword}')
 
 	return input_string
 
@@ -83,7 +86,7 @@ def prefix_emoji(input_string):
 # returns string surrounded by double underscores, which is the syntax for underlined text on Discord
 # at the same time, ensure that the whitespace in between emoji and text is not underlined
 def underline_text(input_string):
-	return f"__{input_string.replace('> ', '>__ __')}__"
+	return f'__{input_string}__'.replace('> ', '>__ __')
 
 
 # returns properly capitalised object name, accounting for names with periods, e.g. BURG.L, MIX.R

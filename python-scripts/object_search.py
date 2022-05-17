@@ -129,8 +129,13 @@ def format_object_info(object_info):
 		embedded_info.set_field_at(7, name='Dmg. Weakness', value=underline_text(prefix_emoji(object_info['weakness'])), inline=True)
 	if 'eweakness' in object_info:
 		embedded_info.set_field_at(8, name='Elem. Weakness', value=underline_text(prefix_emoji(object_info['eweakness'])), inline=True)
+
 	if 'weakpoint' in object_info:
-		embedded_info.set_field_at(9, name='Weak Point', value=underline_text(prefix_emoji(object_info['weakpoint'])), inline=True)
+		is_robot = False
+		if '.' in object_name:
+			is_robot = True
+
+		embedded_info.set_field_at(9, name='Weak Point', value=underline_text(prefix_emoji(object_info['weakpoint'], is_robot)), inline=True)
 
 	if 'recipe' in object_info:
 		recipe_name = 'Recipe'
