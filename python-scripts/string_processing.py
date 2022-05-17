@@ -74,11 +74,17 @@ def append_elem_emoji(weapon_name, elemental_type):
 
 # insert corresponding custom emoji for specific attributes
 def prefix_emoji(input_string, is_robot=False):
-	for keyword in CUSTOM_EMOJIS:
-		if is_robot and keyword == 'RobotBack':  # check if weak point is a robot's back
-			input_string = input_string.replace('Back', f"{CUSTOM_EMOJIS['RobotBack']} Back")
-		elif not (is_robot and keyword == 'Back'):
-			input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]} {keyword}')
+	for keyword, emoji in CUSTOM_EMOJIS.items():
+
+		# ignore creature back emoji if object is robot
+		if is_robot and keyword == 'Back':
+			continue
+
+		elif is_robot and keyword == 'RobotBack':  # check if weak point is a robot's back
+			input_string = input_string.replace('Back', f'{emoji} Back')
+
+		else:
+			input_string = input_string.replace(keyword, f'{emoji} {keyword}')
 
 	return input_string
 

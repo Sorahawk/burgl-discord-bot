@@ -77,7 +77,7 @@ CUSTOM_EMOJIS = {
 	'RightArrow': '▶️',
 	'CrossMark': '❎',
 
-	'BURG.L': '<:BURGL_Icon:975802756881338428>',
+	'BURG.L': '<:BURGL_Icon:976155200102486016>',
 
 	'Aphid': '<:Pet_Aphid:975803016735256677>',
 	'Weevil': '<:Pet_Weevil:975803016819146842>',
@@ -91,13 +91,13 @@ CUSTOM_EMOJIS = {
 	'Salty': '<:ElementalType_Salty:976063715017392188>',
 	'Sour': '<:ElementalType_Sour:976063714702802945>',
 
-	'Busting': '<:DamageType_Busting:975802970027479100>',
-	'Chopping': '<:DamageType_Chopping:975802970073624586>',
-	'Digging': '<:DamageType_Digging:975802970073600010>',
-	'Explosive': '<:DamageType_Explosive:975802970950205481>',
-	'Slashing': '<:DamageType_Slashing:975802970174275674>',
-	'Stabbing': '<:DamageType_Stabbing:975802970031685733>',
-	'Repair': '<:DamageType_Repair:975802970019102811>',
+	'Busting': '<:DamageType_Busting:976155517707763762>',
+	'Chopping': '<:DamageType_Chopping:976155517699383297>',
+	'Digging': '<:DamageType_Digging:976155517670002788>',
+	'Explosive': '<:DamageType_Explosive:976155517690982470>',
+	'Slashing': '<:DamageType_Slashing:976155517363830835>',
+	'Stabbing': '<:DamageType_Stabbing:976155517766496286>',
+	'Repair': '<:DamageType_Repair:976155517770682428>',
 
 	'Eyes': '<:WeakPoint_Eyes:976063745233141791>',
 	'Back': '<:WeakPoint_Back:976063745363161128>',
