@@ -82,14 +82,14 @@ CUSTOM_EMOJIS = {
 	'Aphid': '<:Pet_Aphid:975803016735256677>',
 	'Weevil': '<:Pet_Weevil:975803016819146842>',
 
-	'Light': '<:ArmorClass_Light:975802864930795550>',
-	'Medium': '<:ArmorClass_Medium:975802874518974534>',
-	'Heavy': '<:ArmorClass_Heavy:975802883364773918>',
+	'Light': '<:ArmorClass_Light:976063426470244382>',
+	'Medium': '<:ArmorClass_Medium:976063426575097856>',
+	'Heavy': '<:ArmorClass_Heavy:976063426600243250>',
 
-	'Fresh': '<:ElementalType_Fresh:975802950351978567>',
-	'Spicy': '<:ElementalType_Spicy:975802950565892206>',
-	'Salty': '<:ElementalType_Salty:975802950305853480>',
-	'Sour': '<:ElementalType_Sour:975802950234538024>',
+	'Fresh': '<:ElementalType_Fresh:976063714807652353>',
+	'Spicy': '<:ElementalType_Spicy:976063715302588426>',
+	'Salty': '<:ElementalType_Salty:976063715017392188>',
+	'Sour': '<:ElementalType_Sour:976063714702802945>',
 
 	'Busting': '<:DamageType_Busting:975802970027479100>',
 	'Chopping': '<:DamageType_Chopping:975802970073624586>',
@@ -99,12 +99,12 @@ CUSTOM_EMOJIS = {
 	'Stabbing': '<:DamageType_Stabbing:975802970031685733>',
 	'Repair': '<:DamageType_Repair:975802970019102811>',
 
-	'Eyes': '<:WeakPoint_Eyes:975802994941636628>',
-	'Back': '<:WeakPoint_Back:975802994866135140>',
-	'Guts': '<:WeakPoint_Guts:975802995012943913>',
-	'Legs': '<:WeakPoint_Legs:975802994899714050>',
-	'Rump': '<:WeakPoint_Rump:975802995210067998>',
-	'RobotBack': '<:WeakPoint_RobotBack:975802994971000965>'
+	'Eyes': '<:WeakPoint_Eyes:976063745233141791>',
+	'Back': '<:WeakPoint_Back:976063745363161128>',
+	'Gut': '<:WeakPoint_Gut:976063745279279104>',
+	'Legs': '<:WeakPoint_Legs:976063745245716500>',
+	'Rump': '<:WeakPoint_Rump:976063744897593387>',
+	'RobotBack': '<:WeakPoint_RobotBack:976063745266704394>'
 }
 
 
@@ -124,7 +124,6 @@ OBJECT_INFO_ATTRIBUTES = {
 	'tamewith': (3, 'Tame with'),
 
 	'damage': 4,
-	'class': (4, 'Armor Class'),
 	'food': 4,
 	'sturdiness': 4,
 

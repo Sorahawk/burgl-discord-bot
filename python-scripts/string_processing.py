@@ -57,7 +57,7 @@ def burgl_message(key):
 
 
 # insert pet icon emoji behind the name of corresponding tameable creature
-def pet_icon_emoji(creature_name):
+def append_pet_emoji(creature_name):
 	if creature_name in CUSTOM_EMOJIS:
 		return f'{creature_name} {CUSTOM_EMOJIS[creature_name]}'
 	else:
@@ -65,15 +65,15 @@ def pet_icon_emoji(creature_name):
 
 
 # insert elemental icon emoji behind the name of elemental weapons
-def elem_weapon_emoji(weapon_name, elemental_type):
+def append_elem_emoji(weapon_name, elemental_type):
 	if elemental_type in CUSTOM_EMOJIS:
 		return f'{weapon_name} {CUSTOM_EMOJIS[elemental_type]}'
 	else:
 		return weapon_name
 
 
-# insert corresponding custom emoji for damage and elemental types
-def dmg_elem_emoji(input_string):
+# insert corresponding custom emoji for specific attributes
+def prefix_emoji(input_string):
 	for keyword in CUSTOM_EMOJIS:
 		input_string = input_string.replace(keyword, f'{CUSTOM_EMOJIS[keyword]} {keyword}')
 
@@ -81,8 +81,9 @@ def dmg_elem_emoji(input_string):
 
 
 # returns string surrounded by double underscores, which is the syntax for underlined text on Discord
+# at the same time, ensure that the whitespace in between emoji and text is not underlined
 def underline_text(input_string):
-	return f"__{input_string}__" 
+	return f"__{input_string.replace('> ', '>__ __')}__"
 
 
 # returns properly capitalised object name, accounting for names with periods, e.g. BURG.L, MIX.R

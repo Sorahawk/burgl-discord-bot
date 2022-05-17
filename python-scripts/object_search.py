@@ -98,11 +98,11 @@ def format_object_info(object_info):
 
 	# append pet icon if the object is a tameable creature
 	if 'tamewith' in object_info:
-		object_name = pet_icon_emoji(object_name)
+		object_name = append_pet_emoji(object_name)
 
 	# append elemental icon if the object is an elemental weapon
 	elif 'augmenttype' in object_info:
-		object_name = elem_weapon_emoji(object_name, object_info['augmenttype'])
+		object_name = append_elem_emoji(object_name, object_info['augmenttype'])
 
 	# create empty grid embed
 	embedded_info = create_grid_embed(object_name, object_info['page_url'], object_info['picture_url'])
@@ -112,22 +112,25 @@ def format_object_info(object_info):
 		embedded_info.set_field_at(0, name='Description', value=f"*{object_info['description']}*", inline=False)
 
 	if 'brokenwith' in object_info:
-		embedded_info.set_field_at(1, name='Harvest with', value=dmg_elem_emoji(object_info['brokenwith']), inline=True)
+		embedded_info.set_field_at(1, name='Harvest with', value=prefix_emoji(object_info['brokenwith']), inline=True)
 
 	if 'tooltype' in object_info:
-		embedded_info.set_field_at(3, name='Dmg. Type', value=dmg_elem_emoji(object_info['tooltype']), inline=True)
+		embedded_info.set_field_at(3, name='Dmg. Type', value=prefix_emoji(object_info['tooltype']), inline=True)
+
+	if 'class' in object_info:
+		embedded_info.set_field_at(4, name='Armor Class', value=prefix_emoji(object_info['class']), inline=True)
 
 	if 'resistance' in object_info:
-		embedded_info.set_field_at(4, name='Dmg. Resistance', value=dmg_elem_emoji(object_info['resistance']), inline=True)
+		embedded_info.set_field_at(4, name='Dmg. Resistance', value=prefix_emoji(object_info['resistance']), inline=True)
 	if 'eresistance' in object_info:
-		embedded_info.set_field_at(5, name='Elem. Resistance', value=dmg_elem_emoji(object_info['eresistance']), inline=True)
+		embedded_info.set_field_at(5, name='Elem. Resistance', value=prefix_emoji(object_info['eresistance']), inline=True)
 
 	if 'weakness' in object_info:
-		embedded_info.set_field_at(7, name='Dmg. Weakness', value=underline_text(dmg_elem_emoji(object_info['weakness'])), inline=True)
+		embedded_info.set_field_at(7, name='Dmg. Weakness', value=underline_text(prefix_emoji(object_info['weakness'])), inline=True)
 	if 'eweakness' in object_info:
-		embedded_info.set_field_at(8, name='Elem. Weakness', value=underline_text(dmg_elem_emoji(object_info['eweakness'])), inline=True)
+		embedded_info.set_field_at(8, name='Elem. Weakness', value=underline_text(prefix_emoji(object_info['eweakness'])), inline=True)
 	if 'weakpoint' in object_info:
-		embedded_info.set_field_at(9, name='Weak Point', value=underline_text(object_info['weakpoint']), inline=True)
+		embedded_info.set_field_at(9, name='Weak Point', value=underline_text(prefix_emoji(object_info['weakpoint'])), inline=True)
 
 	if 'recipe' in object_info:
 		recipe_name = 'Recipe'
