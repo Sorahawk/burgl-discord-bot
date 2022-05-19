@@ -8,7 +8,7 @@ BOT_COMMAND_PREFIX = '.'
 
 
 # list of bot commands
-BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'purge']
+BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'purge', 'clear']
 
 
 # dictionary of command flags
@@ -30,7 +30,9 @@ BOT_HELP_MESSAGE = [
 		'*+Use flag `-v` to view all binded shortcuts (no arguments required).*', '*+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).*',
 		'*+Each parameter is case-insensitive and must be separated by a comma.*'],
 
-	['**.purge**', 'Purges the webpage data and object information caches.']
+	['**.purge**', 'Purges the webpage data and object information caches.'],
+
+	['**.clear**', 'Clears up to 100 recent messages (in server channels), and all bot messages (in private chats).']
 ]
 
 

@@ -3,8 +3,8 @@ from bind_functions import *
 from global_variables import *
 from storage_functions import *
 
-from discord import Embed
 from json import dumps, loads
+from discord import DMChannel, Embed
 from secret_variables import DEBUG_MODE
 from card_search import get_creature_card
 from global_variables import CUSTOM_EMOJIS
@@ -36,8 +36,14 @@ async def help_method(bot, message, user_input, flag_presence):
 		try:
 			reaction, user = await bot.wait_for('reaction_add', timeout=60, check=cross_emoji_check)
 
-			await embedded_message.clear_reactions()
-			return await embedded_message.edit(content=burgl_message('embed_close'), embed=None)
+			# check if channel is a private chat
+			if isinstance(message.channel, DMChannel):
+				return await embedded_message.delete()
+
+			else:
+				# close help menu
+				await embedded_message.clear_reactions()
+				return await embedded_message.edit(content=burgl_message('embed_close'), embed=None)
 
 		except TimeoutError:
 			try:
@@ -147,8 +153,23 @@ async def bind_method(bot, message, user_input, flag_presence):
 		await bind_default(message, user_input)
 
 
-# purge cache method
+# cache purging method
 async def purge_method(bot, message, user_input, flag_presence):
 	purge_cache()
 
 	await message.channel.send(burgl_message('purged'))
+
+
+# message clearing method
+async def clear_method(bot, message, user_input, flag_presence):
+	message_history = [old_message async for old_message in message.channel.history()]
+
+	# if message is from a server channel
+	if not isinstance(message.channel, DMChannel):
+		await message.channel.delete_messages(message_history)
+		return await message.delete()
+
+	else:  # if message is from a private message
+		for old_message in message_history:
+			if old_message.author == bot.user:
+				await old_message.delete()

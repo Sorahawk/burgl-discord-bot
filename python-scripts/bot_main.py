@@ -12,8 +12,8 @@ from secret_variables import DEBUG_MODE, DISCORD_BOT_TOKEN
 
 
 # declare bot intents
-intents = discord.Intents.default()
-intents.message_content = True
+# all() enables everything, including the privileged intents: presences, members and message_content
+intents = discord.Intents.all()
 
 # initialise client
 bot = discord.Client(intents=intents)

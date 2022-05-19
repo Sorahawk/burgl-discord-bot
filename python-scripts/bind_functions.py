@@ -3,6 +3,7 @@ from storage_functions import *
 from discord import Embed
 from global_variables import *
 
+from discord import DMChannel
 from asyncio import TimeoutError
 from string_processing import burgl_message
 
@@ -61,8 +62,12 @@ async def bind_view(bot, message, user_input):
 			reaction, user = await bot.wait_for('reaction_add', timeout=60, check=multipage_emoji_check)
 
 			if reaction.emoji == cross_mark:
-				await embedded_message.clear_reactions()
-				return await embedded_message.edit(content=burgl_message('embed_close'), embed=None)
+				if isinstance(message.channel, DMChannel):  # check if channel is a private chat
+					return await embedded_message.delete()
+
+				else:
+					await embedded_message.clear_reactions()
+					return await embedded_message.edit(content=burgl_message('embed_close'), embed=None)
 
 			elif reaction.emoji == left_arrow:
 				if current_page == 0:
@@ -79,7 +84,9 @@ async def bind_view(bot, message, user_input):
 					current_page += 1
 
 			await embedded_message.edit(embed=embed_list[current_page])
-			await embedded_message.remove_reaction(reaction, user)
+
+			if not isinstance(message.channel, DMChannel):
+				await embedded_message.remove_reaction(reaction, user)
 
 		except TimeoutError:
 			try:
