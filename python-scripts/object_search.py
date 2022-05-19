@@ -76,6 +76,11 @@ def get_object_info(search_query):
 			# repair cost extraction failed
 			print(f"WARNING: Repair cost extraction for {object_info['name']} failed.")
 
+	# if object is Smoothie?, manually insert recipe with just the base ingredient
+	if object_info['name'] == 'Smoothie?':
+		object_info['recipe_name'] = f'{smoothie_type.title()} Smoothie?'
+		object_info['recipe'] = compile_counter([SMOOTHIE_BASES[smoothie_type]], 'Smoothie')
+
 	return object_info
 
 

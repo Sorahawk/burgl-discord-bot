@@ -194,13 +194,10 @@ def get_recipe_table(page_content, object_name, smoothie_type):
 
 	recipe = compile_counter(recipe_list, recipe_type)
 
-	# add in smoothie base to recipe
+	# add in base ingredient to smoothie recipe
 	if recipe_type == 'Smoothie':
-		for base in SMOOTHIE_BASES:
-			if smoothie_type == base:
-				recipe_name = f'{base.title()} {object_name}'
-				recipe[SMOOTHIE_BASES[base]] = 1
-				break
+		recipe_name = f'{smoothie_type.title()} {object_name}'
+		recipe[SMOOTHIE_BASES[smoothie_type]] = 1
 
 	return recipe, recipe_name
 
