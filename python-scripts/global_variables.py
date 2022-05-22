@@ -3,6 +3,10 @@
 MAIN_CHANNEL_ID = 970882023055036426
 
 
+# list of elevated Discord users
+ELEVATED_USERS = ['<61795156359905281', '498051548463628300']
+
+
 # symbol to signify bot commands
 BOT_COMMAND_PREFIX = '.'
 
@@ -41,6 +45,7 @@ BOT_VOICELINES = {
 	'hello': 'Hello there! Acting science manager B-B-B-BURG.L at your service!',
 	'debug': 'My data caches are missing!',
 	'purged': 'Data caches have been purged.',
+	'unauthorised': 'You are not authorised to use this command.',
 	'empty': 'Please provide input parameters.',
 	'insufficient': 'A minimum of two comma-separated parameters are required.',
 	'invalid_bind': 'Specified bindings not found.',

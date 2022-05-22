@@ -6,7 +6,7 @@ from global_variables import *
 from random import choice
 from discord.ext import tasks
 from dynamodb_methods import ddb_remove_all
-from datetime import time, timedelta, timezone
+from datetime import datetime, time, timedelta, timezone
 from string_processing import check_command, check_flags
 from secret_variables import DEBUG_MODE, DISCORD_BOT_TOKEN
 
@@ -33,7 +33,7 @@ async def on_ready():
 	# but tasks with specific timings can't be started more than once
 	try:
 		rotate_status.start()
-		daily_purge_cache.start()
+		purge_cache_weekly.start()
 	except:
 		pass
 
@@ -75,14 +75,15 @@ async def rotate_status():
 	await bot.change_presence(activity=activity_status)
 
 
-# automatically purge caches at 6am UTC+8
+# automatically purge caches every Monday 6am UTC+8
 timezone = timezone(timedelta(hours=8))
 @tasks.loop(time=time(hour=6, tzinfo=timezone))
-async def daily_purge_cache():
-	purge_cache()
+async def purge_cache_weekly():
+	if datetime.today().weekday() == 0:
+		purge_cache()
 
-	channel = bot.get_channel(MAIN_CHANNEL_ID)
-	await channel.send(burgl_message('purged'))
+		channel = bot.get_channel(MAIN_CHANNEL_ID)
+		await channel.send(burgl_message('purged'))
 
 
 bot.run(DISCORD_BOT_TOKEN)

@@ -12,9 +12,13 @@ from dynamodb_methods import ddb_insert_item
 from string_processing import burgl_message, capitalise_object_name
 
 
-# all bot methods here have to correspond to an item in BOT_COMMAND_LIST
-# and must share the same name, followed by '_method'
+# returns True if message author is elevated, otherwise False
+def check_user_elevation(message):
+	return message.author.id in ELEVATED_USERS
 
+
+# all bot methods below have to correspond to an item in BOT_COMMAND_LIST
+# and must share the same name, followed by '_method'
 
 # help menu method
 async def help_method(bot, message, user_input, flag_presence):
@@ -143,7 +147,11 @@ async def bind_method(bot, message, user_input, flag_presence):
 	if flag_presence['view_bindings']:
 		await bind_view(bot, message, user_input)
 
-	elif flag_presence['delete_binding']:
+	# allow non-elevated users to view bindings
+	if not check_user_elevation(message):
+		return await message.channel.send(burgl_message('unauthorised'))
+
+	if flag_presence['delete_binding']:
 		if user_input == '':
 			return await message.channel.send(burgl_message('empty'))
 
@@ -155,9 +163,11 @@ async def bind_method(bot, message, user_input, flag_presence):
 
 # cache purging method
 async def purge_method(bot, message, user_input, flag_presence):
-	purge_cache()
-
-	await message.channel.send(burgl_message('purged'))
+	if not check_user_elevation(message):
+		return await message.channel.send(burgl_message('unauthorised'))
+	else:
+		purge_cache()
+		return await message.channel.send(burgl_message('purged'))
 
 
 # message clearing method
