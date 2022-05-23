@@ -79,7 +79,7 @@ async def rotate_status():
 timezone = timezone(timedelta(hours=8))
 @tasks.loop(time=time(hour=6, tzinfo=timezone))
 async def purge_cache_weekly():
-	if datetime.today().weekday() == 0:
+	if datetime.today().weekday() == 6:
 		purge_cache()
 
 		channel = bot.get_channel(MAIN_CHANNEL_ID)
