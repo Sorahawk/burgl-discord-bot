@@ -184,25 +184,27 @@ SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum
 SPECIAL_NAMES = ['AARTZ', 'BBQ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the']
 
 
-# sets the minimum threshold of string similarity between search query and predicted result
+# decimal value for minimum ratio of string similarity between search query and predicted result
 SIMILAR_THRESHOLD_API = 0.35
 
 
-# sets the minimum threshold of string similarity between search query and predicted result
+# decimal value for minimum ratio of string similarity between search query and predicted result
 SIMILAR_THRESHOLD_CARD = 0.75
+
+
+# max number of fields per embed page when viewing binded shortcuts
+MAX_SHORTCUT_FIELDS = 15
 
 
 # DynamoDB table names as strings, and a dictionary of their corresponding key and attribute headers
 SHORTCUT_STORAGE = 'ShortName-FullName'
 OBJECT_INFO_CACHE = 'SearchQuery-ObjectInfo'
 PAGE_HTML_CACHE = 'WikiURL-PageHTML'
+CHOPPING_LIST = 'RawResource-Quantity'
 
 DDB_TABLE_HEADERS = {
 	SHORTCUT_STORAGE: ('short_name', 'full_name'),
 	OBJECT_INFO_CACHE: ('search_query', 'object_info'),
-	PAGE_HTML_CACHE: ('wiki_url', 'page_html')
+	PAGE_HTML_CACHE: ('wiki_url', 'page_html'),
+	CHOPPING_LIST: ('raw_resource', 'quantity')
 }
-
-
-# max number of fields per embed page when viewing binded shortcuts
-MAX_SHORTCUT_FIELDS = 15
