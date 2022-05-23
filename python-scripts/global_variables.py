@@ -1,4 +1,18 @@
 
+# integer value of local timezone offset with respect to UTC
+TIMEZONE_OFFSET = 8
+
+
+# integer value for day of the week to conduct weekly cache purge
+# 0 is Monday, 6 is Sunday
+PURGE_DAY = 0
+
+
+# integer value for hour of the day to conduct weekly cache purge
+# 0 is 12AM, 23 is 11PM
+PURGE_HOUR = 6
+
+
 # ID of default Discord server channel that will receive notifications
 MAIN_CHANNEL_ID = 970882023055036426
 
@@ -21,7 +35,7 @@ BOT_COMMAND_FLAGS = {'delete_binding': 'd', 'force_search': 'f', 'get_gold': 'g'
 
 
 # list containing lists of strings to populate the embedded help menu
-BOT_HELP_MESSAGE = [
+BOT_HELP_MENU = [
 	['**.help**', 'Displays this help menu.'],
 
 	['**.search <object_name>**', 'Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
@@ -119,7 +133,7 @@ CUSTOM_EMOJIS = {
 # each entry includes the index of the field in the embed which they should be inserted at
 # if the attribute has a special name, the content for that entry is stored in a tuple
 # first item in the tuple is index, and second item is special name
-OBJECT_INFO_ATTRIBUTES = {
+OBJECT_ATTRIBUTES = {
 	'aggression': 1,
 	'category': 1,
 	'species': 1,
@@ -163,11 +177,11 @@ SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum
 SPECIAL_NAMES = ['AARTZ', 'BBQ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the']
 
 
-# sets the minimum threshold of similarity between search query and predicted result
+# sets the minimum threshold of string similarity between search query and predicted result
 SIMILAR_THRESHOLD_API = 0.35
 
 
-# sets the minimum threshold of similarity between search query and predicted result
+# sets the minimum threshold of string similarity between search query and predicted result
 SIMILAR_THRESHOLD_CARD = 0.75
 
 
@@ -184,4 +198,4 @@ DDB_TABLE_HEADERS = {
 
 
 # max number of fields per embed page when viewing binded shortcuts
-MAX_EMBED_FIELDS = 15
+MAX_SHORTCUT_FIELDS = 15

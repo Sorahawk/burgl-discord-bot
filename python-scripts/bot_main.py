@@ -75,11 +75,11 @@ async def rotate_status():
 	await bot.change_presence(activity=activity_status)
 
 
-# automatically purge caches every Monday 6am UTC+8
-timezone = timezone(timedelta(hours=8))
-@tasks.loop(time=time(hour=6, tzinfo=timezone))
+# automatically purge caches once a week
+timezone = timezone(timedelta(hours=TIMEZONE_OFFSET))
+@tasks.loop(time=time(hour=PURGE_HOUR, tzinfo=timezone))
 async def purge_cache_weekly():
-	if datetime.today().weekday() == 6:
+	if datetime.today().weekday() == PURGE_DAY:
 		purge_cache()
 
 		channel = bot.get_channel(MAIN_CHANNEL_ID)

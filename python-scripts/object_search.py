@@ -3,7 +3,7 @@ from string_processing import *
 
 from discord import Embed
 from url_processing import locate_object_url
-from global_variables import OBJECT_INFO_ATTRIBUTES
+from global_variables import OBJECT_ATTRIBUTES
 
 
 # returns booleans representing presence of recipe and repair costs on an object's page
@@ -156,7 +156,7 @@ def format_object_info(object_info):
 		repair_list = generate_recipe_string(object_info['repair_cost'])
 		embedded_info.set_field_at(11, name='Repair Cost', value=repair_list, inline=True)
 
-	for attribute, attribute_info in OBJECT_INFO_ATTRIBUTES.items():
+	for attribute, attribute_info in OBJECT_ATTRIBUTES.items():
 		if attribute in object_info:
 
 			if isinstance(attribute_info, int):  # if no special name

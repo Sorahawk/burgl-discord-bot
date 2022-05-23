@@ -24,7 +24,7 @@ def check_user_elevation(message):
 async def help_method(bot, message, user_input, flag_presence):
 	help_menu = Embed(description=f"{CUSTOM_EMOJIS['BURG.L']} **Command List**", colour=0x6542E1)
 
-	for command in BOT_HELP_MESSAGE:
+	for command in BOT_HELP_MENU:
 		help_menu.add_field(name=command[0], value='\n'.join(command[1:]), inline=False)
 
 	embedded_message = await message.channel.send(embed=help_menu)

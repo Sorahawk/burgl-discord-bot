@@ -35,13 +35,13 @@ async def bind_view(bot, message, user_input):
 
 	# create embeds until all shortcuts are in a page (max fields per page can be manually set, but the actual max by Discord is 25)
 	embed_list = []
-	number_pages = (len(shortcut_list) // MAX_EMBED_FIELDS) + 1
+	number_pages = (len(shortcut_list) // MAX_SHORTCUT_FIELDS) + 1
 
 	for page in range(number_pages):
 		shortcut_embed = Embed(title='**Binded Shortcuts**', color=0x6542E1)
 
-		start_index = page * MAX_EMBED_FIELDS
-		end_index = start_index + MAX_EMBED_FIELDS
+		start_index = page * MAX_SHORTCUT_FIELDS
+		end_index = start_index + MAX_SHORTCUT_FIELDS
 
 		for binded_pair in shortcut_list[start_index:end_index]:
 			shortcuts = ', '.join(binded_pair[1])
