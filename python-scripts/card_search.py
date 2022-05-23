@@ -1,6 +1,6 @@
-from string_processing import string_similarity
-from url_processing import get_page_data, locate_object_url
-from global_variables import BASE_WIKI_URL, SIMILAR_THRESHOLD_CARD
+from url_processing import *
+from global_variables import *
+from string_processing import *
 
 
 # iterates through list of creature cards to compare the input with their names

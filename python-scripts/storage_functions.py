@@ -1,8 +1,7 @@
 from dynamodb_methods import *
 from global_variables import *
-
-from secret_variables import DEBUG_MODE
-from string_processing import capitalise_object_name
+from secret_variables import *
+from string_processing import *
 
 
 # binds one or more shortcut phrases to a full name
@@ -98,8 +97,8 @@ def retrieve_from_cache(table_name, key):
 			return result[attribute_header]
 
 
-# purge the cache tables (query-object info and url-HTML)
-def purge_cache():
+# clear the cache tables (query-object info and url-HTML)
+def clear_cache():
 	tables = [OBJECT_INFO_CACHE, PAGE_HTML_CACHE]
 
 	for table_name in tables:

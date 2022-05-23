@@ -1,14 +1,14 @@
 import discord
 
-from bot_functions import *
-from global_variables import *
-
 from random import choice
 from discord.ext import tasks
-from dynamodb_methods import ddb_remove_all
 from datetime import datetime, time, timedelta, timezone
-from string_processing import check_command, check_flags
-from secret_variables import DEBUG_MODE, DISCORD_BOT_TOKEN
+
+from bot_functions import *
+from dynamodb_methods import *
+from global_variables import *
+from secret_variables import *
+from string_processing import *
 
 
 # declare bot intents
@@ -33,7 +33,7 @@ async def on_ready():
 	# but tasks with specific timings can't be started more than once
 	try:
 		rotate_status.start()
-		purge_cache_weekly.start()
+		clear_cache_weekly.start()
 	except:
 		pass
 
@@ -75,15 +75,15 @@ async def rotate_status():
 	await bot.change_presence(activity=activity_status)
 
 
-# automatically purge caches once a week
+# automatically clear caches once a week
 timezone = timezone(timedelta(hours=TIMEZONE_OFFSET))
-@tasks.loop(time=time(hour=PURGE_HOUR, tzinfo=timezone))
-async def purge_cache_weekly():
-	if datetime.today().weekday() == PURGE_DAY:
-		purge_cache()
+@tasks.loop(time=time(hour=CACHE_CLEAR_HOUR, tzinfo=timezone))
+async def clear_cache_weekly():
+	if datetime.today().weekday() == CACHE_CLEAR_DAY:
+		clear_cache()
 
 		channel = bot.get_channel(MAIN_CHANNEL_ID)
-		await channel.send(burgl_message('purged'))
+		await channel.send(burgl_message('cleared'))
 
 
 bot.run(DISCORD_BOT_TOKEN)

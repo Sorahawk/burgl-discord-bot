@@ -1,8 +1,8 @@
 import re
 
-from global_variables import *
-
 from difflib import SequenceMatcher
+
+from global_variables import *
 
 
 # determines which command is being used, if any (remember that bot reads all messages)

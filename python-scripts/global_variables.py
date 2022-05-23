@@ -3,14 +3,14 @@
 TIMEZONE_OFFSET = 8
 
 
-# integer value for day of the week to conduct weekly cache purge
+# integer value for day of the week to conduct weekly cache clear
 # 0 is Monday, 6 is Sunday
-PURGE_DAY = 0
+CACHE_CLEAR_DAY = 0
 
 
-# integer value for hour of the day to conduct weekly cache purge
+# integer value for hour of the day to conduct weekly cache clear
 # 0 is 12AM, 23 is 11PM
-PURGE_HOUR = 6
+CACHE_CLEAR_HOUR = 6
 
 
 # ID of default Discord server channel that will receive notifications
@@ -18,7 +18,12 @@ MAIN_CHANNEL_ID = 970882023055036426
 
 
 # list of elevated Discord users
-ELEVATED_USERS = ['<61795156359905281', '498051548463628300']
+ELEVATED_USERS = [261795156359905281, 498051548463628300]
+
+
+# color code for Embed messages
+# 0x6542E1 is the purple that BURG.L's icon has in-game while speaking
+EMBED_COLOR_CODE = 0x6542E1
 
 
 # symbol to signify bot commands
@@ -26,7 +31,7 @@ BOT_COMMAND_PREFIX = '.'
 
 
 # list of bot commands
-BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'purge', 'clear']
+BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge']
 
 
 # dictionary of command flags
@@ -34,31 +39,33 @@ BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'purge', 'clear']
 BOT_COMMAND_FLAGS = {'delete_binding': 'd', 'force_search': 'f', 'get_gold': 'g', 'view_bindings': 'v'}
 
 
-# list containing lists of strings to populate the embedded help menu
-BOT_HELP_MENU = [
-	['**.help**', 'Displays this help menu.'],
-
-	['**.search <object_name>**', 'Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
+# dictionary containing nested lists of strings to populate the help menu, categorised by command type
+BOT_HELP_MENU = {
+	'Main': [
+		['.search <object_name>', 'Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
 		'*+Use flag `-f` to force the search to bypass any binded shortcuts.*'],
 
-	['**.card <creature_name>**', "Displays the specified creature's bestiary card.",
+		['.card <creature_name>', "Displays the specified creature's bestiary card.",
 		"*+Use flag `-g` to display the creature's gold bestiary card.*", '*+Use flag `-f` to force the search to bypass any binded shortcuts.*'],
 
-	['**.bind <object_name>, <shortcut_1>, [shortcut_2], ...**', 'Binds an object name to one or more shortcut phrases.',
+		['.bind <object_name>, <shortcut_1>, [shortcut_2], ...', 'Binds an object name to one or more shortcut phrases.',
 		'*+Use flag `-v` to view all binded shortcuts (no arguments required).*', '*+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).*',
-		'*+Each parameter is case-insensitive and must be separated by a comma.*'],
+		'*+Each parameter is case-insensitive and must be separated by a comma.*']
+	],
 
-	['**.purge**', 'Purges the webpage data and object information caches.'],
-
-	['**.clear**', 'Clears up to 100 recent messages (in server channels), and all bot messages (in private chats).']
-]
+	'Utility': [
+		['.help', 'Displays this help menu.'],
+		['.clear', 'Clears the webpage data and object information caches.'],
+		['.purge', 'Purges up to 100 recent messages (in server channels), and all bot messages (in private chats).']
+	]
+}
 
 
 # dictionary of typical messages used by the bot, including warning and error messages
 BOT_VOICELINES = {
 	'hello': 'Hello there! Acting science manager B-B-B-BURG.L at your service!',
 	'debug': 'My data caches are missing!',
-	'purged': 'Data caches have been purged.',
+	'cleared': 'Data caches have been cleared.',
 	'unauthorised': 'You are not authorised to use this command.',
 	'empty': 'Please provide input parameters.',
 	'insufficient': 'A minimum of two comma-separated parameters are required.',

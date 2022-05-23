@@ -67,11 +67,11 @@ The overall roadmap and development tracker for this project can be found on the
   - *Use flag `-v` to view all binded shortcuts (no arguments required).*
   - *Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).*
   - *Each parameter is case-insensitive and must be separated by a comma.*
-- `.purge`
-  - Purges the webpage data and object information caches.
 - `.clear`
-  - Clears up to 100 recent messages from a server channel.
-  - Clears all of this bot's messages from a private chat.
+  - Clears the webpage data and object information caches.
+- `.purge`
+  - Purges up to 100 recent messages from a server channel.
+  - Purges all of this bot's messages from a private chat.
 
 <br>
 

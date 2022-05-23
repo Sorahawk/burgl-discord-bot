@@ -1,7 +1,8 @@
 from collections import Counter
-from url_processing import get_page_data
-from global_variables import BASE_WIKI_URL, SMOOTHIE_BASES
-from string_processing import res_weakness_processing
+
+from url_processing import *
+from global_variables import *
+from string_processing import *
 
 
 # returns dictionary of extracted information for a given status effect or mutation

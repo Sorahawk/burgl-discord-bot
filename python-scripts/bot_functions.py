@@ -1,15 +1,15 @@
+from json import dumps, loads
+from asyncio import TimeoutError
+from discord import DMChannel, Embed
+
+from card_search import *
 from object_search import *
 from bind_functions import *
+from dynamodb_methods import *
 from global_variables import *
+from secret_variables import *
 from storage_functions import *
-
-from json import dumps, loads
-from discord import DMChannel, Embed
-from secret_variables import DEBUG_MODE
-from card_search import get_creature_card
-from global_variables import CUSTOM_EMOJIS
-from dynamodb_methods import ddb_insert_item
-from string_processing import burgl_message, capitalise_object_name
+from string_processing import *
 
 
 # returns True if message author is elevated, otherwise False
@@ -22,39 +22,20 @@ def check_user_elevation(message):
 
 # help menu method
 async def help_method(bot, message, user_input, flag_presence):
-	help_menu = Embed(description=f"{CUSTOM_EMOJIS['BURG.L']} **Command List**", colour=0x6542E1)
+	embed_list = []
+	category_names = ['Main', 'Utility']
 
-	for command in BOT_HELP_MENU:
-		help_menu.add_field(name=command[0], value='\n'.join(command[1:]), inline=False)
+	for page in range(len(category_names)):
+		category = category_names[page]
+		help_embed = Embed(title='**Command List**', description=f'**{category}**', color=EMBED_COLOR_CODE)
 
-	embedded_message = await message.channel.send(embed=help_menu)
-	await embedded_message.add_reaction(CUSTOM_EMOJIS['CrossMark'])
+		for command in BOT_HELP_MENU[category]:
+			help_embed.add_field(name=command[0], value='\n'.join(command[1:]), inline=False)
 
+		help_embed.set_footer(text=f'Page {page + 1}/{len(category_names)}')
+		embed_list.append(help_embed)
 
-	# returns True if emoji reaction by user to the specific help message is the cross mark
-	def cross_emoji_check(reaction, user):
-		return user != bot.user and reaction.message.id == embedded_message.id and reaction.emoji == CUSTOM_EMOJIS['CrossMark']
-
-
-	while True:
-		try:
-			reaction, user = await bot.wait_for('reaction_add', timeout=60, check=cross_emoji_check)
-
-			# check if channel is a private chat
-			if isinstance(message.channel, DMChannel):
-				return await embedded_message.delete()
-
-			else:
-				# close help menu
-				await embedded_message.clear_reactions()
-				return await embedded_message.edit(content=burgl_message('embed_close'), embed=None)
-
-		except TimeoutError:
-			try:
-				# remove cross 'button' from the message
-				return await embedded_message.clear_reactions()
-			except:
-				return
+	return await multipage_embed_handler(bot, message, embed_list)
 
 
 # object search method
@@ -99,19 +80,19 @@ async def search_method(bot, message, user_input, flag_presence):
 	if isinstance(result, list):
 		# item page format is not supported
 		if result[0] == 102:
-			await message.channel.send(burgl_message(102).replace('VAR1', result[1]))
+			return await message.channel.send(burgl_message(102).replace('VAR1', result[1]))
 
 	# unable to locate item page URL
 	elif result == 101:
 		user_input = capitalise_object_name(user_input)
-		await message.channel.send(burgl_message(101).replace('VAR1', user_input))
+		return await message.channel.send(burgl_message(101).replace('VAR1', user_input))
 
 	# daily quota for Google API exhausted
 	elif result == 103:
-		await message.channel.send(burgl_message(103))
+		return await message.channel.send(burgl_message(103))
 
 	else:
-		await message.channel.send(embed=format_object_info(result))
+		return await message.channel.send(embed=format_object_info(result))
 
 
 # creature card search method
@@ -127,25 +108,25 @@ async def card_method(bot, message, user_input, flag_presence):
 
 	# daily quota for Google API exhausted
 	if result == 103:
-		await message.channel.send(burgl_message(103))
+		return await message.channel.send(burgl_message(103))
 
 	# card cannot be found
 	elif result == 104:
 		user_input = capitalise_object_name(user_input)
-		await message.channel.send(burgl_message(104).replace('VAR1', user_input))
+		return await message.channel.send(burgl_message(104).replace('VAR1', user_input))
 
 	else:
-		embedded_card = Embed(title=f'{result[0]}', colour=0x6542E1)
+		embedded_card = Embed(title=f'{result[0]}', color=EMBED_COLOR_CODE)
 		embedded_card.set_image(url=result[1])
 		embedded_card.set_footer(text='Creature Card')
 
-		await message.channel.send(embed=embedded_card)
+		return await message.channel.send(embed=embedded_card)
 
 
 # shortcut binding method
 async def bind_method(bot, message, user_input, flag_presence):
 	if flag_presence['view_bindings']:
-		await bind_view(bot, message, user_input)
+		return await bind_view(bot, message, user_input)
 
 	# allow non-elevated users to view bindings
 	if not check_user_elevation(message):
@@ -154,30 +135,28 @@ async def bind_method(bot, message, user_input, flag_presence):
 	if flag_presence['delete_binding']:
 		if user_input == '':
 			return await message.channel.send(burgl_message('empty'))
-
-		await bind_delete(message, user_input)
-
+		else:
+			return await bind_delete(message, user_input)
 	else:
-		await bind_default(message, user_input)
+		return await bind_default(message, user_input)
 
 
-# cache purging method
-async def purge_method(bot, message, user_input, flag_presence):
+# cache clearing method
+async def clear_method(bot, message, user_input, flag_presence):
 	if not check_user_elevation(message):
 		return await message.channel.send(burgl_message('unauthorised'))
 	else:
-		purge_cache()
-		return await message.channel.send(burgl_message('purged'))
+		clear_cache()
+		return await message.channel.send(burgl_message('cleared'))
 
 
-# message clearing method
-async def clear_method(bot, message, user_input, flag_presence):
+# message purging method
+async def purge_method(bot, message, user_input, flag_presence):
 	message_history = [old_message async for old_message in message.channel.history()]
 
 	# if message is from a server channel
 	if not isinstance(message.channel, DMChannel):
-		await message.channel.delete_messages(message_history)
-		return await message.delete()
+		return await message.channel.delete_messages(message_history)
 
 	else:  # if message is from a private message
 		for old_message in message_history:

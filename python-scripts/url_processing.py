@@ -1,12 +1,12 @@
-import requests  # don't import get directly as dict.get() is used as well
-
-from global_variables import *
+import requests  # don't import requests.get directly as dict.get() is used as well
 
 from lxml import html
-from dynamodb_methods import ddb_insert_item
-from storage_functions import retrieve_from_cache
-from string_processing import get_appended_url, string_similarity
-from secret_variables import DEBUG_MODE, JSON_API_KEY, SEARCH_ENGINE_ID
+
+from dynamodb_methods import *
+from global_variables import *
+from secret_variables import *
+from storage_functions import *
+from string_processing import *
 
 
 # returns content of wiki page as an lxml.html.HtmlElement object

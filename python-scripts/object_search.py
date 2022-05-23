@@ -1,9 +1,9 @@
+from discord import Embed
+
+from url_processing import *
+from global_variables import *
 from object_extraction import *
 from string_processing import *
-
-from discord import Embed
-from url_processing import locate_object_url
-from global_variables import OBJECT_ATTRIBUTES
 
 
 # returns booleans representing presence of recipe and repair costs on an object's page
@@ -86,7 +86,7 @@ def get_object_info(search_query):
 
 # returns a grid-formatted embed message with blank fields to be filled in with attributes
 def create_grid_embed(title, url, image):
-	embedded_message = Embed(title=title, url=url, color=0x6542E1)
+	embedded_message = Embed(title=title, url=url, color=EMBED_COLOR_CODE)
 	embedded_message.set_image(url=image)
 
 	embedded_message.add_field(name='Description', value='\u200b', inline=False)

@@ -1,7 +1,7 @@
 import boto3
 
-from global_variables import DDB_TABLE_HEADERS
-from secret_variables import AWS_ACCESS_KEY, AWS_SECRET_KEY
+from global_variables import *
+from secret_variables import *
 
 
 # initialises and returns DynamoDB session
