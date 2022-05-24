@@ -26,7 +26,7 @@ def check_info_presence(page_content):
 def get_object_info(search_query):
 
 	# check for special queries, e.g. upgraded tools, special smoothie types
-	is_upgraded_tool = '+' == search_query.strip()[-1]
+	is_upgraded_tool = '+' in search_query
 	search_query, smoothie_type = detect_smoothie_type(search_query)
 
 	# get most likely wiki URL of object

@@ -185,12 +185,11 @@ def generate_recipe_string(recipe_list):
 def process_chop_input(user_input):
 
 	# regex search patterns
-	# [^,\d]+ means match any consecutive characters that are not digits nor commas
-	name_qty_pattern = '[^,\d]+ [0-9]+'
-	qty_name_pattern = '[0-9]+ [^,\d]+'
-	regex_pattern = f'{name_qty_pattern}|{qty_name_pattern}'
+	name_pattern = "[a-z _+'?-]+"
+	qty_pattern = '[0-9]+'
+	regex_pattern = f'{name_pattern} {qty_pattern}|{qty_pattern} {name_pattern}'
 
-	results = re.findall(regex_pattern, user_input)
+	results = re.findall(regex_pattern, user_input, re.IGNORECASE)
 
 	processed_input = {}
 
