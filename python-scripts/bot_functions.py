@@ -162,3 +162,15 @@ async def purge_method(bot, message, user_input, flag_presence):
 		for old_message in message_history:
 			if old_message.author == bot.user:
 				await old_message.delete()
+
+
+# chopping list method
+async def chop_method(bot, message, user_input, flag_presence):
+	if user_input == '':
+		return await message.channel.send(burgl_message('empty'))
+
+	inputted_items = process_chop_input(user_input)
+	return await message.channel.send(inputted_items)
+
+
+# skip next one if neither or just ignore current one? idk

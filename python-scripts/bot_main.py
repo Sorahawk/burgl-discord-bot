@@ -24,10 +24,11 @@ async def on_ready():
 	print(f'{bot.user} is online.')
 
 	channel = bot.get_channel(MAIN_CHANNEL_ID)
-	await channel.send(burgl_message('hello'))
 
 	if DEBUG_MODE:
-		await channel.send(burgl_message('debug'))
+		return await channel.send(burgl_message('debug'))
+
+	await channel.send(burgl_message('hello'))
 
 	# if script becomes inactive for any reason, on_ready will be called again once active
 	# but tasks with specific timings can't be started more than once

@@ -31,7 +31,7 @@ BOT_COMMAND_PREFIX = '.'
 
 
 # list of bot commands
-BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge']
+BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge', 'chop']
 
 
 # dictionary of command flags

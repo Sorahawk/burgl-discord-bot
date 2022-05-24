@@ -115,7 +115,7 @@ def capitalise_object_name(object_name):
 def get_appended_url(search_query):
 
 	# symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
-	illegal_symbols = '[\][}{><|%+]+'
+	illegal_symbols = '[+%<>|}{[\]]+'
 
 	search_query = re.sub(illegal_symbols, '', search_query)
 
@@ -179,3 +179,30 @@ def generate_recipe_string(recipe_list):
 		recipe_string += f'{item[1]} {item[0]}\n'
 
 	return recipe_string
+
+
+# returns a dictionary containing processed item names as keys and their quantities
+def process_chop_input(user_input):
+
+	# regex search patterns
+	# [^,\d]+ means match any consecutive characters that are not digits nor commas
+	name_qty_pattern = '[^,\d]+ [0-9]+'
+	qty_name_pattern = '[0-9]+ [^,\d]+'
+	regex_pattern = f'{name_qty_pattern}|{qty_name_pattern}'
+
+	results = re.findall(regex_pattern, user_input)
+
+	processed_input = {}
+
+	for item in results:
+		item = item.split()
+
+		if item[0].isdecimal():
+			item_qty = item.pop(0)
+		else:
+			item_qty = item.pop(-1)
+
+		item_name = ' '.join(item)
+		processed_input[item_name] = int(item_qty)
+
+	return processed_input
