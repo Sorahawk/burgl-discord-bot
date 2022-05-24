@@ -1,4 +1,3 @@
-from json import dumps, loads
 from asyncio import TimeoutError
 from discord import DMChannel, Embed
 from collections import Counter
