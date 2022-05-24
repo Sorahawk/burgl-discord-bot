@@ -62,6 +62,10 @@ def get_object_info(search_query):
 
 	has_recipe, has_repair_cost = check_info_presence(page_content)
 
+	# disable recipe extraction for natural resources since some items like Plant Fiber can be grinded
+	if 'category' in object_info and object_info['category'] == 'Natural Resources':
+		has_recipe, has_repair_cost = False, False
+
 	if has_recipe:
 		try:
 			object_info['recipe'], object_info['recipe_name'] = get_recipe_table(page_content, object_info['name'], smoothie_type)
@@ -82,6 +86,47 @@ def get_object_info(search_query):
 		object_info['recipe'] = compile_counter([SMOOTHIE_BASES[smoothie_type]], 'Smoothie')
 
 	return object_info
+
+
+# returns a dictionary containing attributes of the searched object if located
+# otherwise, can return error codes 101, 102 or 103 depending on the failure case
+# function also caches results for succesful retrieval, as well as errors 101 and 102
+def process_object_input(user_input, flag_presence={'force_search': False}):
+	result = None
+
+	# if user forces search of actual query, then bypass both shortcut table as well as cache
+	if not flag_presence['force_search']:
+
+		# check if corresponding object info exists in cache
+		result = retrieve_from_cache(OBJECT_INFO_CACHE, user_input)
+
+		if result:
+			# load dictionary from stored string
+			result = loads(result)
+
+			if isinstance(result, dict):
+				# reinitialise collections.Counter for relevant attributes
+				counter_list = ['recipe', 'repair_cost']
+
+				for attribute in counter_list:
+					if attribute in result:
+						result[attribute] = Counter(result[attribute])
+
+	# if query not in cache or -f flag present
+	if not result:
+		if flag_presence['force_search']:
+			full_name = user_input
+		else:
+			full_name = retrieve_full_name(user_input)
+
+		# extract object info
+		result = get_object_info(full_name)
+
+		# cache results except when -f flag is present, or Google API error occurs (API could be available again at any time)
+		if result != 103 and not flag_presence['force_search'] and not DEBUG_MODE:
+			ddb_insert_item(OBJECT_INFO_CACHE, user_input, dumps(result))
+
+		return result
 
 
 # returns a grid-formatted embed message with blank fields to be filled in with attributes

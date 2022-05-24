@@ -200,11 +200,11 @@ MAX_SHORTCUT_FIELDS = 15
 SHORTCUT_STORAGE = 'ShortName-FullName'
 OBJECT_INFO_CACHE = 'SearchQuery-ObjectInfo'
 PAGE_HTML_CACHE = 'WikiURL-PageHTML'
-CHOPPING_LIST = 'RawResource-Quantity'
+CHOPPING_LIST = 'NaturalResource-Quantity'
 
 DDB_TABLE_HEADERS = {
 	SHORTCUT_STORAGE: ('short_name', 'full_name'),
 	OBJECT_INFO_CACHE: ('search_query', 'object_info'),
 	PAGE_HTML_CACHE: ('wiki_url', 'page_html'),
-	CHOPPING_LIST: ('raw_resource', 'quantity')
+	CHOPPING_LIST: ('natural_resource', 'quantity')
 }

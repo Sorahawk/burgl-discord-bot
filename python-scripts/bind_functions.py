@@ -25,6 +25,10 @@ async def bind_view(bot, message, user_input):
 	embed_list = []
 	number_pages = (len(shortcut_list) // MAX_SHORTCUT_FIELDS) + 1
 
+	# minus one if the number is nicely divisible
+	if len(shortcut_list) % MAX_SHORTCUT_FIELDS == 0:
+		number_pages -= 1
+
 	for page in range(number_pages):
 		shortcut_embed = Embed(title='**Binded Shortcuts**', color=EMBED_COLOR_CODE)
 

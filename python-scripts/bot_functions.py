@@ -1,10 +1,12 @@
 from json import dumps, loads
 from asyncio import TimeoutError
 from discord import DMChannel, Embed
+from collections import Counter
 
 from card_search import *
 from object_search import *
 from bind_functions import *
+from chop_functions import *
 from dynamodb_methods import *
 from global_variables import *
 from secret_variables import *
@@ -43,39 +45,7 @@ async def search_method(bot, message, user_input, flag_presence):
 	if user_input == '':
 		return await message.channel.send(burgl_message('empty'))
 
-	result = None
-
-	# if user forces search of actual query, then bypass both shortcut table as well as cache
-	if not flag_presence['force_search']:
-
-		# check if corresponding object info exists in cache
-		result = retrieve_from_cache(OBJECT_INFO_CACHE, user_input)
-
-		if result:
-			# load dictionary from stored string
-			result = loads(result)
-
-			if isinstance(result, dict):
-				# reinitialise collections.Counter for relevant attributes
-				counter_list = ['recipe', 'repair_cost']
-
-				for attribute in counter_list:
-					if attribute in result:
-						result[attribute] = Counter(result[attribute])
-
-	# if query not in cache or -f flag present
-	if not result:
-		if flag_presence['force_search']:
-			full_name = user_input
-		else:
-			full_name = retrieve_full_name(user_input)
-
-		# extract object info
-		result = get_object_info(full_name)
-
-		# cache results except Google API error (the API could become available again at any time) and -f searches
-		if result != 103 and not flag_presence['force_search'] and not DEBUG_MODE:
-			ddb_insert_item(OBJECT_INFO_CACHE, user_input, dumps(result))
+	result = process_object_input(user_input, flag_presence)
 
 	if isinstance(result, list):
 		# item page format is not supported
@@ -169,8 +139,13 @@ async def chop_method(bot, message, user_input, flag_presence):
 	if user_input == '':
 		return await message.channel.send(burgl_message('empty'))
 
+	# process user input into dictionary of items and their desired quantities
 	inputted_items = process_chop_input(user_input)
-	return await message.channel.send(inputted_items)
+	total_count = Counter()
 
+	for item, quantity in inputted_items.items():
+		added_items = process_chop_components(item, quantity)
+		total_count += added_items
+		await message.channel.send(added_items)
 
-# skip next one if neither or just ignore current one? idk
+	await message.channel.send(total_count)
