@@ -83,6 +83,7 @@ The overall roadmap and development tracker for this project can be found on the
 | 102 | Wiki page for the object has an unsupported layout. |
 | 103 | Daily limit of 100 queries for Google Custom Search JSON API has been exceeded. |
 | 104 | Bestiary card for the creature cannot be located. |
+| 105 | Object is not compatible with the Chopping List. |
 
 <br>
 

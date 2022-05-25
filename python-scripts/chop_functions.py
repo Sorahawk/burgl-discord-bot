@@ -18,7 +18,7 @@ def process_chop_components(item, quantity, base_components=None):
 			print(f"WARNING: Error {item_info} occurred for component material '{item}'.\n")
 			return base_components
 
-	if base_components is None:
+	if not base_components:
 		base_components = Counter()
 
 	# only insert an item into chopping list if it is a natural resource
@@ -45,5 +45,9 @@ def process_chop_components(item, quantity, base_components=None):
 
 			# recursively run function on component materials
 			base_components = process_chop_components(material, recipe[material], base_components)
+
+	# return error 105 if object is not a resource or craftable item, e.g. creature
+	else:
+		return 105
 
 	return base_components

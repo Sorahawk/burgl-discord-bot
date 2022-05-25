@@ -31,7 +31,7 @@ BOT_COMMAND_PREFIX = '.'
 
 
 # list of bot commands
-BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge', 'chop']
+BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge', 'chop', 'sleep']
 
 
 # dictionary of command flags
@@ -75,7 +75,8 @@ BOT_VOICELINES = {
 	101: "**ERROR 101:** Unable to locate 'VAR1'. Try typing in the object's full name.",
 	102: "**ERROR 102:** Wiki page for 'VAR1' has an unsupported layout.",
 	103: "**ERROR 103:** Google API daily limit exceeded. Type in the exact name of 'VAR1'.",
-	104: "**ERROR 104:** Unable to locate Creature Card for 'VAR1'. Type in the exact name of the creature."
+	104: "**ERROR 104:** Unable to locate Creature Card for 'VAR1'. Type in the exact name of the creature.",
+	105: "**ERROR 105:** 'VAR1' is not a valid object for the Chopping List."
 }
 
 

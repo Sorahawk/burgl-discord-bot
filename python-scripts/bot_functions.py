@@ -21,25 +21,16 @@ def check_user_elevation(message):
 # display corresponding error message if result is an error
 # returns True if no error, else returns None by default
 async def detect_search_errors(message, user_input, result):
+
+	# catch specific error cases which return different data types
 	if isinstance(result, list):
-		# item page format is not supported
 		if result[0] == 102:
 			await message.channel.send(burgl_message(102).replace('VAR1', result[1]))
 
-	# unable to locate item page URL
-	elif result == 101:
-		user_input = capitalise_object_name(user_input)
-		await message.channel.send(burgl_message(101).replace('VAR1', user_input))
-
-	# daily quota for Google API exhausted
-	elif result == 103:
-		await message.channel.send(burgl_message(103).replace('VAR1', user_input))
-
-	# card cannot be found
-	elif result == 104:
-		user_input = capitalise_object_name(user_input)
-		await message.channel.send(burgl_message(104).replace('VAR1', user_input))
-
+	# check voiceline dictionary in global_variables directly so no need to keep updating here too
+	elif isinstance(result, int) and result in BOT_VOICELINES:
+		full_name = capitalise_object_name(retrieve_full_name(user_input))
+		await message.channel.send(burgl_message(result).replace('VAR1', full_name))
 	else:
 		return True
 
@@ -99,14 +90,13 @@ async def card_method(bot, message, user_input, flag_presence):
 
 # shortcut binding method
 async def bind_method(bot, message, user_input, flag_presence):
-	if flag_presence['view_bindings']:
-		return await bind_view(bot, message, user_input)
+	if flag_presence['view_bindings']:  # allow non-elevated users to view bindings
+		await bind_view(bot, message, user_input)
 
-	# allow non-elevated users to view bindings
-	if not check_user_elevation(message):
-		return await message.channel.send(burgl_message('unauthorised'))
+	elif not check_user_elevation(message):
+		await message.channel.send(burgl_message('unauthorised'))
 
-	if flag_presence['delete_binding']:
+	elif flag_presence['delete_binding']:
 		if user_input == '':
 			await message.channel.send(burgl_message('empty'))
 		else:
@@ -142,6 +132,8 @@ async def purge_method(bot, message, user_input, flag_presence):
 async def chop_method(bot, message, user_input, flag_presence):
 	if user_input == '':
 		return await message.channel.send(burgl_message('empty'))
+	elif not check_user_elevation(message):
+		return await message.channel.send(burgl_message('unauthorised'))
 
 	# process user input into dictionary of items and their desired quantities
 	inputted_items = process_chop_input(user_input)
@@ -160,3 +152,16 @@ async def chop_method(bot, message, user_input, flag_presence):
 	# print item Counter if not empty
 	if total_count:
 		await message.channel.send(total_count)
+
+
+# toggle sleep mode method
+async def sleep_method(bot, message, user_input, flag_presence):
+	if DEBUG_MODE:
+		# ignore command if in development mode
+		return
+
+	elif not check_user_elevation(message):
+		await message.channel.send(burgl_message('unauthorised'))
+
+	else:
+		pass

@@ -59,12 +59,16 @@ async def on_message(message):
 	# in the process also removes any excess whitespace
 	flag_presence, user_input = check_flags(user_input)
 
-	# call corresponding method
-	try:
+	if DEBUG_MODE:
 		await eval(command_method)(bot, message, user_input, flag_presence)
 
-	except Exception as e:  # log any errors if command fails in any unexpected way
-		print(f'WARNING: {e}.\n')
+	# log any unexpected errors if not in debug mode
+	else:
+		try:
+			await eval(command_method)(bot, message, user_input, flag_presence)
+
+		except Exception as e:  # log any errors if command fails in any unexpected way
+			print(f'WARNING: {e}.\n')
 
 
 # automatically rotate bot's Discord status every 10 minutes
