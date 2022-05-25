@@ -74,7 +74,7 @@ BOT_VOICELINES = {
 
 	101: "**ERROR 101:** Unable to locate 'VAR1'. Try typing in the object's full name.",
 	102: "**ERROR 102:** Wiki page for 'VAR1' has an unsupported layout.",
-	103: '**ERROR 103:** Google API daily limit exceeded. Type in the exact name of the object.',
+	103: "**ERROR 103:** Google API daily limit exceeded. Type in the exact name of 'VAR1'.",
 	104: "**ERROR 104:** Unable to locate Creature Card for 'VAR1'. Type in the exact name of the creature."
 }
 

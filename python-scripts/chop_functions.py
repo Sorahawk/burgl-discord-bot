@@ -10,11 +10,15 @@ from global_variables import *
 def process_chop_components(item, quantity, base_components=None):
 	item_info = process_object_input(item)
 
-	# return any errors if they occur for a user-inputted item, otherwise ignore
 	if not isinstance(item_info, dict):
-		return item_info if not base_components else base_components
+		if base_components is None:  # return any errors if they occur for a user-inputted item
+			return item_info
 
-	if not base_components:
+		else:  # print warning if any errors occur for component materials
+			print(f"WARNING: Error {item_info} occurred for component material '{item}'.\n")
+			return base_components
+
+	if base_components is None:
 		base_components = Counter()
 
 	# only insert an item into chopping list if it is a natural resource

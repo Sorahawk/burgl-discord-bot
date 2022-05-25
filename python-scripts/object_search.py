@@ -72,14 +72,14 @@ def get_object_info(search_query):
 			object_info['recipe'], object_info['recipe_name'] = get_recipe_table(page_content, object_info['name'], smoothie_type)
 		except:
 			# recipe extraction failed
-			print(f"WARNING: Recipe extraction for {object_info['name']} failed.")
+			print(f"WARNING: Recipe extraction for {object_info['name']} failed.\n")
 
 	if has_repair_cost:
 		try:
 			object_info['repair_cost'] = get_repair_cost(page_content)
 		except:
 			# repair cost extraction failed
-			print(f"WARNING: Repair cost extraction for {object_info['name']} failed.")
+			print(f"WARNING: Repair cost extraction for {object_info['name']} failed.\n")
 
 	# if object is Smoothie?, manually insert recipe with just the base ingredient
 	if object_info['name'] == 'Smoothie?':
@@ -127,7 +127,7 @@ def process_object_input(user_input, flag_presence={'force_search': False}):
 		if result != 103 and not flag_presence['force_search'] and not DEBUG_MODE:
 			ddb_insert_item(OBJECT_INFO_CACHE, user_input, dumps(result))
 
-		return result
+	return result
 
 
 # returns a grid-formatted embed message with blank fields to be filled in with attributes

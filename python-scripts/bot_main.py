@@ -21,7 +21,7 @@ bot = discord.Client(intents=intents)
 
 @bot.event
 async def on_ready():
-	print(f'{bot.user} is online.')
+	print(f'{bot.user} is online.\n')
 
 	channel = bot.get_channel(MAIN_CHANNEL_ID)
 
@@ -60,7 +60,11 @@ async def on_message(message):
 	flag_presence, user_input = check_flags(user_input)
 
 	# call corresponding method
-	await eval(command_method)(bot, message, user_input, flag_presence)
+	try:
+		await eval(command_method)(bot, message, user_input, flag_presence)
+
+	except Exception as e:  # log any errors if command fails in any unexpected way
+		print(f'WARNING: {e}.\n')
 
 
 # automatically rotate bot's Discord status every 10 minutes

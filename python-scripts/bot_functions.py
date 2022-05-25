@@ -18,6 +18,32 @@ def check_user_elevation(message):
 	return message.author.id in ELEVATED_USERS
 
 
+# display corresponding error message if result is an error
+# returns True if no error, else returns None by default
+async def detect_search_errors(message, user_input, result):
+	if isinstance(result, list):
+		# item page format is not supported
+		if result[0] == 102:
+			await message.channel.send(burgl_message(102).replace('VAR1', result[1]))
+
+	# unable to locate item page URL
+	elif result == 101:
+		user_input = capitalise_object_name(user_input)
+		await message.channel.send(burgl_message(101).replace('VAR1', user_input))
+
+	# daily quota for Google API exhausted
+	elif result == 103:
+		await message.channel.send(burgl_message(103).replace('VAR1', user_input))
+
+	# card cannot be found
+	elif result == 104:
+		user_input = capitalise_object_name(user_input)
+		await message.channel.send(burgl_message(104).replace('VAR1', user_input))
+
+	else:
+		return True
+
+
 # all bot methods below have to correspond to an item in BOT_COMMAND_LIST
 # and must share the same name, followed by '_method'
 
@@ -36,7 +62,7 @@ async def help_method(bot, message, user_input, flag_presence):
 		help_embed.set_footer(text=f'Page {page + 1}/{len(category_names)}')
 		embed_list.append(help_embed)
 
-	return await multipage_embed_handler(bot, message, embed_list)
+	await multipage_embed_handler(bot, message, embed_list)
 
 
 # object search method
@@ -46,22 +72,9 @@ async def search_method(bot, message, user_input, flag_presence):
 
 	result = process_object_input(user_input, flag_presence)
 
-	if isinstance(result, list):
-		# item page format is not supported
-		if result[0] == 102:
-			return await message.channel.send(burgl_message(102).replace('VAR1', result[1]))
-
-	# unable to locate item page URL
-	elif result == 101:
-		user_input = capitalise_object_name(user_input)
-		return await message.channel.send(burgl_message(101).replace('VAR1', user_input))
-
-	# daily quota for Google API exhausted
-	elif result == 103:
-		return await message.channel.send(burgl_message(103))
-
-	else:
-		return await message.channel.send(embed=format_object_info(result))
+	# check for errors and proceed if none detected
+	if await detect_search_errors(message, user_input, result):
+		await message.channel.send(embed=format_object_info(result))
 
 
 # creature card search method
@@ -75,21 +88,13 @@ async def card_method(bot, message, user_input, flag_presence):
 
 	result = get_creature_card(full_name, flag_presence['get_gold'])
 
-	# daily quota for Google API exhausted
-	if result == 103:
-		return await message.channel.send(burgl_message(103))
-
-	# card cannot be found
-	elif result == 104:
-		user_input = capitalise_object_name(user_input)
-		return await message.channel.send(burgl_message(104).replace('VAR1', user_input))
-
-	else:
+	# check for errors and proceed if none detected
+	if await detect_search_errors(message, user_input, result):
 		embedded_card = Embed(title=f'{result[0]}', color=EMBED_COLOR_CODE)
 		embedded_card.set_image(url=result[1])
 		embedded_card.set_footer(text='Creature Card')
 
-		return await message.channel.send(embed=embedded_card)
+		await message.channel.send(embed=embedded_card)
 
 
 # shortcut binding method
@@ -103,20 +108,20 @@ async def bind_method(bot, message, user_input, flag_presence):
 
 	if flag_presence['delete_binding']:
 		if user_input == '':
-			return await message.channel.send(burgl_message('empty'))
+			await message.channel.send(burgl_message('empty'))
 		else:
-			return await bind_delete(message, user_input)
+			await bind_delete(message, user_input)
 	else:
-		return await bind_default(message, user_input)
+		await bind_default(message, user_input)
 
 
 # cache clearing method
 async def clear_method(bot, message, user_input, flag_presence):
 	if not check_user_elevation(message):
-		return await message.channel.send(burgl_message('unauthorised'))
+		await message.channel.send(burgl_message('unauthorised'))
 	else:
 		clear_cache()
-		return await message.channel.send(burgl_message('cleared'))
+		await message.channel.send(burgl_message('cleared'))
 
 
 # message purging method
@@ -125,7 +130,7 @@ async def purge_method(bot, message, user_input, flag_presence):
 
 	# if message is from a server channel
 	if not isinstance(message.channel, DMChannel):
-		return await message.channel.delete_messages(message_history)
+		await message.channel.delete_messages(message_history)
 
 	else:  # if message is from a private message
 		for old_message in message_history:
@@ -142,9 +147,16 @@ async def chop_method(bot, message, user_input, flag_presence):
 	inputted_items = process_chop_input(user_input)
 	total_count = Counter()
 
-	for item, quantity in inputted_items.items():
-		added_items = process_chop_components(item, quantity)
-		total_count += added_items
-		await message.channel.send(added_items)
+	for item_name, quantity in inputted_items.items():
+		added_items = process_chop_components(item_name, quantity)
 
-	await message.channel.send(total_count)
+		# check for errors and proceed if none detected
+		if await detect_search_errors(message, item_name, added_items):
+			total_count += added_items
+			await message.channel.send(added_items)
+
+
+	# TODO: replace this line
+	# print item Counter if not empty
+	if total_count:
+		await message.channel.send(total_count)
