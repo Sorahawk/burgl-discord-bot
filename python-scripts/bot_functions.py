@@ -158,7 +158,8 @@ async def chop_method(bot, message, user_input, flag_presence):
 
 
 # store full command list locally in this script
-full_command_list = global_variables.BOT_COMMAND_LIST
+# can also be accessed by referencing BOT_COMMAND_LIST itself at any time, but just use a clearer name to avoid confusion 
+full_command_list = BOT_COMMAND_LIST
 
 # toggle sleep mode method
 async def sleep_method(bot, message, user_input, flag_presence):
