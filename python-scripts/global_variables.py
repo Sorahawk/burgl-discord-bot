@@ -66,6 +66,7 @@ BOT_VOICELINES = {
 	'hello': 'Hello there! Acting science manager B-B-B-BURG.L at your service!',
 	'debug': 'My data caches are missing!',
 	'cleared': 'Data caches have been cleared.',
+	'sleeping': 'Shutting down to recharge.',
 	'unauthorised': 'You are not authorised to use this command.',
 	'empty': 'Please provide input parameters.',
 	'insufficient': 'A minimum of two comma-separated parameters are required.',

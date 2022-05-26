@@ -1,4 +1,4 @@
-import re
+import re, global_variables
 
 from difflib import SequenceMatcher
 
@@ -12,7 +12,7 @@ from global_variables import *
 def check_command(user_input):
 	lowered_input = user_input.lower() + ' '
 
-	for command_name in BOT_COMMAND_LIST:
+	for command_name in global_variables.BOT_COMMAND_LIST:
 		command = command_name + ' '
 
 		if lowered_input.startswith(command):

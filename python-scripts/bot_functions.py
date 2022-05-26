@@ -1,3 +1,5 @@
+import global_variables
+
 from asyncio import TimeoutError
 from discord import DMChannel, Embed
 from collections import Counter
@@ -101,6 +103,7 @@ async def bind_method(bot, message, user_input, flag_presence):
 			await message.channel.send(burgl_message('empty'))
 		else:
 			await bind_delete(message, user_input)
+
 	else:
 		await bind_default(message, user_input)
 
@@ -154,14 +157,22 @@ async def chop_method(bot, message, user_input, flag_presence):
 		await message.channel.send(total_count)
 
 
+# store full command list locally in this script
+full_command_list = global_variables.BOT_COMMAND_LIST
+
 # toggle sleep mode method
 async def sleep_method(bot, message, user_input, flag_presence):
 	if DEBUG_MODE:
 		# ignore command if in development mode
 		return
-
 	elif not check_user_elevation(message):
-		await message.channel.send(burgl_message('unauthorised'))
+		return await message.channel.send(burgl_message('unauthorised'))
 
+	sleep_command = ['sleep']
+
+	if global_variables.BOT_COMMAND_LIST == sleep_command:  # switch off sleep mode
+		global_variables.BOT_COMMAND_LIST = full_command_list
+		await message.channel.send(burgl_message('hello'))
 	else:
-		pass
+		global_variables.BOT_COMMAND_LIST = sleep_command
+		await message.channel.send(burgl_message('sleeping'))
