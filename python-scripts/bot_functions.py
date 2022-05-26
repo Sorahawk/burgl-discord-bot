@@ -119,6 +119,9 @@ async def clear_method(bot, message, user_input, flag_presence):
 
 # message purging method
 async def purge_method(bot, message, user_input, flag_presence):
+	await message.channel.send(burgl_message('purging'))
+
+	# flatten message history into a list
 	message_history = [old_message async for old_message in message.channel.history()]
 
 	# if message is from a server channel
