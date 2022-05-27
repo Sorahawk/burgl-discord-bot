@@ -1,4 +1,4 @@
-import discord
+import discord, requests
 
 from random import choice
 from discord.ext import tasks
@@ -93,6 +93,26 @@ async def clear_cache_weekly():
 
 		channel = bot.get_channel(MAIN_CHANNEL_ID)
 		await channel.send(burgl_message('cleared'))
+
+
+# monitors project repository for new code
+# updates cloud code and restarts bot service after updates
+@tasks.loop(seconds=15)
+async def monitor_repository():
+	url = 'https://api.github.com/repos/Sorahawk/burgl-discord-bot/commits'
+
+	headers = {}
+	#headers = {'If-None-Match': 'W/"2698553f004ce0bfa9c27fd11ff59972a30f4d648d7fd63ad5cb4399f6951a90"'}
+
+	for x in range(2):
+		response = requests.get(url, headers=headers)
+
+		if response.status_code == 200:
+			etag = response.headers['ETag']
+			headers = {'If-None-Match': etag}
+
+		elif response.status_code == 304:
+			print(response.headers)
 
 
 bot.run(DISCORD_BOT_TOKEN)
