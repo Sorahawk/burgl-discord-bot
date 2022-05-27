@@ -64,9 +64,10 @@ BOT_HELP_MENU = {
 # dictionary of typical messages used by the bot, including warning and error messages
 BOT_VOICELINES = {
 	'hello': 'Hello there! Acting science manager B-B-B-BURG.L at your service!',
+	'sleeping': 'Shutting down to recharge!',
 	'debug': 'My data caches are missing!',
 	'cleared': 'Data caches have been cleared.',
-	'sleeping': 'Shutting down to recharge.',
+	'purging': 'Purging message history...',
 	'unauthorised': 'You are not authorised to use this command.',
 	'empty': 'Please provide input parameters.',
 	'insufficient': 'A minimum of two comma-separated parameters are required.',
