@@ -95,7 +95,7 @@ BOT_HELP_MENU = {
 BOT_VOICELINES = {
 	'hello': 'Hello there! Acting science manager B-B-B-BURG.L at your service!',
 	'sleeping': 'Shutting down to recharge!',
-	'updating': 'Available OS update detected, please stand by while I restart.'
+	'updating': 'Available OS update detected, please stand by while I restart.',
 	'debug': 'My data caches are missing!',
 	'cleared': 'Data caches have been cleared.',
 	'purging': 'Purging message history...',
