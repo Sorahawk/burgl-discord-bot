@@ -79,6 +79,8 @@ def process_chop_components(item, quantity, base_components=None):
 
 				# round up desired quantity to the nearest number divisible by recipe quantity
 				quantity = math.ceil(quantity / recipe_quantity)
+			else:
+				recipe_quantity = 1
 
 		# multiply item costs by quantity
 		for material in recipe.keys():
@@ -100,7 +102,4 @@ def process_chop_components(item, quantity, base_components=None):
 
 	# update final quantity since some recipes need the desired quantity to be rounded up
 	base_components['quantity'] = quantity * recipe_quantity
-
-	print(base_components)
-
 	return base_components
