@@ -51,6 +51,27 @@ def check_flags(user_input):
 	return flag_presence, user_input
 
 
+# detect special smoothie type keyword in user input and remove it
+# returns new search query and the smoothie type as two separate variables
+# returns 'basic' by default since don't expect basic to be explicitly stated for smoothies
+def detect_smoothie_type(search_query):
+	smoothie_type = 'basic'
+
+	# detect any special smoothie types from input, e.g. beefy, sticky
+	# does not account for multiple smoothie types, will just take the last one iterated
+	for special in SMOOTHIE_BASES:
+		# ignore 'basic' base because it might appear in other items, e.g. Normal Chair
+		if special != 'basic' and special in search_query.lower():
+			new_search_query = re.compile(special, re.IGNORECASE).sub('', search_query).strip()
+
+			# if the input was just the smoothie type alone, do not remove it
+			if new_search_query:
+				search_query = new_search_query
+				smoothie_type = special
+
+	return search_query, smoothie_type
+
+
 # insert BURG.L emoji to the front of string
 def prefix_burgl_emoji(input_string):
 	return f"{CUSTOM_EMOJIS['BURG.L']} *{input_string}*"
@@ -147,30 +168,9 @@ def string_similarity(a, b):
 	return SequenceMatcher(None, a.lower(), b.lower()).ratio()
 
 
-# detect special smoothie type from user input and remove it
-# returns new search query and the smoothie type as two separate variables
-# returns 'basic' by default since don't expect basic to be explicitly stated for smoothies
-def detect_smoothie_type(search_query):
-	smoothie_type = 'basic'
-
-	# detect any special smoothie types from input, e.g. beefy, sticky
-	# does not account for multiple smoothie types, will just take the last one iterated
-	for special in SMOOTHIE_BASES:
-		# ignore 'basic' base because it might appear in other items, e.g. Normal Chair
-		if special != 'basic' and special in search_query.lower():
-			new_search_query = re.compile(special, re.IGNORECASE).sub('', search_query).strip()
-
-			# if the input was just the smoothie type alone, do not remove it
-			if new_search_query:
-				search_query = new_search_query
-				smoothie_type = special
-
-	return search_query, smoothie_type
-
-
 # processes the many variations of (e)weakness and (e)resistance labels with a single function
 # returns the specific header (out of 4 possibilities) and the processed string
-def res_weakness_processing(header, content):
+def res_weak_processing(header, content):
 	if 'weakness' in header:
 		keyword = 'weakness'
 	else:
@@ -191,29 +191,3 @@ def generate_recipe_string(recipe_list):
 		recipe_string += f'{item[1]} {item[0]}\n'
 
 	return recipe_string
-
-
-# returns a dictionary containing processed item names as keys and their quantities
-def process_chop_input(user_input):
-
-	# regex search patterns
-	name_pattern = "[a-z _+'?-]+"
-	qty_pattern = '[0-9]+'
-	regex_pattern = f'{name_pattern} {qty_pattern}|{qty_pattern} {name_pattern}'
-
-	results = re.findall(regex_pattern, user_input, re.IGNORECASE)
-
-	processed_input = {}
-
-	for item in results:
-		item = item.split()
-
-		if item[0].isdecimal():
-			item_qty = item.pop(0)
-		else:
-			item_qty = item.pop(-1)
-
-		item_name = ' '.join(item)
-		processed_input[item_name] = int(item_qty)
-
-	return processed_input

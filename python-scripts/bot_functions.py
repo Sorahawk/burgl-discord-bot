@@ -140,27 +140,36 @@ async def purge_method(bot, message, user_input, flag_presence):
 # chopping list method
 async def chop_method(bot, message, user_input, flag_presence):
 	if user_input == '':
-		return await burgl_message('empty'. message)
+		return await burgl_message('empty', message)
 	elif not check_user_elevation(message):
 		return await burgl_message('unauthorised', message)
 
 	# process user input into dictionary of items and their desired quantities
 	inputted_items = process_chop_input(user_input)
-	total_count = Counter()
+
+	if not inputted_items:
+		return await burgl_message('empty', message)
+	elif len(inputted_items) > 25:  # too many items for one Embed page
+		return await burgl_message('exceeded', message)
+
+	summary_embed = Embed(title='**Chopping List - New Items**', color=EMBED_COLOR_CODE)
+	empty_summary = summary_embed.copy()
 
 	for item_name, quantity in inputted_items.items():
 		added_items = process_chop_components(item_name, quantity)
 
 		# check for errors and proceed if none detected
 		if await detect_search_errors(message, item_name, added_items):
-			total_count += added_items
-			await message.channel.send(added_items)
+			item_name = added_items['name']
+			del added_items['name']
 
+			added_items = generate_recipe_string(added_items)
 
-	# TODO: replace this line
-	# print item Counter if not empty
-	if total_count:
-		await message.channel.send(total_count)
+			summary_embed.add_field(name=f'{item_name} (x{quantity})', value=added_items, inline=False)
+
+	# print summary of added materials
+	if len(summary_embed) != len(empty_summary):
+		await message.channel.send(embed=summary_embed)
 
 
 # store full command list locally in this script

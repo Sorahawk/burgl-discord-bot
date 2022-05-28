@@ -5,6 +5,33 @@ from dynamodb_methods import *
 from global_variables import *
 
 
+# returns a Counter containing processed item names as keys and their quantities
+def process_chop_input(user_input):
+
+	# regex search patterns
+	name_pattern = "[a-z _+'?-]+"
+	qty_pattern = '[0-9]+'
+	regex_pattern = f'{name_pattern} {qty_pattern}|{qty_pattern} {name_pattern}'
+
+	# find all item-quantity pairs
+	results = re.findall(regex_pattern, user_input, re.IGNORECASE)
+
+	processed_input = Counter()
+
+	for item in results:
+		item = item.split()
+
+		if item[0].isdecimal():  # quantity came before item name
+			item_qty = item.pop(0)
+		else:  # quantity came after item name
+			item_qty = item.pop(-1)
+
+		item_name = ' '.join(item)
+		processed_input[item_name] += int(item_qty)
+
+	return processed_input
+
+
 # recursive function to break an item down to its base components and update chopping list quantities
 # returns rolling Counter to itself by default
 def process_chop_components(item, quantity, base_components=None):
@@ -21,10 +48,11 @@ def process_chop_components(item, quantity, base_components=None):
 	if not base_components:
 		base_components = Counter()
 
+	item_name = item_info['name']
+
 	# only insert an item into chopping list if it is a natural resource
 	if 'category' in item_info and item_info['category'] == 'Natural Resources':
 		table_name = CHOPPING_LIST
-		item_name = item_info['name']
 
 		# check if material already exists in the chopping list
 		existing_quantity = ddb_retrieve_item(table_name, item_name)
@@ -48,6 +76,8 @@ def process_chop_components(item, quantity, base_components=None):
 
 	# return error 105 if object is not a resource or craftable item, e.g. creature
 	else:
-		return 105
+		return [105, item_name]
 
+	# return the full name of item being crafted
+	base_components['name'] = item_name
 	return base_components

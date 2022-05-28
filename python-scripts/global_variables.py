@@ -1,6 +1,6 @@
 
 # absolute path to the project folder on the Linux cloud instance
-ABSOLUTE_FOLDER_PATH = '~/burgl-discord-bot/'
+LINUX_ABSOLUTE_PATH = '~/burgl-discord-bot/'
 
 # name of the bot service running on the Linux cloud instance
 LINUX_SERVICE_NAME = 'burgl-bot.service'
@@ -105,6 +105,7 @@ BOT_VOICELINES = {
 	'unauthorised': 'You are not authorised to use this command.',
 	'empty': 'Please provide input parameters.',
 	'insufficient': 'A minimum of two comma-separated parameters are required.',
+	'exceeded': 'A maximum of 25 items are allowed per entry.',
 	'invalid_bind': 'Specified bindings not found.',
 	'embed_close': 'Menu has been closed.',
 

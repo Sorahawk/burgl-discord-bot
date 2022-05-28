@@ -121,7 +121,7 @@ def get_infobox_info(page_content):
 			object_info[header] = content.strip().replace(')+', ')\n+')
 
 		elif 'weakness' in header or 'resistance' in header:
-			header, content = res_weakness_processing(header, content)
+			header, content = res_weak_processing(header, content)
 			object_info[header] = content
 
 		# armor sleek upgrade effect

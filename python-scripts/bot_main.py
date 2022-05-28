@@ -103,8 +103,8 @@ async def clear_cache_weekly():
 # initialise persistent header variable to store latest HTTP response ETag
 stored_headers = {}
 
-# monitors project repository for new code
-# updates cloud code and restarts bot service after updates
+# checks project repository for new code every minute
+# updates cloud code and restarts bot service after update detected
 @tasks.loop(minutes=1)
 async def monitor_repository():
 	url = 'https://api.github.com/repos/Sorahawk/burgl-discord-bot/commits'
@@ -120,7 +120,7 @@ async def monitor_repository():
 			await burgl_message('updating')
 
 			# pull latest code and restart service
-			subprocess.run(f'cd {ABSOLUTE_FOLDER_PATH} && git pull && sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
+			subprocess.run(f'cd {LINUX_ABSOLUTE_PATH} && git pull && sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
 
 
 bot.run(DISCORD_BOT_TOKEN)
