@@ -51,9 +51,27 @@ def check_flags(user_input):
 	return flag_presence, user_input
 
 
-# returns string with BURG.L emoji inserted to front of specified voiceline
-def burgl_message(key):
-	return f"{CUSTOM_EMOJIS['BURG.L']} *{BOT_VOICELINES[key]}*"
+# insert BURG.L emoji to the front of string
+def prefix_burgl_emoji(input_string):
+	return f"{CUSTOM_EMOJIS['BURG.L']} *{input_string}*"
+
+
+# inserts BURG.L emoji to front of specified voiceline and sends message to the given channel
+async def burgl_message(key, message=None):
+	voiceline = prefix_burgl_emoji(BOT_VOICELINES[key])
+
+	# send specific lines to main channel so that real-time bot status is reflected
+	if not message or (key in ['hello', 'sleeping', 'debug', 'cleared'] and message.channel != global_variables.MAIN_CHANNEL):
+		await global_variables.MAIN_CHANNEL.send(voiceline)
+
+	if message:
+		await message.channel.send(voiceline)
+
+
+# returns string surrounded by double underscores, which is the syntax for underlined text on Discord
+# at the same time, ensure that the whitespace in between emoji and text is not underlined
+def underline_text(input_string):
+	return f'__{input_string}__'.replace('> ', '>__ __')
 
 
 # insert pet icon emoji behind the name of corresponding tameable creature
@@ -73,7 +91,7 @@ def append_elem_emoji(weapon_name, elemental_type):
 
 
 # insert corresponding custom emoji for specific attributes
-def prefix_emoji(input_string, is_robot=False):
+def prefix_custom_emoji(input_string, is_robot=False):
 	for keyword, emoji in CUSTOM_EMOJIS.items():
 
 		# ignore creature back emoji if object is robot
@@ -87,12 +105,6 @@ def prefix_emoji(input_string, is_robot=False):
 			input_string = input_string.replace(keyword, f'{emoji} {keyword}')
 
 	return input_string
-
-
-# returns string surrounded by double underscores, which is the syntax for underlined text on Discord
-# at the same time, ensure that the whitespace in between emoji and text is not underlined
-def underline_text(input_string):
-	return f'__{input_string}__'.replace('> ', '>__ __')
 
 
 # returns properly capitalised object name, accounting for names with periods, e.g. BURG.L, MIX.R

@@ -163,30 +163,30 @@ def format_object_info(object_info):
 		embedded_info.set_field_at(0, name='Description', value=f"*{object_info['description']}*", inline=False)
 
 	if 'brokenwith' in object_info:
-		embedded_info.set_field_at(1, name='Harvest with', value=prefix_emoji(object_info['brokenwith']), inline=True)
+		embedded_info.set_field_at(1, name='Harvest with', value=prefix_custom_emoji(object_info['brokenwith']), inline=True)
 
 	if 'tooltype' in object_info:
-		embedded_info.set_field_at(3, name='Dmg. Type', value=prefix_emoji(object_info['tooltype']), inline=True)
+		embedded_info.set_field_at(3, name='Dmg. Type', value=prefix_custom_emoji(object_info['tooltype']), inline=True)
 
 	if 'class' in object_info:
-		embedded_info.set_field_at(4, name='Armor Class', value=prefix_emoji(object_info['class']), inline=True)
+		embedded_info.set_field_at(4, name='Armor Class', value=prefix_custom_emoji(object_info['class']), inline=True)
 
 	if 'resistance' in object_info:
-		embedded_info.set_field_at(4, name='Dmg. Resistance', value=prefix_emoji(object_info['resistance']), inline=True)
+		embedded_info.set_field_at(4, name='Dmg. Resistance', value=prefix_custom_emoji(object_info['resistance']), inline=True)
 	if 'eresistance' in object_info:
-		embedded_info.set_field_at(5, name='Elem. Resistance', value=prefix_emoji(object_info['eresistance']), inline=True)
+		embedded_info.set_field_at(5, name='Elem. Resistance', value=prefix_custom_emoji(object_info['eresistance']), inline=True)
 
 	if 'weakness' in object_info:
-		embedded_info.set_field_at(7, name='Dmg. Weakness', value=underline_text(prefix_emoji(object_info['weakness'])), inline=True)
+		embedded_info.set_field_at(7, name='Dmg. Weakness', value=underline_text(prefix_custom_emoji(object_info['weakness'])), inline=True)
 	if 'eweakness' in object_info:
-		embedded_info.set_field_at(8, name='Elem. Weakness', value=underline_text(prefix_emoji(object_info['eweakness'])), inline=True)
+		embedded_info.set_field_at(8, name='Elem. Weakness', value=underline_text(prefix_custom_emoji(object_info['eweakness'])), inline=True)
 
 	if 'weakpoint' in object_info:
 		is_robot = False
 		if '.' in object_name:
 			is_robot = True
 
-		embedded_info.set_field_at(9, name='Weak Point', value=underline_text(prefix_emoji(object_info['weakpoint'], is_robot)), inline=True)
+		embedded_info.set_field_at(9, name='Weak Point', value=underline_text(prefix_custom_emoji(object_info['weakpoint'], is_robot)), inline=True)
 
 	if 'recipe' in object_info:
 		recipe_name = 'Recipe'

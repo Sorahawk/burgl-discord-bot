@@ -1,4 +1,4 @@
-import discord, requests
+import discord, requests, global_variables
 
 from random import choice
 from discord.ext import tasks
@@ -23,20 +23,22 @@ bot = discord.Client(intents=intents)
 async def on_ready():
 	print(f'{bot.user} is online.\n')
 
-	channel = bot.get_channel(MAIN_CHANNEL_ID)
+	# initialise global main channel object
+	global_variables.MAIN_CHANNEL = bot.get_channel(MAIN_CHANNEL_ID)
 
 	if DEBUG_MODE:
-		return await channel.send(burgl_message('debug'))
+		await burgl_message('debug')
 
-	await channel.send(burgl_message('hello'))
+	else:
+		await burgl_message('hello')
 
-	# if script becomes inactive for any reason, on_ready will be called again once active
-	# but tasks with specific timings can't be started more than once
-	try:
-		rotate_status.start()
-		clear_cache_weekly.start()
-	except:
-		pass
+		# if script becomes inactive for any reason, on_ready will be called again once active
+		# but tasks with specific timings can't be started more than once
+		try:
+			rotate_status.start()
+			clear_cache_weekly.start()
+		except:
+			pass
 
 
 @bot.event
@@ -74,7 +76,7 @@ async def on_message(message):
 # automatically rotate bot's Discord status every 10 minutes
 @tasks.loop(minutes=10)
 async def rotate_status():
-	activity, activity_type = choice(list(ACTIVITY_STATUSES.items()))
+	activity, activity_type = choice(list(BOT_ACTIVITY_STATUSES.items()))
 
 	if isinstance(activity_type, str):
 		activity_status = discord.Streaming(url=activity_type, name=activity)
@@ -90,9 +92,7 @@ timezone = timezone(timedelta(hours=TIMEZONE_OFFSET))
 async def clear_cache_weekly():
 	if datetime.today().weekday() == CACHE_CLEAR_DAY:
 		clear_cache()
-
-		channel = bot.get_channel(MAIN_CHANNEL_ID)
-		await channel.send(burgl_message('cleared'))
+		await burgl_message('cleared')
 
 
 # monitors project repository for new code

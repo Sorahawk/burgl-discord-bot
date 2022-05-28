@@ -35,7 +35,7 @@ async def multipage_embed_handler(bot, message, embed_list):
 
 				else:
 					await embedded_message.clear_reactions()
-					return await embedded_message.edit(content=burgl_message('embed_close'), embed=None)
+					return await embedded_message.edit(content=prefix_burgl_emoji(BOT_VOICELINES['embed_close']), embed=None)
 
 			elif reaction.emoji == left_arrow:
 				if current_page == 0:

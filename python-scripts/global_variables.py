@@ -1,42 +1,69 @@
 
-# integer value of local timezone offset with respect to UTC
-TIMEZONE_OFFSET = 8
-
-
-# integer value for day of the week to conduct weekly cache clear
-# 0 is Monday, 6 is Sunday
-CACHE_CLEAR_DAY = 0
-
-
-# integer value for hour of the day to conduct weekly cache clear
-# 0 is 12AM, 23 is 11PM
-CACHE_CLEAR_HOUR = 6
-
-
 # ID of default Discord server channel that will receive notifications
-MAIN_CHANNEL_ID = 970882023055036426
+MAIN_CHANNEL_ID = 976308922010959892
 
+# main channel object, to be initialised when the bot calls on_ready()
+MAIN_CHANNEL = None
 
 # list of elevated Discord users
 ELEVATED_USERS = [261795156359905281, 498051548463628300]
 
+# symbol to signify bot commands
+BOT_COMMAND_PREFIX = '.'
+
+# list of bot commands
+BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge', 'chop', 'sleep']
+
+# dictionary of command flags
+# each flag can only be a single letter
+BOT_COMMAND_FLAGS = {'delete_binding': 'd', 'force_search': 'f', 'get_gold': 'g', 'view_bindings': 'v'}
 
 # color code for Embed messages
 # 0x6542E1 is the purple that BURG.L's icon has in-game while speaking
 EMBED_COLOR_CODE = 0x6542E1
 
+# max number of fields per embed page when viewing binded shortcuts
+MAX_SHORTCUT_FIELDS = 15
 
-# symbol to signify bot commands
-BOT_COMMAND_PREFIX = '.'
+# decimal value for minimum ratio of string similarity between search query and predicted result
+SIMILAR_THRESHOLD_API = 0.35
+
+# decimal value for minimum ratio of string similarity between search query and predicted result
+SIMILAR_THRESHOLD_CARD = 0.75
+
+# integer value of local timezone offset with respect to UTC
+TIMEZONE_OFFSET = 8
+
+# integer value for day of the week to conduct weekly cache clear
+# 0 is Monday, 6 is Sunday
+CACHE_CLEAR_DAY = 0
+
+# integer value for hour of the day to conduct weekly cache clear
+# 0 is 12AM, 23 is 11PM
+CACHE_CLEAR_HOUR = 6
+
+# string of the base wiki URL
+BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
+
+# dictionary of smoothie bases and their base ingredients
+SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
+
+# list of words which have atypical capitalisation, excluding robot and device names like BURG.L or TAYZ.T
+SPECIAL_NAMES = ['AARTZ', 'BBQ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the']
 
 
-# list of bot commands
-BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge', 'chop', 'sleep']
+# DynamoDB table names as strings, and a dictionary of their corresponding key and attribute headers
+SHORTCUT_STORAGE = 'ShortName-FullName'
+OBJECT_INFO_CACHE = 'SearchQuery-ObjectInfo'
+PAGE_HTML_CACHE = 'WikiURL-PageHTML'
+CHOPPING_LIST = 'NaturalResource-Quantity'
 
-
-# dictionary of command flags
-# each flag can only be a single letter
-BOT_COMMAND_FLAGS = {'delete_binding': 'd', 'force_search': 'f', 'get_gold': 'g', 'view_bindings': 'v'}
+DDB_TABLE_HEADERS = {
+	SHORTCUT_STORAGE: ('short_name', 'full_name'),
+	OBJECT_INFO_CACHE: ('search_query', 'object_info'),
+	PAGE_HTML_CACHE: ('wiki_url', 'page_html'),
+	CHOPPING_LIST: ('natural_resource', 'quantity')
+}
 
 
 # dictionary containing nested lists of strings to populate the help menu, categorised by command type
@@ -88,7 +115,7 @@ BOT_VOICELINES = {
 
 # available ActivityTypes: 0 is gaming (Playing), 1 is streaming (Streaming), 2 is listening (Listening to),
 # 3 is watching (Watching), 4 is custom, 5 is competing (Competing in)
-ACTIVITY_STATUSES = {
+BOT_ACTIVITY_STATUSES = {
 	'with a pet aphid': 0,
 	'with a pet weevil': 0,
 	'the ladybugs cooing': 2,
@@ -172,42 +199,4 @@ OBJECT_ATTRIBUTES = {
 	'upgradeeffect': (8, 'Sleek Upgrade Effect'),
 
 	'loot': 10
-}
-
-
-# string of the base wiki URL
-BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
-
-
-# dictionary of smoothie bases and their base ingredients
-SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
-
-
-# list of words which have atypical capitalisation, excluding robot and device names like BURG.L or TAYZ.T
-SPECIAL_NAMES = ['AARTZ', 'BBQ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the']
-
-
-# decimal value for minimum ratio of string similarity between search query and predicted result
-SIMILAR_THRESHOLD_API = 0.35
-
-
-# decimal value for minimum ratio of string similarity between search query and predicted result
-SIMILAR_THRESHOLD_CARD = 0.75
-
-
-# max number of fields per embed page when viewing binded shortcuts
-MAX_SHORTCUT_FIELDS = 15
-
-
-# DynamoDB table names as strings, and a dictionary of their corresponding key and attribute headers
-SHORTCUT_STORAGE = 'ShortName-FullName'
-OBJECT_INFO_CACHE = 'SearchQuery-ObjectInfo'
-PAGE_HTML_CACHE = 'WikiURL-PageHTML'
-CHOPPING_LIST = 'NaturalResource-Quantity'
-
-DDB_TABLE_HEADERS = {
-	SHORTCUT_STORAGE: ('short_name', 'full_name'),
-	OBJECT_INFO_CACHE: ('search_query', 'object_info'),
-	PAGE_HTML_CACHE: ('wiki_url', 'page_html'),
-	CHOPPING_LIST: ('natural_resource', 'quantity')
 }

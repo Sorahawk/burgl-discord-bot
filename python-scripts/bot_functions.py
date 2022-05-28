@@ -24,17 +24,20 @@ def check_user_elevation(message):
 # returns True if no error, else returns None by default
 async def detect_search_errors(message, user_input, result):
 
-	# catch specific error cases which return different data types
+	# catch specific error cases which return different data types, e.g. 102
 	if isinstance(result, list):
-		if result[0] == 102:
-			await message.channel.send(burgl_message(102).replace('VAR1', result[1]))
+		error_message = prefix_burgl_emoji(BOT_VOICELINES[result[0]]).replace('VAR1', result[1])
 
 	# check voiceline dictionary in global_variables directly so no need to keep updating here too
 	elif isinstance(result, int) and result in BOT_VOICELINES:
 		full_name = capitalise_object_name(retrieve_full_name(user_input))
-		await message.channel.send(burgl_message(result).replace('VAR1', full_name))
+		error_message = prefix_burgl_emoji(BOT_VOICELINES[result]).replace('VAR1', full_name)
+
 	else:
 		return True
+
+	# send error message
+	await message.channel.send(error_message)
 
 
 # all bot methods below have to correspond to an item in BOT_COMMAND_LIST
@@ -61,7 +64,7 @@ async def help_method(bot, message, user_input, flag_presence):
 # object search method
 async def search_method(bot, message, user_input, flag_presence):
 	if user_input == '':
-		return await message.channel.send(burgl_message('empty'))
+		return await burgl_message('empty', message)
 
 	result = process_object_input(user_input, flag_presence)
 
@@ -73,7 +76,7 @@ async def search_method(bot, message, user_input, flag_presence):
 # creature card search method
 async def card_method(bot, message, user_input, flag_presence):
 	if user_input == '':
-		return await message.channel.send(burgl_message('empty'))
+		return await burgl_message('empty', message)
 
 	# check for existing shortcut binding in database if no -f flag
 	if not flag_presence['force_search']:
@@ -96,11 +99,11 @@ async def bind_method(bot, message, user_input, flag_presence):
 		await bind_view(bot, message, user_input)
 
 	elif not check_user_elevation(message):
-		await message.channel.send(burgl_message('unauthorised'))
+		await burgl_message('unauthorised', message)
 
 	elif flag_presence['delete_binding']:
 		if user_input == '':
-			await message.channel.send(burgl_message('empty'))
+			await burgl_message('empty', message)
 		else:
 			await bind_delete(message, user_input)
 
@@ -111,15 +114,15 @@ async def bind_method(bot, message, user_input, flag_presence):
 # cache clearing method
 async def clear_method(bot, message, user_input, flag_presence):
 	if not check_user_elevation(message):
-		await message.channel.send(burgl_message('unauthorised'))
+		await burgl_message('unauthorised', message)
 	else:
 		clear_cache()
-		await message.channel.send(burgl_message('cleared'))
+		await burgl_message('cleared', message)
 
 
 # message purging method
 async def purge_method(bot, message, user_input, flag_presence):
-	await message.channel.send(burgl_message('purging'))
+	await burgl_message('purging', message)
 
 	# flatten message history into a list
 	message_history = [old_message async for old_message in message.channel.history()]
@@ -137,9 +140,9 @@ async def purge_method(bot, message, user_input, flag_presence):
 # chopping list method
 async def chop_method(bot, message, user_input, flag_presence):
 	if user_input == '':
-		return await message.channel.send(burgl_message('empty'))
+		return await burgl_message('empty'. message)
 	elif not check_user_elevation(message):
-		return await message.channel.send(burgl_message('unauthorised'))
+		return await burgl_message('unauthorised', message)
 
 	# process user input into dictionary of items and their desired quantities
 	inputted_items = process_chop_input(user_input)
@@ -170,13 +173,13 @@ async def sleep_method(bot, message, user_input, flag_presence):
 		# ignore command if in development mode
 		return
 	elif not check_user_elevation(message):
-		return await message.channel.send(burgl_message('unauthorised'))
+		return await burgl_message('unauthorised', message)
 
 	sleep_command = ['sleep']
 
 	if global_variables.BOT_COMMAND_LIST == sleep_command:  # switch off sleep mode
 		global_variables.BOT_COMMAND_LIST = full_command_list
-		await message.channel.send(burgl_message('hello'))
+		await burgl_message('hello', message)
 	else:
 		global_variables.BOT_COMMAND_LIST = sleep_command
-		await message.channel.send(burgl_message('sleeping'))
+		await burgl_message('sleeping', message)

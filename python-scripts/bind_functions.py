@@ -11,7 +11,7 @@ async def bind_default(message, user_input):
 	user_input = user_input.lower().strip(',').split(',')  # remove any edge commas, then split by comma
 
 	if len(user_input) < 2:
-		return await message.channel.send(burgl_message('insufficient'))
+		return await burgl_message('insufficient', message)
 
 	formatted_string = bind_shortcuts(user_input[0], user_input[1:])
 	await message.channel.send(formatted_string)
@@ -54,4 +54,4 @@ async def bind_delete(message, user_input):
 	if formatted_string:
 		await message.channel.send(formatted_string)
 	else:
-		await message.channel.send(burgl_message('invalid_bind'))
+		await burgl_message('invalid_bind', message)
