@@ -62,14 +62,28 @@ def detect_smoothie_type(search_query):
 	for special in SMOOTHIE_BASES:
 		# ignore 'basic' base because it might appear in other items, e.g. Normal Chair
 		if special != 'basic' and special in search_query.lower():
-			new_search_query = re.compile(special, re.IGNORECASE).sub('', search_query).strip()
+			new_search_query = re.compile(special, re.IGNORECASE).sub('', search_query)
 
 			# if the input was just the smoothie type alone, do not remove it
 			if new_search_query:
 				search_query = new_search_query
 				smoothie_type = special
 
-	return search_query, smoothie_type
+	return ' '.join(search_query.split()), smoothie_type
+
+
+# adds in smoothie base ingredient to dictionary of item attributes
+def insert_smoothie_base(object_info, smoothie_type):
+	smoothie_name = object_info['name']
+	base_ingredient = SMOOTHIE_BASES[smoothie_type]
+	
+	if smoothie_name == 'Smoothie?':
+		object_info['recipe'] = {}
+
+	object_info['recipe_name'] = f"{smoothie_type.title()} {smoothie_name}"
+	object_info['recipe'][base_ingredient] = 1
+
+	return object_info
 
 
 # insert BURG.L emoji to the front of string

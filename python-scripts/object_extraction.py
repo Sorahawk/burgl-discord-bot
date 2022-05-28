@@ -169,7 +169,7 @@ def compile_counter(item_list, recipe_type=None):
 
 
 # returns object's crafting recipe as a Counter()
-def get_recipe_table(page_content, object_name, smoothie_type):
+def get_recipe_table(page_content, object_name):
 	recipe_keyword = 'Recipe'
 
 	# account for special case where upgraded Fiber Bandage has lower crafting costs
@@ -194,11 +194,6 @@ def get_recipe_table(page_content, object_name, smoothie_type):
 		recipe_name = ''
 
 	recipe = compile_counter(recipe_list, recipe_type)
-
-	# add in base ingredient to smoothie recipe
-	if recipe_type == 'Smoothie':
-		recipe_name = f'{smoothie_type.title()} {object_name}'
-		recipe[SMOOTHIE_BASES[smoothie_type]] = 1
 
 	return recipe, recipe_name
 

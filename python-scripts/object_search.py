@@ -26,9 +26,8 @@ def check_info_presence(page_content):
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
 def get_object_info(search_query):
 
-	# check for special queries, e.g. upgraded tools, special smoothie types
+	# check for special queries, e.g. upgraded tools
 	is_upgraded_tool = '+' in search_query
-	search_query, smoothie_type = detect_smoothie_type(search_query)
 
 	# get most likely wiki URL of object
 	result = locate_object_url(search_query)
@@ -69,7 +68,7 @@ def get_object_info(search_query):
 
 	if has_recipe:
 		try:
-			object_info['recipe'], object_info['recipe_name'] = get_recipe_table(page_content, object_info['name'], smoothie_type)
+			object_info['recipe'], object_info['recipe_name'], = get_recipe_table(page_content, object_info['name'])
 		except:
 			# recipe extraction failed
 			print(f"WARNING: Recipe extraction for {object_info['name']} failed.\n")
@@ -81,11 +80,6 @@ def get_object_info(search_query):
 			# repair cost extraction failed
 			print(f"WARNING: Repair cost extraction for {object_info['name']} failed.\n")
 
-	# if object is Smoothie?, manually insert recipe with just the base ingredient
-	if object_info['name'] == 'Smoothie?':
-		object_info['recipe_name'] = f'{smoothie_type.title()} Smoothie?'
-		object_info['recipe'] = compile_counter([SMOOTHIE_BASES[smoothie_type]], 'Smoothie')
-
 	return object_info
 
 
@@ -94,6 +88,9 @@ def get_object_info(search_query):
 # function also caches results for succesful retrieval, as well as errors 101 and 102
 def process_object_input(user_input, flag_presence={'force_search': False}):
 	result = None
+
+	# detect smoothie type
+	user_input, smoothie_type = detect_smoothie_type(user_input)
 
 	# if user forces search of actual query, then bypass both shortcut table as well as cache
 	if not flag_presence['force_search']:
@@ -126,6 +123,10 @@ def process_object_input(user_input, flag_presence={'force_search': False}):
 		# cache results except when -f flag is present, or Google API error occurs (API could be available again at any time)
 		if result != 103 and not flag_presence['force_search'] and not DEBUG_MODE:
 			ddb_insert_item(OBJECT_INFO_CACHE, user_input, dumps(result))
+
+	# most attributes of smoothies are cached, except their smoothie base ingredient, since it is variable
+	if isinstance(result, dict) and 'category' in result and 'smoothie' in result['category'].lower():
+		result = insert_smoothie_base(result, smoothie_type)
 
 	return result
 

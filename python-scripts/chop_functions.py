@@ -79,5 +79,9 @@ def process_chop_components(item, quantity, base_components=None):
 		return [105, item_name]
 
 	# return the full name of item being crafted
-	base_components['name'] = item_name
+	if 'recipe_name' in item_info:
+		base_components['name'] = item_info['recipe_name']
+	else:
+		base_components['name'] = item_name
+
 	return base_components

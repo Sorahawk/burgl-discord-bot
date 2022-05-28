@@ -1,8 +1,8 @@
 
-# Make a copy of this file named secret_variables.py and fill that in
+# Make a copy of this file, rename it secret_variables.py, and fill it in
 
 
-# (boolean) Toggle development/debug mode, which disables the caches
+# (boolean) Toggle development/debug mode, which disables the caches when on
 DEBUG_MODE = False
 
 # (string) AWS Access Key
