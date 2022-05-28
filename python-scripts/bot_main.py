@@ -117,6 +117,8 @@ async def monitor_repository():
 
 		# new repository update
 		else:
+			await burgl_message('updating')
+
 			# pull latest code and restart service
 			subprocess.run(f'git pull && sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
 
