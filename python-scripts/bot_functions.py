@@ -2,8 +2,9 @@ import global_variables
 
 from collections import Counter
 from asyncio import TimeoutError
-from discord import DMChannel, Embed
+from discord import DMChannel, Embed, Status
 
+from bot_tasks import *
 from card_search import *
 from bot_messaging import *
 from object_search import *
@@ -59,7 +60,7 @@ async def help_method(bot, message, user_input, flag_presence):
 		help_embed.set_footer(text=f'Page {page + 1}/{len(category_names)}')
 		embed_list.append(help_embed)
 
-	await multipage_embed_handler(bot, message, embed_list)
+	await multipage_embed_handler(bot, message, user_input, embed_list)
 
 
 # object search method
@@ -191,7 +192,13 @@ async def sleep_method(bot, message, user_input, flag_presence):
 
 	if global_variables.BOT_COMMAND_LIST == sleep_command:  # switch off sleep mode
 		global_variables.BOT_COMMAND_LIST = full_command_list
+
 		await burgl_message('hello', message)
+		rotate_status.start(bot)
+
 	else:
 		global_variables.BOT_COMMAND_LIST = sleep_command
+
 		await burgl_message('sleeping', message)
+		await bot.change_presence(status=Status.idle)
+		rotate_status.cancel()

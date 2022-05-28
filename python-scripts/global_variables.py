@@ -57,6 +57,9 @@ SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum
 # list of words which have atypical capitalisation, excluding robot and device names like BURG.L or TAYZ.T
 SPECIAL_NAMES = ['AARTZ', 'BBQ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the']
 
+# list of items not to be broken down into their component materials for the Chopping List
+SPECIAL_ITEMS = ['Berry Leather', 'Crude Rope', 'Mushroom Slurry', 'Pupa Leather', 'Repair Glue']
+
 
 # DynamoDB table names as strings, and a dictionary of their corresponding key and attribute headers
 SHORTCUT_STORAGE = 'ShortName-FullName'
@@ -83,7 +86,10 @@ BOT_HELP_MENU = {
 
 		['.bind <object_name>, <shortcut_1>, [shortcut_2], ...', 'Binds an object name to one or more shortcut phrases.',
 		'*+Use flag `-v` to view all binded shortcuts (no arguments required).*', '*+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).*',
-		'*+Each parameter is case-insensitive and must be separated by a comma.*']
+		'*+Parameters are case-insensitive and must be separated by a comma.*'],
+
+		['.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...', 'Adds one or more specified items to the Chopping List.',
+		'*+Parameters are case-insensitive and there is a maximum of 25 parameters per entry. Commas are optional unless two item_names are arranged consecutively.*']
 	],
 
 	'Utility': [

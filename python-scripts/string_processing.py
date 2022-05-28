@@ -134,7 +134,7 @@ def capitalise_object_name(object_name):
 	if '.' in object_name and '. ' not in object_name + ' ':  # make sure not shortform like Asst.
 		object_name = object_name.upper()
 	else:
-		object_name = object_name.title().replace("'S", "'s")
+		object_name = object_name.title().replace("'S", "'s").replace('’S', '’s')
 
 	for phrase in SPECIAL_NAMES:
 		titled_phrase = f' {phrase.title()} '  # make sure the phrase is standalone and not part of a word

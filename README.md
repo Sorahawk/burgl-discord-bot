@@ -30,7 +30,7 @@ The overall roadmap and development tracker for this project can be found on the
 | ------- | ----------- |
 | Object Search | Retrieves object information (e.g. creatures, items, resources, status effects, mutations). |
 | Creature Card Search | Retrieves a creature's bestiary card. |
-| Chopping List | Consolidates total number of resources required for crafting and building. |
+| Chopping List | Tracks player-required resources and their corresponding quantities. |
 | Task Scheduler | Keeps track of user-inputted tasks, as well as generating harvesting tasks based on the Chopping List. |
 | Database Storage and Caching | Stores permanent data, as well as caching queried data from searches. |
 
@@ -66,12 +66,16 @@ The overall roadmap and development tracker for this project can be found on the
   - Binds an object name to one or more shortcut phrases.
   - *Use flag `-v` to view all binded shortcuts (no arguments required).*
   - *Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).*
-  - *Each parameter is case-insensitive and must be separated by a comma.*
+  - *Parameters are case-insensitive and must be separated by a comma.*
+- `.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...`
+  - Adds one or more specified items to the Chopping List, which tracks player-required resources and quantities.
+  - If a specified item is not already a natural resource, it will be broken down into its component materials before being added to the list.
+  - *Parameters are case-insensitive and there is a maximum of 25 parameters per entry. Commas are optional unless two item_names are arranged consecutively.*
 - `.clear`
   - Clears the webpage data and object information caches.
 - `.purge`
-  - Purges up to 100 recent messages from a server channel.
-  - Purges all of this bot's messages from a private chat.
+  - In a server channel: Purges up to 100 recent messages.
+  - In a private message: Purges all of this bot's messages.
 
 <br>
 

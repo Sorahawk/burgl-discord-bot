@@ -19,15 +19,25 @@ async def burgl_message(key, message=None):
 
 # standard handler for multi-page messages, which allows for page navigation, as well as closing the menu
 # unique input is embed_list, which is the list of discord.Embed messages to display, in page order
-async def multipage_embed_handler(bot, message, embed_list):
+async def multipage_embed_handler(bot, message, user_input, embed_list):
 	if len(embed_list) == 0:
 		return await burgl_message('no_bindings', message)
+	
+	current_page = 0
+	direct_page = re.findall('\d+', user_input)
+
+	# see if a valid page number was specified and navigate to it directly if so
+	for number in direct_page:
+		number = int(number)
+
+		if number <= len(embed_list):
+			current_page = number - 1
+			break
 
 	left_arrow = CUSTOM_EMOJIS['LeftArrow']
 	cross_mark = CUSTOM_EMOJIS['CrossMark']
 	right_arrow = CUSTOM_EMOJIS['RightArrow']
 
-	current_page = 0
 	embedded_message = await message.channel.send(embed=embed_list[current_page])
 
 	await embedded_message.add_reaction(left_arrow)

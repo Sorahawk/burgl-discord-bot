@@ -1,10 +1,7 @@
 import global_variables
-import discord, requests, subprocess, sys
+import discord, sys
 
-from random import choice
-from discord.ext import tasks
-from datetime import datetime, time, timedelta, timezone
-
+from bot_tasks import *
 from bot_functions import *
 from dynamodb_methods import *
 from global_variables import *
@@ -31,7 +28,7 @@ async def on_ready():
 		return await burgl_message('debug')
 
 	await burgl_message('hello')
-	rotate_status.start()
+	rotate_status.start(bot)
 
 	# if script becomes inactive for any reason, on_ready will be called again when reactivated
 	# but tasks with specific timings can't be started more than once
@@ -76,51 +73,6 @@ async def on_message(message):
 
 		except Exception as e:  # log any errors if command fails in any unexpected way
 			print(f'WARNING: {e}.\n')
-
-
-# automatically rotate bot's Discord status every 10 minutes
-@tasks.loop(minutes=10)
-async def rotate_status():
-	activity, activity_type = choice(list(BOT_ACTIVITY_STATUSES.items()))
-
-	if isinstance(activity_type, str):
-		activity_status = discord.Streaming(url=activity_type, name=activity)
-	else:
-		activity_status = discord.Activity(type=activity_type, name=activity)
-
-	await bot.change_presence(activity=activity_status)
-
-
-# automatically clear caches once a week
-timezone = timezone(timedelta(hours=TIMEZONE_OFFSET))
-@tasks.loop(time=time(hour=CACHE_CLEAR_HOUR, tzinfo=timezone))
-async def clear_cache_weekly():
-	if datetime.today().weekday() == CACHE_CLEAR_DAY:
-		clear_cache()
-		await burgl_message('cleared')
-
-
-# initialise persistent header variable to store latest HTTP response ETag
-stored_headers = {}
-
-# checks project repository for new code every minute
-# pulls new code and restarts bot service when update is detected
-@tasks.loop(minutes=1)
-async def monitor_repository():
-	url = 'https://api.github.com/repos/Sorahawk/burgl-discord-bot/commits'
-	response = requests.get(url, headers=stored_headers)
-
-	if response.status_code == 200:
-		if not stored_headers:
-			etag = response.headers['ETag']
-			stored_headers['If-None-Match'] = etag
-
-		# new repository update
-		else:
-			await burgl_message('updating')
-
-			# pull latest code and restart service
-			subprocess.run(f'cd {LINUX_ABSOLUTE_PATH} && git pull && sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
 
 
 bot.run(DISCORD_BOT_TOKEN)

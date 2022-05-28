@@ -51,9 +51,10 @@ def process_chop_components(item, quantity, base_components=None):
 		base_components = Counter()
 
 	item_name = item_info['name']
+	recipe_quantity = 1
 
-	# only insert an item into chopping list if it is a natural resource
-	if 'category' in item_info and item_info['category'] == 'Natural Resources':
+	# only insert an item into chopping list if it is in SPECIAL_ITEMS, or if it is a natural resource
+	if item_name in SPECIAL_ITEMS or ('category' in item_info and item_info['category'] == 'Natural Resources'):
 		table_name = CHOPPING_LIST
 
 		# check if material already exists in the chopping list
@@ -77,10 +78,7 @@ def process_chop_components(item, quantity, base_components=None):
 				recipe_quantity = int(recipe_quantity[0][1:])
 
 				# round up desired quantity to the nearest number divisible by recipe quantity
-				quantity = math.ceil(quantity / recipe_quantity) * recipe_quantity
-
-				# remove recipe quantity from recipe name
-				item_info['recipe_name'] = ' '.join(item_info['recipe_name'].split()[:-1])
+				quantity = math.ceil(quantity / recipe_quantity)
 
 		# multiply item costs by quantity
 		for material in recipe.keys():
@@ -94,12 +92,15 @@ def process_chop_components(item, quantity, base_components=None):
 		return [105, item_name]
 
 	# return the full name of item being crafted
-	if 'recipe_name' in item_info:
-		base_components['name'] = item_info['recipe_name']
+	if 'recipe_name' in item_info and item_info['recipe_name']:
+		# remove recipe quantity from recipe name
+		base_components['name'] = ' '.join(item_info['recipe_name'].split()[:-1])
 	else:
 		base_components['name'] = item_name
 
 	# update final quantity since some recipes need the desired quantity to be rounded up
-	base_components['quantity'] = quantity
+	base_components['quantity'] = quantity * recipe_quantity
+
+	print(base_components)
 
 	return base_components
