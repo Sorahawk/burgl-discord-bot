@@ -60,12 +60,12 @@ def prefix_burgl_emoji(input_string):
 async def burgl_message(key, message=None):
 	voiceline = prefix_burgl_emoji(BOT_VOICELINES[key])
 
-	# send specific lines to main channel so that real-time bot status is reflected
-	if not message or (key in ['hello', 'sleeping', 'debug', 'cleared'] and message.channel != global_variables.MAIN_CHANNEL):
-		await global_variables.MAIN_CHANNEL.send(voiceline)
-
 	if message:
 		await message.channel.send(voiceline)
+
+	# send specific lines to main channel also so that real-time bot status is reflected
+	if not message or (key in ['hello', 'sleeping', 'debug', 'cleared'] and message.channel != global_variables.MAIN_CHANNEL):
+		await global_variables.MAIN_CHANNEL.send(voiceline)
 
 
 # returns string surrounded by double underscores, which is the syntax for underlined text on Discord

@@ -1,4 +1,5 @@
-import discord, requests, global_variables
+import discord, requests, subprocess, sys
+import global_variables
 
 from random import choice
 from discord.ext import tasks
@@ -27,18 +28,22 @@ async def on_ready():
 	global_variables.MAIN_CHANNEL = bot.get_channel(MAIN_CHANNEL_ID)
 
 	if DEBUG_MODE:
-		await burgl_message('debug')
+		return await burgl_message('debug')
 
-	else:
-		await burgl_message('hello')
+	await burgl_message('hello')
+	rotate_status.start()
 
-		# if script becomes inactive for any reason, on_ready will be called again once active
-		# but tasks with specific timings can't be started more than once
-		try:
-			rotate_status.start()
-			clear_cache_weekly.start()
-		except:
-			pass
+	# if script becomes inactive for any reason, on_ready will be called again when reactivated
+	# but tasks with specific timings can't be started more than once
+	try:
+		clear_cache_weekly.start()
+	except Exception as e:
+		print(f'WARNING: {e}.\n')
+
+	# activate self-updating if running on linux cloud instance
+	if sys.platform == 'linux':
+		monitor_repository.start()
+		print('INFO: Watching project repository for updates.')
 
 
 @bot.event
@@ -95,24 +100,25 @@ async def clear_cache_weekly():
 		await burgl_message('cleared')
 
 
+# initialise persistent header variable to store latest HTTP response ETag
+stored_headers = {}
+
 # monitors project repository for new code
 # updates cloud code and restarts bot service after updates
-@tasks.loop(seconds=15)
+@tasks.loop(minutes=1)
 async def monitor_repository():
 	url = 'https://api.github.com/repos/Sorahawk/burgl-discord-bot/commits'
+	response = requests.get(url, headers=stored_headers)
 
-	headers = {}
-	#headers = {'If-None-Match': 'W/"2698553f004ce0bfa9c27fd11ff59972a30f4d648d7fd63ad5cb4399f6951a90"'}
-
-	for x in range(2):
-		response = requests.get(url, headers=headers)
-
-		if response.status_code == 200:
+	if response.status_code == 200:
+		if not stored_headers:
 			etag = response.headers['ETag']
-			headers = {'If-None-Match': etag}
+			stored_headers['If-None-Match'] = etag
 
-		elif response.status_code == 304:
-			print(response.headers)
+		# new repository update
+		else:
+			# pull latest code and restart service
+			subprocess.run(f'git pull && sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
 
 
 bot.run(DISCORD_BOT_TOKEN)
