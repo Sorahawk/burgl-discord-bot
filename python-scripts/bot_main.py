@@ -43,8 +43,7 @@ async def on_ready():
 	# activate self-updating if running on linux cloud instance
 	if sys.platform == 'linux':
 		monitor_repository.start()
-		#print('INFO: Watching project repository for updates.')
-		await global_variables.MAIN_CHANNEL.send('INFO: Watching project repository for updates.')
+		print('INFO: Watching project repository for updates.')
 
 
 @bot.event
@@ -108,8 +107,6 @@ stored_headers = {}
 # updates cloud code and restarts bot service after updates
 @tasks.loop(minutes=1)
 async def monitor_repository():
-	await global_variables.MAIN_CHANNEL.send('headers ' + str(stored_headers))
-
 	url = 'https://api.github.com/repos/Sorahawk/burgl-discord-bot/commits'
 	response = requests.get(url, headers=stored_headers)
 
@@ -118,14 +115,12 @@ async def monitor_repository():
 			etag = response.headers['ETag']
 			stored_headers['If-None-Match'] = etag
 
-			await global_variables.MAIN_CHANNEL.send('headers 2 ' + str(stored_headers))
-
 		# new repository update
 		else:
 			await burgl_message('updating')
 
 			# pull latest code and restart service
-			subprocess.run(f'git pull && sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
+			subprocess.run(f'cd ~/burgl-discord-bot/ && git pull && sudo systemctl restart burgl-bot.service', shell=True)
 
 
 bot.run(DISCORD_BOT_TOKEN)

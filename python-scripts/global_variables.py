@@ -1,7 +1,4 @@
 
-# name of the bot service running on the Linux cloud instance
-LINUX_SERVICE_NAME = 'burgl-bot.service'
-
 # ID of default Discord server channel that will receive notifications
 MAIN_CHANNEL_ID = 976308922010959892
 
