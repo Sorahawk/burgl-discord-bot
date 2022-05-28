@@ -1,10 +1,11 @@
 import global_variables
 
+from collections import Counter
 from asyncio import TimeoutError
 from discord import DMChannel, Embed
-from collections import Counter
 
 from card_search import *
+from bot_messaging import *
 from object_search import *
 from bind_functions import *
 from chop_functions import *
@@ -101,11 +102,11 @@ async def bind_method(bot, message, user_input, flag_presence):
 	elif not check_user_elevation(message):
 		await burgl_message('unauthorised', message)
 
+	elif user_input == '':
+		await burgl_message('empty', message)
+
 	elif flag_presence['delete_binding']:
-		if user_input == '':
-			await burgl_message('empty', message)
-		else:
-			await bind_delete(message, user_input)
+		await bind_delete(message, user_input)
 
 	else:
 		await bind_default(message, user_input)
@@ -161,11 +162,13 @@ async def chop_method(bot, message, user_input, flag_presence):
 		# check for errors and proceed if none detected
 		if await detect_search_errors(message, item_name, added_items):
 			item_name = added_items['name']
+			item_quantity = added_items['quantity']
+
 			del added_items['name']
+			del added_items['quantity']
 
 			added_items = generate_recipe_string(added_items)
-
-			summary_embed.add_field(name=f'{item_name} (x{quantity})', value=added_items, inline=False)
+			summary_embed.add_field(name=f'{item_name} (x{item_quantity})', value=added_items, inline=False)
 
 	# print summary of added materials
 	if len(summary_embed) != len(empty_summary):

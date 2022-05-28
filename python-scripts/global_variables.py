@@ -106,6 +106,7 @@ BOT_VOICELINES = {
 	'empty': 'Please provide input parameters.',
 	'insufficient': 'A minimum of two comma-separated parameters are required.',
 	'exceeded': 'A maximum of 25 items are allowed per entry.',
+	'no_bindings': 'There are no shortcuts binded.',
 	'invalid_bind': 'Specified bindings not found.',
 	'embed_close': 'Menu has been closed.',
 

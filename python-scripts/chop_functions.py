@@ -1,3 +1,5 @@
+import math, re
+
 from collections import Counter
 
 from object_search import *
@@ -67,6 +69,19 @@ def process_chop_components(item, quantity, base_components=None):
 	elif 'recipe' in item_info:
 		recipe = item_info['recipe']
 
+		if 'recipe_name' in item_info:
+			recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
+
+			if recipe_quantity:
+				# convert quantity to integer
+				recipe_quantity = int(recipe_quantity[0][1:])
+
+				# round up desired quantity to the nearest number divisible by recipe quantity
+				quantity = math.ceil(quantity / recipe_quantity) * recipe_quantity
+
+				# remove recipe quantity from recipe name
+				item_info['recipe_name'] = ' '.join(item_info['recipe_name'].split()[:-1])
+
 		# multiply item costs by quantity
 		for material in recipe.keys():
 			recipe[material] *= quantity
@@ -83,5 +98,8 @@ def process_chop_components(item, quantity, base_components=None):
 		base_components['name'] = item_info['recipe_name']
 	else:
 		base_components['name'] = item_name
+
+	# update final quantity since some recipes need the desired quantity to be rounded up
+	base_components['quantity'] = quantity
 
 	return base_components

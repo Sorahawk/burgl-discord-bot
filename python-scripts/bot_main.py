@@ -1,5 +1,5 @@
-import discord, requests, subprocess, sys
 import global_variables
+import discord, requests, subprocess, sys
 
 from random import choice
 from discord.ext import tasks
@@ -104,7 +104,7 @@ async def clear_cache_weekly():
 stored_headers = {}
 
 # checks project repository for new code every minute
-# updates cloud code and restarts bot service after update detected
+# pulls new code and restarts bot service when update is detected
 @tasks.loop(minutes=1)
 async def monitor_repository():
 	url = 'https://api.github.com/repos/Sorahawk/burgl-discord-bot/commits'

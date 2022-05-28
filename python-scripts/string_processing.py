@@ -60,8 +60,7 @@ def detect_smoothie_type(search_query):
 	# detect any special smoothie types from input, e.g. beefy, sticky
 	# does not account for multiple smoothie types, will just take the last one iterated
 	for special in SMOOTHIE_BASES:
-		# ignore 'basic' base because it might appear in other items, e.g. Normal Chair
-		if special != 'basic' and special in search_query.lower():
+		if special in search_query.lower():
 			new_search_query = re.compile(special, re.IGNORECASE).sub('', search_query)
 
 			# if the input was just the smoothie type alone, do not remove it
@@ -89,18 +88,6 @@ def insert_smoothie_base(object_info, smoothie_type):
 # insert BURG.L emoji to the front of string
 def prefix_burgl_emoji(input_string):
 	return f"{CUSTOM_EMOJIS['BURG.L']} *{input_string}*"
-
-
-# inserts BURG.L emoji to front of specified voiceline and sends message to the given channel
-async def burgl_message(key, message=None):
-	voiceline = prefix_burgl_emoji(BOT_VOICELINES[key])
-
-	if message:
-		await message.channel.send(voiceline)
-
-	# send specific lines to main channel also so that real-time bot status is reflected
-	if not message or (key in ['hello', 'sleeping', 'debug', 'cleared'] and message.channel != global_variables.MAIN_CHANNEL):
-		await global_variables.MAIN_CHANNEL.send(voiceline)
 
 
 # returns string surrounded by double underscores, which is the syntax for underlined text on Discord

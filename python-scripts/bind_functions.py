@@ -1,9 +1,11 @@
+import math
+
 from discord import Embed
 
+from bot_messaging import *
 from global_variables import *
 from storage_functions import *
 from string_processing import *
-from multipage_handling import *
 
 
 # default subfunction to bind at least one shortcut to a full object name
@@ -23,11 +25,7 @@ async def bind_view(bot, message, user_input):
 
 	# create embeds until all shortcuts are in a page (max fields per page can be manually set, but the actual max by Discord is 25)
 	embed_list = []
-	number_pages = (len(shortcut_list) // MAX_SHORTCUT_FIELDS) + 1
-
-	# minus one if the number is nicely divisible
-	if len(shortcut_list) % MAX_SHORTCUT_FIELDS == 0:
-		number_pages -= 1
+	number_pages = math.ceil(len(shortcut_list) / MAX_SHORTCUT_FIELDS)
 
 	for page in range(number_pages):
 		shortcut_embed = Embed(title='**Binded Shortcuts**', color=EMBED_COLOR_CODE)

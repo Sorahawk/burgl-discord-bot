@@ -5,9 +5,24 @@ from global_variables import *
 from string_processing import *
 
 
+# inserts BURG.L emoji to front of specified voiceline and sends message to the given channel
+async def burgl_message(key, message=None):
+	voiceline = prefix_burgl_emoji(BOT_VOICELINES[key])
+
+	if message:
+		await message.channel.send(voiceline)
+
+	# send specific lines to main channel also so that real-time bot status is reflected
+	if not message or (key in ['hello', 'sleeping', 'debug', 'cleared'] and message.channel != global_variables.MAIN_CHANNEL):
+		await global_variables.MAIN_CHANNEL.send(voiceline)
+
+
 # standard handler for multi-page messages, which allows for page navigation, as well as closing the menu
 # unique input is embed_list, which is the list of discord.Embed messages to display, in page order
 async def multipage_embed_handler(bot, message, embed_list):
+	if len(embed_list) == 0:
+		return await burgl_message('no_bindings', message)
+
 	left_arrow = CUSTOM_EMOJIS['LeftArrow']
 	cross_mark = CUSTOM_EMOJIS['CrossMark']
 	right_arrow = CUSTOM_EMOJIS['RightArrow']
