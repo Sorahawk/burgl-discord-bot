@@ -120,7 +120,7 @@ async def monitor_repository():
 			await burgl_message('updating')
 
 			# pull latest code and restart service
-			subprocess.run(f'cd ~/burgl-discord-bot/ && git pull && sudo systemctl restart burgl-bot.service', shell=True)
+			subprocess.run(f'cd {ABSOLUTE_FOLDER_PATH} && git pull && sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
 
 
 bot.run(DISCORD_BOT_TOKEN)
