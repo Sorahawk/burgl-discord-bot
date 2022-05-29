@@ -70,7 +70,7 @@ The overall roadmap and development tracker for this project can be found on the
 - `.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...`
   - Adds one or more specified items to the Chopping List, which tracks player-required resources and quantities.
   - If a specified item is not already a natural resource, it will be broken down into its component materials before being added to the list.
-  - *Parameters are case-insensitive and there is a maximum of 25 parameters per entry. Commas are optional unless two item_names are arranged consecutively.*
+  - *Parameters are case-insensitive and there is a maximum of 9 parameters per entry. Commas are optional unless two item_names are arranged consecutively.*
 - `.clear`
   - Clears the webpage data and object information caches.
 - `.purge`

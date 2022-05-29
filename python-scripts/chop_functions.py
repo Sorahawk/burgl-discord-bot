@@ -14,8 +14,7 @@ async def chop_default(message, user_input):
 		return await burgl_message('exceeded', message)
 
 	for item, quantity in chopping_items.items():
-		print(process_chop_components(item, quantity))
-
+		await global_variables.MAIN_CHANNEL.send(process_chop_components(item, quantity))
 
 
 

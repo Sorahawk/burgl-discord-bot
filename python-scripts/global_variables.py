@@ -92,7 +92,7 @@ BOT_HELP_MENU = {
 		'*+Parameters are case-insensitive and must be separated by a comma.*'],
 
 		['.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...', 'Adds one or more specified items to the Chopping List.',
-		'*+Parameters are case-insensitive and there is a maximum of 25 parameters per entry. Commas are optional unless two item_names are arranged consecutively.*']
+		'*+Parameters are case-insensitive and there is a maximum of 9 parameters per entry. Commas are optional unless two item_names are arranged consecutively.*']
 	],
 
 	'Utility': [

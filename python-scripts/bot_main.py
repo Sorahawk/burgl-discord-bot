@@ -56,25 +56,24 @@ async def on_message(message):
 	# check for any valid command if the message starts with the prefix symbol
 	result = check_command(message.content[prefix_length:])
 
-	if result:
-		command_method, user_input = result[0], result[1]
-	else:
+	if not result:
 		return
+
+	command_method, user_input = result[0], result[1]
 
 	# check for presence of any command flags
 	# in the process also removes any excess whitespace
 	flag_presence, user_input = check_flags(user_input)
 
 	if DEBUG_MODE:
-		await eval(command_method)(bot, message, user_input, flag_presence)
+		return await eval(command_method)(bot, message, user_input, flag_presence)
 
 	# log any unexpected errors if not in debug mode
-	else:
-		try:
-			await eval(command_method)(bot, message, user_input, flag_presence)
+	try:
+		await eval(command_method)(bot, message, user_input, flag_presence)
 
-		except Exception as e:  # log any errors if command fails in any unexpected way
-			print(f'WARNING: {e}.\n')
+	except Exception as e:  # log any errors if command fails in any unexpected way
+		print(f'WARNING: {e}.\n')
 
 
 bot.run(DISCORD_BOT_TOKEN)

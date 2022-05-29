@@ -54,7 +54,7 @@ def process_chop_components(item_name, quantity, base_components=None):
 
 	item_name = item_info['name']
 
-	# end recursion if item is natural resource, or in SPECIAL_ITEMS
+	# stop recursion if item is natural resource, or in SPECIAL_ITEMS
 	if item_name in SPECIAL_ITEMS or ('category' in item_info and item_info['category'] == 'Natural Resources'):
 		base_components[item_name] += quantity
 
@@ -88,13 +88,11 @@ def process_chop_components(item_name, quantity, base_components=None):
 	else:
 		return [105, item_name]
 
-
 	if not originalCall:
 		return base_components
 
-	else:
-		# return smoothie name with prefixed base type
-		if 'category' in item_info and 'smoothie' in item_info['category'].lower():
-			item_name = item_info['recipe_name']
+	# return smoothie name with prefixed base type
+	if 'category' in item_info and 'smoothie' in item_info['category'].lower():
+		item_name = item_info['recipe_name']
 
-		return item_name, quantity, base_components
+	return item_name, quantity, base_components

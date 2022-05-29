@@ -82,10 +82,6 @@ async def multipage_embed_handler(bot, message, user_input, embed_list):
 				await embedded_message.remove_reaction(reaction, user)
 
 		except TimeoutError:
-			try:
-				# after specified timeout period, remove 'buttons' from the message
-				# leaves the info on screen, but also informs the user that pages can no longer be navigated
-				return await embedded_message.clear_reactions()
-
-			except:  # other errors, like discord.errors.NotFound: Unknown Message (if message is deleted)
-				return
+			# after specified timeout period, remove 'buttons' from the message
+			# leaves the info on screen, but also informs the user that pages can no longer be navigated
+			return await embedded_message.clear_reactions()
