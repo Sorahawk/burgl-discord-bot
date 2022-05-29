@@ -1,5 +1,4 @@
-import math
-
+from math import ceil
 from discord import Embed
 
 from bot_messaging import *
@@ -25,7 +24,7 @@ async def bind_view(bot, message, user_input):
 
 	# create embeds until all shortcuts are in a page (max fields per page can be manually set, but the actual max by Discord is 25)
 	embed_list = []
-	number_pages = math.ceil(len(shortcut_list) / MAX_SHORTCUT_FIELDS)
+	number_pages = ceil(len(shortcut_list) / MAX_SHORTCUT_FIELDS)
 
 	for page in range(number_pages):
 		shortcut_embed = Embed(title='**Binded Shortcuts**', color=EMBED_COLOR_CODE)

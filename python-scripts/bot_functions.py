@@ -1,7 +1,5 @@
 import global_variables
 
-from collections import Counter
-from asyncio import TimeoutError
 from discord import DMChannel, Embed, Status
 
 from bot_tasks import *

@@ -1,6 +1,6 @@
-import math, re
-
+from math import ceil
 from collections import Counter
+from re import findall, IGNORECASE
 
 from object_search import *
 from dynamodb_methods import *
@@ -16,7 +16,7 @@ def process_chop_input(user_input):
 	regex_pattern = f'{name_pattern} {qty_pattern}|{qty_pattern} {name_pattern}'
 
 	# find all item-quantity pairs
-	results = re.findall(regex_pattern, user_input, re.IGNORECASE)
+	results = findall(regex_pattern, user_input, IGNORECASE)
 
 	processed_input = Counter()
 
@@ -78,7 +78,7 @@ def process_chop_components(item, quantity, base_components=None):
 				recipe_quantity = int(recipe_quantity[0][1:])
 
 				# round up desired quantity to the nearest number divisible by recipe quantity
-				quantity = math.ceil(quantity / recipe_quantity)
+				quantity = ceil(quantity / recipe_quantity)
 			else:
 				recipe_quantity = 1
 

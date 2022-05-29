@@ -1,4 +1,4 @@
-import boto3
+from boto3 import resource
 
 from global_variables import *
 from secret_variables import *
@@ -6,7 +6,7 @@ from secret_variables import *
 
 # initialises and returns DynamoDB session
 def ddb_create_session():
-	return boto3.resource('dynamodb', region_name='ap-southeast-1', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+	return resource('dynamodb', region_name='ap-southeast-1', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
 
 
 # returns tuple consisting of table key and attribute headers

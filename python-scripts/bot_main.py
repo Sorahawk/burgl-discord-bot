@@ -1,5 +1,7 @@
 import global_variables
-import discord, sys
+
+from sys import platform
+from discord import Client, Intents
 
 from bot_tasks import *
 from bot_functions import *
@@ -11,10 +13,10 @@ from string_processing import *
 
 # declare bot intents
 # all() enables everything, including the privileged intents: presences, members and message_content
-intents = discord.Intents.all()
+intents = Intents.all()
 
 # initialise client
-bot = discord.Client(intents=intents)
+bot = Client(intents=intents)
 
 
 @bot.event
@@ -38,7 +40,7 @@ async def on_ready():
 		print(f'WARNING: {e}.\n')
 
 	# activate self-updating if running on linux cloud instance
-	if sys.platform == 'linux':
+	if platform == 'linux':
 		monitor_repository.start()
 		print('INFO: Watching project repository for updates.')
 
