@@ -22,7 +22,7 @@ async def bind_default(message, user_input):
 async def bind_view(bot, message, user_input):
 	shortcut_list = retrieve_all_shortcuts()
 
-	# create embeds until all shortcuts are in a page (max fields per page can be manually set, but the actual max by Discord is 25)
+	# create embeds until all shortcuts are in a page
 	embed_list = []
 	number_pages = ceil(len(shortcut_list) / MAX_SHORTCUT_FIELDS)
 

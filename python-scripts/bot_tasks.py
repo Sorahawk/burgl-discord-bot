@@ -47,10 +47,10 @@ async def monitor_repository():
 
 		# new repository update
 		else:
-			await burgl_message('updating', message)
+			await burgl_message('updating')
 
 			# reset any changes that could have been made to the project folder and pull latest code
-			result = run(f'cd {LINUX_ABSOLUTE_PATH} && git reset --hard HEAD && git pull', shell=True)
+			run(f'cd {LINUX_ABSOLUTE_PATH} && git reset --hard HEAD && git pull', shell=True)
 
 			# restart service
-			result = run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
+			run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)

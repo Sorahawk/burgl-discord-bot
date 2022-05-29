@@ -31,6 +31,9 @@ EMBED_COLOR_CODE = 0x6542E1
 # max number of fields per embed page when viewing binded shortcuts
 MAX_SHORTCUT_FIELDS = 15
 
+# max number of items per command entry when entering items into the Chopping List
+MAX_CHOPPING_INPUT = 9
+
 # decimal value for minimum ratio of string similarity between search query and predicted result
 SIMILAR_THRESHOLD_API = 0.35
 
@@ -65,13 +68,13 @@ SPECIAL_ITEMS = ['Berry Leather', 'Crude Rope', 'Mushroom Slurry', 'Pupa Leather
 SHORTCUT_STORAGE = 'ShortName-FullName'
 OBJECT_INFO_CACHE = 'SearchQuery-ObjectInfo'
 PAGE_HTML_CACHE = 'WikiURL-PageHTML'
-CHOPPING_LIST = 'NaturalResource-Quantity'
+CHOPPING_LIST = 'Item-Quantity.Components'
 
 DDB_TABLE_HEADERS = {
 	SHORTCUT_STORAGE: ('short_name', 'full_name'),
 	OBJECT_INFO_CACHE: ('search_query', 'object_info'),
 	PAGE_HTML_CACHE: ('wiki_url', 'page_html'),
-	CHOPPING_LIST: ('natural_resource', 'quantity')
+	CHOPPING_LIST: ('item', ('quantity', 'components'))
 }
 
 

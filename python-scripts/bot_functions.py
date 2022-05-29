@@ -79,7 +79,7 @@ async def card_method(bot, message, user_input, flag_presence):
 		return await burgl_message('empty', message)
 
 	# check for existing shortcut binding in database if no -f flag
-	if not flag_presence['force_search']:
+	elif not flag_presence['force_search']:
 		full_name = retrieve_full_name(user_input)
 
 	result = get_creature_card(full_name, flag_presence['get_gold'])
@@ -139,39 +139,14 @@ async def purge_method(bot, message, user_input, flag_presence):
 
 # chopping list method
 async def chop_method(bot, message, user_input, flag_presence):
-	if user_input == '':
-		return await burgl_message('empty', message)
-	elif not check_user_elevation(message):
-		return await burgl_message('unauthorised', message)
+	if not check_user_elevation(message):
+		await burgl_message('unauthorised', message)
 
-	# process user input into dictionary of items and their desired quantities
-	inputted_items = process_chop_input(user_input)
+	elif user_input == '':
+		await burgl_message('empty', message)
 
-	if not inputted_items:
-		return await burgl_message('empty', message)
-	elif len(inputted_items) > 25:  # too many items for one Embed page
-		return await burgl_message('exceeded', message)
-
-	summary_embed = Embed(title='**Chopping List - New Items**', color=EMBED_COLOR_CODE)
-	empty_summary = summary_embed.copy()
-
-	for item_name, quantity in inputted_items.items():
-		added_items = process_chop_components(item_name, quantity)
-
-		# check for errors and proceed if none detected
-		if await detect_search_errors(message, item_name, added_items):
-			item_name = added_items['name']
-			item_quantity = added_items['quantity']
-
-			del added_items['name']
-			del added_items['quantity']
-
-			added_items = generate_recipe_string(added_items)
-			summary_embed.add_field(name=f'{item_name} (x{item_quantity})', value=added_items, inline=False)
-
-	# print summary of added materials
-	if len(summary_embed) != len(empty_summary):
-		await message.channel.send(embed=summary_embed)
+	else:
+		await chop_default(message, user_input)
 
 
 # store full command list locally in this script
@@ -183,6 +158,7 @@ async def sleep_method(bot, message, user_input, flag_presence):
 	if DEBUG_MODE:
 		# ignore command if in development mode
 		return
+
 	elif not check_user_elevation(message):
 		return await burgl_message('unauthorised', message)
 

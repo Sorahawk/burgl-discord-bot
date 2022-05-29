@@ -16,15 +16,22 @@ def get_table_headers(table_name):
 
 # inserts specified key and attribute values into specified table
 # works for updating too, as entire entry will be overwritten even if that primary key already exists
-def ddb_insert_item(table_name, key, attribute):
+def ddb_insert_item(table_name, key, attributes):
 	table = ddb_create_session().Table(table_name)
-	key_header, attribute_header = get_table_headers(table_name)
+	key_header, attribute_headers = get_table_headers(table_name)
+
+	if isinstance(attribute_headers, str):
+		attributes = (attributes, )
+		attribute_headers = (attribute_headers, )
+
+	output_dict = {key_header: key}
+
+	for index in range(len(attribute_headers)):
+		header = attribute_headers[index]
+		output_dict[header] = attributes[index]
 
 	try:
-		table.put_item(Item={
-			key_header: key,
-			attribute_header: attribute})
-
+		table.put_item(Item=output_dict)
 		return True
 
 	except:  # can fail if key input is empty

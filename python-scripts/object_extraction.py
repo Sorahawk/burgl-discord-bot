@@ -150,7 +150,7 @@ def get_infobox_info(page_content):
 
 
 # returns a Counter() of the compiled materials and their quantities
-# collections.Counter will make it much easier to recursively sum up materials for chopping list in future
+# collections.Counter will make it much easier to recursively sum up materials for Chopping List in future
 def compile_counter(item_list, recipe_type=None):
 	counter = Counter()
 	value = None
