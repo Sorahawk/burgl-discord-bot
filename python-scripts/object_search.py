@@ -1,5 +1,6 @@
 from discord import Embed
 from json import dumps, loads
+from collections import Counter
 
 from url_processing import *
 from global_variables import *

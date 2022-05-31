@@ -12,8 +12,13 @@ def check_user_elevation(message):
 
 
 # inserts BURG.L emoji to front of specified voiceline and sends message to the given channel
-async def burgl_message(key, message=None):
-	voiceline = prefix_burgl_emoji(BOT_VOICELINES[key])
+async def burgl_message(key, message=None, notify=False):
+	prefix = ''
+
+	if notify:
+		prefix = NOTIFY_ROLE_NAME + ' '
+
+	voiceline = prefix_burgl_emoji(prefix + BOT_VOICELINES[key])
 
 	if message:
 		await message.channel.send(voiceline)
@@ -47,7 +52,7 @@ async def detect_search_errors(message, user_input, result):
 # unique input is embed_list, which is the list of discord.Embed messages to display, in page order
 async def multipage_embed_handler(bot, message, user_input, embed_list):
 	if len(embed_list) == 0:
-		return await burgl_message('no_bindings', message)
+		return await burgl_message('no_display', message)
 	
 	current_page = 0
 	direct_page = re.findall('\d+', user_input)

@@ -1,3 +1,5 @@
+from collections import Counter
+
 from dynamodb_methods import *
 from global_variables import *
 from secret_variables import *
@@ -103,3 +105,17 @@ def clear_cache():
 
 	for table_name in tables:
 		ddb_remove_all(table_name)
+
+
+# checks for existing quantity for a specific item in Chopping List and updates it appropriately
+# returns ddb_insert_item(), which itself returns True for successful insertions, otherwise False
+def insert_chop_item(item_name, quantity, base_components):
+	table_name = CHOPPING_LIST
+
+	existing_entry = ddb_retrieve_item(table_name, item_name)
+
+	if existing_entry:
+		quantity += existing_entry['quantity']
+		base_components += Counter(existing_entry['components'])
+
+	return ddb_insert_item(table_name, item_name, (quantity, base_components))

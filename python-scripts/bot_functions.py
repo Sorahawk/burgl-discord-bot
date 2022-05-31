@@ -69,7 +69,7 @@ async def card_method(bot, message, user_input, flag_presence):
 
 # shortcut binding method
 async def bind_method(bot, message, user_input, flag_presence):
-	if flag_presence['view_bindings']:  # allow non-elevated users to view bindings
+	if flag_presence['view']:  # allow non-elevated users to view bindings
 		await bind_view(bot, message, user_input)
 
 	elif not check_user_elevation(message):
@@ -78,7 +78,7 @@ async def bind_method(bot, message, user_input, flag_presence):
 	elif user_input == '':
 		await burgl_message('empty', message)
 
-	elif flag_presence['delete_binding']:
+	elif flag_presence['delete']:
 		await bind_delete(message, user_input)
 
 	else:
@@ -111,18 +111,6 @@ async def purge_method(bot, message, user_input, flag_presence):
 				await old_message.delete()
 
 
-# chopping list method
-async def chop_method(bot, message, user_input, flag_presence):
-	if not check_user_elevation(message):
-		await burgl_message('unauthorised', message)
-
-	elif user_input == '':
-		await burgl_message('empty', message)
-
-	else:
-		await chop_default(message, user_input)
-
-
 # store full command list locally in this script
 # can also be accessed by referencing BOT_COMMAND_LIST itself at any time, but just use a clearer name to avoid confusion 
 full_command_list = BOT_COMMAND_LIST
@@ -150,3 +138,18 @@ async def sleep_method(bot, message, user_input, flag_presence):
 		await burgl_message('sleeping', message)
 		await bot.change_presence(status=Status.idle)
 		rotate_status.cancel()
+
+
+# chopping list method
+async def chop_method(bot, message, user_input, flag_presence):
+	if flag_presence['view']:
+		await chop_view(bot, message, user_input)
+
+	elif not check_user_elevation(message):
+		await burgl_message('unauthorised', message)
+
+	elif user_input == '':
+		await burgl_message('empty', message)
+
+	else:
+		await chop_default(message, user_input)

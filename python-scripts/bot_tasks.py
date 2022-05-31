@@ -28,7 +28,7 @@ tz = timezone(timedelta(hours=TIMEZONE_OFFSET))
 async def clear_cache_weekly():
 	if datetime.today().weekday() == CACHE_CLEAR_DAY:
 		clear_cache()
-		await burgl_message('cleared')
+		await burgl_message('cleared', notify=True)
 
 
 # initialise persistent header variable to store latest HTTP response ETag

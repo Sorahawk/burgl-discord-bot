@@ -12,7 +12,10 @@ MAIN_CHANNEL_ID = 976308922010959892
 MAIN_CHANNEL = None
 
 # list of elevated Discord users
-ELEVATED_USERS = [261795156359905281, 498051548463628300]
+ELEVATED_USERS = [261795156359905281, 498051548463628300, 787989970547769375]
+
+# Discord server role name to ping for notifications
+NOTIFY_ROLE_NAME = '<@&981223991547158609>'
 
 # symbol to signify bot commands
 BOT_COMMAND_PREFIX = '.'
@@ -22,7 +25,7 @@ BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge', 'chop', 
 
 # dictionary of command flags
 # each flag can only be a single letter
-BOT_COMMAND_FLAGS = {'delete_binding': 'd', 'force_search': 'f', 'get_gold': 'g', 'view_bindings': 'v'}
+BOT_COMMAND_FLAGS = {'delete': 'd', 'force_search': 'f', 'get_gold': 'g', 'view': 'v'}
 
 # color code for Embed messages
 # 0x6542E1 is the purple that BURG.L's icon has in-game while speaking
@@ -33,6 +36,9 @@ MAX_SHORTCUT_FIELDS = 15
 
 # max number of items per command entry when entering items into the Chopping List
 MAX_CHOPPING_INPUT = 9
+
+# max number of fields per embed page when viewing the Chopping List
+MAX_CHOPPING_FIELDS = 10
 
 # decimal value for minimum ratio of string similarity between search query and predicted result
 SIMILAR_THRESHOLD_API = 0.35
@@ -112,10 +118,10 @@ BOT_VOICELINES = {
 	'cleared': 'Data caches have been cleared.',
 	'purging': 'Purging message history...',
 	'unauthorised': 'You are not authorised to use this command.',
-	'empty': 'Please provide input parameters.',
+	'empty': 'Please provide valid input parameters.',
 	'insufficient': 'A minimum of two comma-separated parameters are required.',
-	'exceeded': 'A maximum of 25 items are allowed per entry.',
-	'no_bindings': 'There are no shortcuts binded.',
+	'chop_exceeded': f'A maximum of {MAX_CHOPPING_INPUT} items are allowed per entry.',
+	'no_display': 'There is nothing to display.',
 	'invalid_bind': 'Specified bindings not found.',
 	'embed_close': 'Menu has been closed.',
 
@@ -152,6 +158,16 @@ CUSTOM_EMOJIS = {
 	'LeftArrow': '◀️',
 	'RightArrow': '▶️',
 	'CrossMark': '❎',
+
+	1: ':one:',
+	2: ':two:',
+	3: ':three:',
+	4: ':four:',
+	5: ':five:',
+	6: ':six:',
+	7: ':seven:',
+	8: ':eight:',
+	9: ':nine:',
 
 	'BURG.L': '<:BURGL_Icon:976155200102486016>',
 

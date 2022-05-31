@@ -41,7 +41,8 @@ The overall roadmap and development tracker for this project can be found on the
 - [Amazon DynamoDB](https://aws.amazon.com/dynamodb/)
 - [Amazon EC2](https://aws.amazon.com/ec2/)
 - [Discord.py](https://discordpy.readthedocs.io/)
-- [Google Custom Search JSON API](https://developers.google.com/custom-search/v1/introduction)
+- [GitHub REST API](https://docs.github.com/en/rest/)
+- [Google Custom Search JSON API](https://developers.google.com/custom-search/v1/introduction/)
 - [Google Programmable Search Engine](https://programmablesearchengine.google.com/)
 - [Python](https://www.python.org/)
 
