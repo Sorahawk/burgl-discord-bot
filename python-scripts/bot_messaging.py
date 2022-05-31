@@ -2,7 +2,13 @@ from discord import DMChannel
 from asyncio import TimeoutError
 
 from global_variables import *
+from storage_functions import *
 from string_processing import *
+
+
+# returns True if message author is elevated, otherwise False
+def check_user_elevation(message):
+	return message.author.id in ELEVATED_USERS
 
 
 # inserts BURG.L emoji to front of specified voiceline and sends message to the given channel
@@ -15,6 +21,26 @@ async def burgl_message(key, message=None):
 	# send specific lines to main channel also so that real-time bot status is reflected
 	if not message or (key in ['hello', 'sleeping', 'debug', 'cleared'] and message.channel != global_variables.MAIN_CHANNEL):
 		await global_variables.MAIN_CHANNEL.send(voiceline)
+
+
+# display corresponding error message if result is an error
+# returns True if no error, else returns None by default
+async def detect_search_errors(message, user_input, result):
+
+	# catch specific error cases which return different data types, e.g. 102
+	if isinstance(result, list) and isinstance(result[0], int):
+		error_message = prefix_burgl_emoji(BOT_VOICELINES[result[0]]).replace('VAR1', result[1])
+
+	# check voiceline dictionary in global_variables directly so no need to keep updating here too
+	elif isinstance(result, int) and result in BOT_VOICELINES:
+		full_name = capitalise_object_name(retrieve_full_name(user_input))
+		error_message = prefix_burgl_emoji(BOT_VOICELINES[result]).replace('VAR1', full_name)
+
+	else:
+		return True
+
+	# send error message
+	await message.channel.send(error_message)
 
 
 # standard handler for multi-page messages, which allows for page navigation, as well as closing the menu

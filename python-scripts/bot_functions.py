@@ -8,36 +8,10 @@ from bot_messaging import *
 from object_search import *
 from bind_functions import *
 from chop_functions import *
-from dynamodb_methods import *
 from global_variables import *
 from secret_variables import *
 from storage_functions import *
 from string_processing import *
-
-
-# returns True if message author is elevated, otherwise False
-def check_user_elevation(message):
-	return message.author.id in ELEVATED_USERS
-
-
-# display corresponding error message if result is an error
-# returns True if no error, else returns None by default
-async def detect_search_errors(message, user_input, result):
-
-	# catch specific error cases which return different data types, e.g. 102
-	if isinstance(result, list):
-		error_message = prefix_burgl_emoji(BOT_VOICELINES[result[0]]).replace('VAR1', result[1])
-
-	# check voiceline dictionary in global_variables directly so no need to keep updating here too
-	elif isinstance(result, int) and result in BOT_VOICELINES:
-		full_name = capitalise_object_name(retrieve_full_name(user_input))
-		error_message = prefix_burgl_emoji(BOT_VOICELINES[result]).replace('VAR1', full_name)
-
-	else:
-		return True
-
-	# send error message
-	await message.channel.send(error_message)
 
 
 # all bot methods below have to correspond to an item in BOT_COMMAND_LIST

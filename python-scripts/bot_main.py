@@ -5,7 +5,6 @@ from discord import Client, Intents
 
 from bot_tasks import *
 from bot_functions import *
-from dynamodb_methods import *
 from global_variables import *
 from secret_variables import *
 from string_processing import *

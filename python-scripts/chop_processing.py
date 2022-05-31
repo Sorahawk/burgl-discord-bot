@@ -3,7 +3,6 @@ from collections import Counter
 from re import findall, IGNORECASE
 
 from object_search import *
-from dynamodb_methods import *
 from global_variables import *
 
 
@@ -34,7 +33,7 @@ def process_chop_input(user_input):
 
 
 # recursive function to break an item down to its base components and update Chopping List quantities
-# returns rolling Counter to itself by default
+# returns rolling Counter by default, also returns overall item name and quantity if it is the original function call
 def process_chop_components(item_name, quantity, base_components=None):
 	if base_components is None:
 		base_components = Counter()
@@ -59,35 +58,34 @@ def process_chop_components(item_name, quantity, base_components=None):
 		base_components[item_name] += quantity
 
 	elif 'recipe' in item_info:
-		recipe = item_info['recipe']
-
-		if 'recipe_name' not in item_info:
-			item_info['recipe_name'] = ''
-
 		recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
 
 		if recipe_quantity:
 			# remove letter x and convert quantity to integer
 			recipe_quantity = int(recipe_quantity[0][1:])
-
-			# round up desired quantity to the nearest number divisible by recipe quantity
-			quantity = ceil(quantity / recipe_quantity)
 		else:
 			recipe_quantity = 1
 
+		# calculate number of times to craft the recipe
+		crafting_count = ceil(quantity / recipe_quantity)
+
+		recipe = item_info['recipe']
+
 		# multiply item costs by quantity
 		for material in recipe:
-			recipe[material] *= quantity
+			recipe[material] *= crafting_count
 
 			# recursively run function on component materials
 			base_components = process_chop_components(material, recipe[material], base_components)
 
-		quantity *= recipe_quantity
+		# calculate actual number of items produced, not the number of times the recipe is used (i.e. recipes which produce multiple items)
+		quantity = recipe_quantity * crafting_count
 
-	# return error 105 if object is not a resource or craftable item, e.g. creature
-	else:
+	# return error 105 if overall object is not a resource or craftable item, e.g. creature
+	elif originalCall:
 		return [105, item_name]
 
+	# return only the material Counter if function was recursively called
 	if not originalCall:
 		return base_components
 

@@ -10,7 +10,7 @@ def ddb_create_session():
 
 
 # returns tuple consisting of table key and attribute headers
-def get_table_headers(table_name):
+def ddb_table_headers(table_name):
 	return DDB_TABLE_HEADERS[table_name]
 
 
@@ -18,7 +18,7 @@ def get_table_headers(table_name):
 # works for updating too, as entire entry will be overwritten even if that primary key already exists
 def ddb_insert_item(table_name, key, attributes):
 	table = ddb_create_session().Table(table_name)
-	key_header, attribute_headers = get_table_headers(table_name)
+	key_header, attribute_headers = ddb_table_headers(table_name)
 
 	if isinstance(attribute_headers, str):
 		attributes = (attributes, )
@@ -42,7 +42,7 @@ def ddb_insert_item(table_name, key, attributes):
 # otherwise, returns False
 def ddb_retrieve_item(table_name, key):
 	table = ddb_create_session().Table(table_name)
-	key_header = get_table_headers(table_name)[0]
+	key_header = ddb_table_headers(table_name)[0]
 
 	response = table.get_item(Key={key_header: key})
 
@@ -64,7 +64,7 @@ def ddb_retrieve_all(table_name):
 # does not throw any exception even if the key does not exist, but will throw if key input is empty
 def ddb_remove_item(table_name, key):
 	table = ddb_create_session().Table(table_name)
-	key_header = get_table_headers(table_name)[0]
+	key_header = ddb_table_headers(table_name)[0]
 
 	try:
 		table.delete_item(Key={key_header: key})
@@ -78,7 +78,7 @@ def ddb_remove_item(table_name, key):
 # does not throw any exception even if table is already empty
 def ddb_remove_all(table_name):
 	table = ddb_create_session().Table(table_name)
-	key_header = get_table_headers(table_name)[0]
+	key_header = ddb_table_headers(table_name)[0]
 
 	# scan() has a size limit of 1MB, so repeat until it is empty
 	while True:

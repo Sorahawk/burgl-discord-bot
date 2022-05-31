@@ -27,7 +27,7 @@ def bind_shortcuts(full_name, shortcuts):
 # returns corresponding full name if it exists in table, otherwise just returns the original input
 def retrieve_full_name(search_query):
 	table_name = SHORTCUT_STORAGE
-	attribute_header = get_table_headers(table_name)[1]
+	attribute_header = ddb_table_headers(table_name)[1]
 
 	full_name = ddb_retrieve_item(table_name, search_query.lower())
 
@@ -90,7 +90,7 @@ def delete_shortcuts(full_names):
 # returns corresponding attribute value if it exists in table, otherwise None by default
 def retrieve_from_cache(table_name, key):
 	if not DEBUG_MODE:
-		attribute_header = get_table_headers(table_name)[1]
+		attribute_header = ddb_table_headers(table_name)[1]
 		result = ddb_retrieve_item(table_name, key)
 
 		if result:

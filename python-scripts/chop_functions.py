@@ -1,3 +1,4 @@
+from bot_messaging import *
 from chop_processing import *
 from global_variables import *
 
@@ -13,28 +14,20 @@ async def chop_default(message, user_input):
 	elif len(chopping_items) > MAX_CHOPPING_INPUT:
 		return await burgl_message('exceeded', message)
 
-	for item, quantity in chopping_items.items():
-		await message.channel.send(process_chop_components(item, quantity))
-
-
-
-	'''summary_embed = Embed(title='**Chopping List - New Items**', color=EMBED_COLOR_CODE)
+	summary_embed = Embed(title='**Chopping List - New Items**', color=EMBED_COLOR_CODE)
 	empty_summary = summary_embed.copy()
 
-	for item_name, quantity in chopping_items.items():
-		added_items = process_chop_components(item_name, quantity)
+	for item_name, initial_quantity in chopping_items.items():
+		item_entry = process_chop_components(item_name, initial_quantity)
 
-		# check for errors and proceed if none detected
-		if await detect_search_errors(message, item_name, added_items):
-			item_name = added_items['name']
-			item_quantity = added_items['quantity']
+		if await detect_search_errors(message, item_name, item_entry):
+			actual_name, final_quantity, base_components = item_entry
+			base_components_string = generate_recipe_string(base_components)
 
-			del added_items['name']
-			del added_items['quantity']
+			if actual_name in base_components_string:
+				base_components_string = '\u200b'
 
-			added_items = generate_recipe_string(added_items)
-			summary_embed.add_field(name=f'{item_name} (x{item_quantity})', value=added_items, inline=False)
+			summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
 
-	# print summary of added materials
 	if len(summary_embed) != len(empty_summary):
-		await message.channel.send(embed=summary_embed)'''
+		await message.channel.send(embed=summary_embed)
