@@ -5,6 +5,7 @@ from bot_messaging import *
 from chop_processing import *
 from global_variables import *
 from storage_functions import *
+from string_processing import *
 
 
 # default subfunction to add at least one item to the Chopping List
@@ -23,17 +24,22 @@ async def chop_default(message, user_input):
 
 	index = 1
 	for item_name, initial_quantity in chopping_items.items():
+
+		# skip item if given quantity is 0
+		if initial_quantity == 0:
+			continue
+
 		item_entry = process_chop_components(item_name, initial_quantity)
 
 		if await detect_search_errors(message, item_name, item_entry):
 			actual_name, final_quantity, base_components = item_entry
 
-			# update item quantities in Chopping List
+			# generate component string here instead of after database insertion as base_components gets updated with existing quantities
+			base_components_string = generate_recipe_string(base_components)
+
 			if insert_chop_item(actual_name, final_quantity, base_components):
 
 				# TODO: Forward base_components Counter to Task Scheduler
-
-				base_components_string = generate_recipe_string(base_components)
 
 				summary_embed.add_field(name=f'{CUSTOM_EMOJIS[index]} {actual_name} (x{final_quantity})', value=base_components_string, inline=False)
 				index += 1
@@ -42,14 +48,14 @@ async def chop_default(message, user_input):
 		await burgl_message('empty', message)
 	else:
 
-		# TODO: Create Embed handler to insert 9 emojis and wait for delete
+		# TODO: Create Embed handler to insert 9 emojis and wait for responses
 
 		await message.channel.send(embed=summary_embed)
 
 
 # view current Chopping List entries
 async def chop_view(bot, message, user_input):
-	chopping_list = ddb_retrieve_all(CHOPPING_LIST)
+	chopping_list = retrieve_chopping_list()
 
 	embed_list = []
 	number_pages = ceil(len(chopping_list) / MAX_CHOPPING_FIELDS)
@@ -61,9 +67,9 @@ async def chop_view(bot, message, user_input):
 		end_index = start_index + MAX_CHOPPING_FIELDS
 
 		for entry in chopping_list[start_index:end_index]:
-			item = entry['item']
-			quantity = entry['quantity']
-			components = generate_recipe_string(entry['components'])
+			item = entry[0]
+			quantity = entry[1][0]
+			components = generate_recipe_string(entry[1][1])
 
 			chopping_embed.add_field(name=f'{item} (x{quantity})', value=components, inline=False)
 
@@ -71,3 +77,58 @@ async def chop_view(bot, message, user_input):
 		embed_list.append(chopping_embed)
 
 	return await multipage_embed_handler(bot, message, user_input, embed_list)
+
+
+# complete/delete items from the Chopping List
+
+# can also complete multiple items with different quantity (use the same processing algo as insert)
+# need to run each item input through string_processing.detect_smoothie_type()
+# then run the name through the shortcut list
+# then run the name through capitalise_object_name
+# if smoothie_type is default which is Basic, then try deleting without it first
+# only if item not found, then add basic to the front
+# if smoothie type not basic, then always add to the front
+
+async def chop_delete(message, user_input):
+	input_items = process_chop_input(user_input, True)
+
+	if not input_items:
+		return await burgl_message('empty', message)
+
+	# retrieve current Chopping List
+	chopping_list = retrieve_chopping_list()
+	name_list = [entry[0] for entry in chopping_list]
+
+	# process each item name input and check if it exists in the Chopping List
+	for item_name in input_items:
+
+		# TODO: Use the same algorithm as search and chop_default to figure out most likely item name
+		# to replace everything below
+
+		input_quantity = input_items[item_name]
+
+		# check if smoothie type was provided
+		item_name, smoothie_type = detect_smoothie_type(item_name)
+
+		# retrieve any binded full name
+		item_name = retrieve_full_name(item_name)
+
+		# capitalise object name
+		item_name = capitalise_object_name(item_name)
+
+		if smoothie_type != 'basic':  # prefix special smoothie type to front of name
+			item_name = f'{smoothie_type.title()} {item_name}'
+		elif item_name not in name_list:  # prefix 'Basic' to check if item is a basic smoothie
+			item_name = f'Basic {item_name}'
+
+		# skip item if it doesn't exist in Chopping List
+		if item_name not in name_list:
+			continue
+
+		# delete entire entry if quantity is -1
+		if input_quantity == -1:
+			ddb_remove_item(CHOPPING_LIST, item_name)
+		
+		# otherwise, update quantity and adjust component quantities correspondingly
+		else:
+			pass

@@ -85,6 +85,24 @@ async def bind_method(bot, message, user_input, flag_presence):
 		await bind_default(message, user_input)
 
 
+# chopping list method
+async def chop_method(bot, message, user_input, flag_presence):
+	if flag_presence['view']:
+		await chop_view(bot, message, user_input)
+
+	elif not check_user_elevation(message):
+		await burgl_message('unauthorised', message)
+
+	elif user_input == '':
+		await burgl_message('empty', message)
+
+	elif flag_presence['delete']:
+		await chop_delete(message, user_input)
+
+	else:
+		await chop_default(message, user_input)
+
+
 # cache clearing method
 async def clear_method(bot, message, user_input, flag_presence):
 	if not check_user_elevation(message):
@@ -138,18 +156,3 @@ async def sleep_method(bot, message, user_input, flag_presence):
 		await burgl_message('sleeping', message)
 		await bot.change_presence(status=Status.idle)
 		rotate_status.cancel()
-
-
-# chopping list method
-async def chop_method(bot, message, user_input, flag_presence):
-	if flag_presence['view']:
-		await chop_view(bot, message, user_input)
-
-	elif not check_user_elevation(message):
-		await burgl_message('unauthorised', message)
-
-	elif user_input == '':
-		await burgl_message('empty', message)
-
-	else:
-		await chop_default(message, user_input)

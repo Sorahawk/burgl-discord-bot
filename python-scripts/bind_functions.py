@@ -1,5 +1,6 @@
 from math import ceil
 from discord import Embed
+from re import findall, IGNORECASE
 
 from bot_messaging import *
 from global_variables import *
@@ -9,12 +10,13 @@ from string_processing import *
 
 # default subfunction to bind at least one shortcut to a full object name
 async def bind_default(message, user_input):
-	user_input = user_input.lower().strip(',').split(',')  # remove any edge commas, then split by comma
+	name_pattern = "[a-z _+'?-]+"
+	results = findall(name_pattern, user_input, IGNORECASE)
 
-	if len(user_input) < 2:
+	if len(results) < 2:
 		return await burgl_message('insufficient', message)
 
-	formatted_string = bind_shortcuts(user_input[0], user_input[1:])
+	formatted_string = bind_shortcuts(results[0], results[1:])
 	await message.channel.send(formatted_string)
 
 

@@ -7,12 +7,16 @@ from global_variables import *
 
 
 # returns a Counter containing processed item names as keys and their quantities
-def process_chop_input(user_input):
+def process_chop_input(user_input, allow_numberless=False):
 
 	# regex search patterns
 	name_pattern = "[a-z _+'?-]+"
 	qty_pattern = '[0-9]+'
 	regex_pattern = f'{name_pattern} {qty_pattern}|{qty_pattern} {name_pattern}'
+
+	# toggle recognition of comma-separated item names without any quantities
+	if allow_numberless:
+		regex_pattern += f'|{name_pattern}'
 
 	# find all item-quantity pairs
 	results = findall(regex_pattern, user_input, IGNORECASE)
@@ -21,9 +25,11 @@ def process_chop_input(user_input):
 	for item in results:
 		item = item.split()
 
+		# set default quantity of -1 for items with no specified quantity
+		item_qty = -1
 		if item[0].isdecimal():  # quantity came before item name
 			item_qty = item.pop(0)
-		else:  # quantity came after item name
+		elif item[-1].isdecimal():  # quantity came after item name
 			item_qty = item.pop(-1)
 
 		item_name = ' '.join(item)

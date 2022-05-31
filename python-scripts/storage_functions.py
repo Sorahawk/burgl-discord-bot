@@ -119,3 +119,19 @@ def insert_chop_item(item_name, quantity, base_components):
 		base_components += Counter(existing_entry['components'])
 
 	return ddb_insert_item(table_name, item_name, (quantity, base_components))
+
+
+# returns a tuple of two items, first is list of item names from Chopping List, sorted alphabetically
+# second is a list of dictionaries, each of which represents an entry in the Chopping List
+def retrieve_chopping_list():
+	list_entries = ddb_retrieve_all(CHOPPING_LIST)
+	chopping_list = {}
+
+	for entry in list_entries:
+		item_name = entry['item']
+		quantity = entry['quantity']
+		components = entry['components']
+
+		chopping_list[item_name] = quantity, components
+
+	return sorted(chopping_list.items())
