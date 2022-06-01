@@ -52,11 +52,11 @@ async def card_method(bot, message, user_input, flag_presence):
 	if user_input == '':
 		return await burgl_message('empty', message)
 
-	# check for existing shortcut binding in database if no -o flag
+	# check for existing shortcut binding in database if not overridden
 	elif not flag_presence['override']:
 		full_name = retrieve_full_name(user_input)
 
-	result = get_creature_card(full_name, flag_presence['get_gold'])
+	result = get_creature_card(full_name, flag_presence['gold'])
 
 	# check for errors and proceed if none detected
 	if await detect_search_errors(message, user_input, result):
@@ -92,6 +92,9 @@ async def chop_method(bot, message, user_input, flag_presence):
 
 	elif not check_user_elevation(message):
 		await burgl_message('unauthorised', message)
+
+	elif flag_presence['reset']:
+		await chop_reset(message, user_input)
 
 	elif user_input == '':
 		await burgl_message('empty', message)

@@ -115,7 +115,7 @@ def process_object_input(user_input, flag_presence={'override': False}):
 					if attribute in result:
 						result[attribute] = Counter(result[attribute])
 
-	# if query not in cache or -o flag present
+	# if query not in cache or algorithm overridden
 	if not result:
 		if flag_presence['override']:
 			full_name = user_input
@@ -125,7 +125,7 @@ def process_object_input(user_input, flag_presence={'override': False}):
 		# extract object info
 		result = get_object_info(full_name)
 
-		# cache results except when -o flag is present, or Google API error occurs (API could be available again at any time)
+		# cache results except when override flag is present, or Google API error occurs (API could be available again at any time)
 		if result != 103 and not flag_presence['override'] and not DEBUG_MODE:
 			ddb_insert_item(OBJECT_INFO_CACHE, user_input, dumps(result))
 

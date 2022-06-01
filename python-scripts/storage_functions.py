@@ -112,10 +112,10 @@ def clear_cache():
 def insert_chop_item(item_name, quantity, base_components, ignore_existing=False):
 	table_name = CHOPPING_LIST
 
-	if not ignore_existing:
-		existing_entry = ddb_retrieve_item(table_name, item_name)
-	else:
+	if ignore_existing:
 		existing_entry = None
+	else:
+		existing_entry = ddb_retrieve_item(table_name, item_name)
 
 	if existing_entry:
 		quantity += existing_entry['quantity']

@@ -8,7 +8,7 @@ from storage_functions import *
 from string_processing import *
 
 
-# default subfunction to add at least one item to the Chopping List
+# add one or more items to the Chopping List
 async def chop_default(message, user_input):
 	# process user input into dictionary of items and their desired quantities
 	chopping_items = process_chop_input(user_input)
@@ -81,7 +81,7 @@ async def chop_view(bot, message, user_input):
 	return await multipage_embed_handler(bot, message, user_input, embed_list)
 
 
-# complete/delete items on the Chopping List
+# remove items from the Chopping List
 async def chop_delete(message, user_input):
 	input_items = process_chop_input(user_input, True)
 
@@ -123,6 +123,16 @@ async def chop_delete(message, user_input):
 		existing_quantity = chopping_list[item_name][0]
 		base_components = chopping_list[item_name][1]
 
+		# check if recipe crafts more than one of the item
+		recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
+
+		if recipe_quantity:
+			# remove letter x and convert quantity to integer
+			recipe_quantity = int(recipe_quantity[0][1:])
+
+			# round up input quantity to nearest possible quantity
+			input_quantity = ceil(input_quantity / recipe_quantity) * recipe_quantity
+
 		# if existing quantity is smaller than or equal to input quantity, then remove entire entry
 		if existing_quantity <= input_quantity:
 			input_quantity = -1
@@ -132,12 +142,13 @@ async def chop_delete(message, user_input):
 			ddb_remove_item(CHOPPING_LIST, item_name)
 			input_quantity = 'All'
 
-		# otherwise, deduct item quantity and adjust component quantities correspondingly
 		else:
+			# deduct item quantity
 			new_quantity = existing_quantity - input_quantity
 			ratio = new_quantity / existing_quantity
 			input_quantity = f'x{input_quantity}'
 
+			# adjust component quantities accordingly
 			for material in base_components:
 				base_components[material] = int(base_components[material] * ratio)
 
@@ -149,3 +160,18 @@ async def chop_delete(message, user_input):
 	# send string to acknowledge entry deletion
 	if formatted_string:
 		await message.channel.send(string_header + formatted_string)
+
+
+# wipe the entire Chopping List
+async def chop_reset(message, user_input):
+	if 'confirm' not in user_input.lower():
+		return await burgl_message('need_confirmation', message)
+
+	chopping_list = retrieve_chopping_list()
+
+	for item in chopping_list:
+		item_name = item[0]
+
+		ddb_remove_item(CHOPPING_LIST, item_name)
+
+	await burgl_message('chop_reset', message)

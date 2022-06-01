@@ -25,7 +25,7 @@ BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge', 'chop', 
 
 # dictionary of command flags
 # each flag can only be a single letter
-BOT_COMMAND_FLAGS = {'delete': 'd', 'override': 'f', 'get_gold': 'g', 'view': 'v'}
+BOT_COMMAND_FLAGS = {'delete': 'd', 'gold': 'g', 'override': 'o', 'reset': 'r', 'view': 'v'}
 
 # color code for Embed messages
 # 0x6542E1 is the purple that BURG.L's icon has in-game while speaking
@@ -119,11 +119,13 @@ BOT_VOICELINES = {
 	'purging': 'Purging message history...',
 	'unauthorised': 'You are not authorised to use this command.',
 	'empty': 'Please provide valid input parameters.',
+	'need_confirmation': "This command flag requires 'confirm' as a parameter.",
 	'insufficient': 'A minimum of two comma-separated parameters are required.',
 	'chop_exceeded': f'A maximum of {MAX_CHOPPING_INPUT} items are allowed per entry.',
 	'no_display': 'There is nothing to display.',
 	'invalid_bind': 'Specified bindings not found.',
 	'embed_close': 'Menu has been closed.',
+	'chop_reset': 'The Chopping List has been reset.',
 
 	101: "**ERROR 101:** Unable to locate 'VAR1'. Try typing in the object's full name.",
 	102: "**ERROR 102:** Wiki page for 'VAR1' has an unsupported layout.",

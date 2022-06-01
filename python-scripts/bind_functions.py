@@ -8,7 +8,7 @@ from storage_functions import *
 from string_processing import *
 
 
-# default subfunction to bind at least one shortcut to a full object name
+# bind one or more shortcuts to a full object name
 async def bind_default(message, user_input):
 	name_pattern = "[a-z _+'?-]+"
 	results = findall(name_pattern, user_input, IGNORECASE)
