@@ -52,8 +52,8 @@ async def card_method(bot, message, user_input, flag_presence):
 	if user_input == '':
 		return await burgl_message('empty', message)
 
-	# check for existing shortcut binding in database if no -f flag
-	elif not flag_presence['force_search']:
+	# check for existing shortcut binding in database if no -o flag
+	elif not flag_presence['override']:
 		full_name = retrieve_full_name(user_input)
 
 	result = get_creature_card(full_name, flag_presence['get_gold'])

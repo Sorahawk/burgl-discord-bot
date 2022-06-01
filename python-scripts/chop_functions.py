@@ -31,18 +31,20 @@ async def chop_default(message, user_input):
 
 		item_entry = process_chop_components(item_name, initial_quantity)
 
-		if await detect_search_errors(message, item_name, item_entry):
-			actual_name, final_quantity, base_components = item_entry
+		if not await detect_search_errors(message, item_name, item_entry):
+			continue
 
-			# generate component string here instead of after database insertion as base_components gets updated with existing quantities
-			base_components_string = generate_recipe_string(base_components)
+		actual_name, final_quantity, base_components = item_entry
 
-			if insert_chop_item(actual_name, final_quantity, base_components):
+		# generate component string here instead of after database insertion as base_components gets updated with existing quantities
+		base_components_string = generate_recipe_string(base_components)
 
-				# TODO: Forward base_components Counter to Task Scheduler
+		if insert_chop_item(actual_name, final_quantity, base_components):
 
-				summary_embed.add_field(name=f'{CUSTOM_EMOJIS[index]} {actual_name} (x{final_quantity})', value=base_components_string, inline=False)
-				index += 1
+			# TODO: Forward base_components Counter to Task Scheduler
+
+			summary_embed.add_field(name=f'{CUSTOM_EMOJIS[index]} {actual_name} (x{final_quantity})', value=base_components_string, inline=False)
+			index += 1
 
 	if len(summary_embed) == len(embed_title):  # if no valid items were added
 		await burgl_message('empty', message)
@@ -100,35 +102,24 @@ async def chop_delete(message, user_input):
 	name_list = [entry[0] for entry in chopping_list]
 
 	# process each item name input and check if it exists in the Chopping List
-	for item_name in input_items:
+	for input_name in input_items:
+		item_info = process_object_input(item_name)
 
-		# TODO: Use the same algorithm as search and chop_default to figure out most likely item name
-		# to replace everything below
-
-		input_quantity = input_items[item_name]
-
-		# check if smoothie type was provided
-		item_name, smoothie_type = detect_smoothie_type(item_name)
-
-		# retrieve any binded full name
-		item_name = retrieve_full_name(item_name)
-
-		# capitalise object name
-		item_name = capitalise_object_name(item_name)
-
-		if smoothie_type != 'basic':  # prefix special smoothie type to front of name
-			item_name = f'{smoothie_type.title()} {item_name}'
-		elif item_name not in name_list:  # prefix 'Basic' to check if item is a basic smoothie
-			item_name = f'Basic {item_name}'
-
-		# skip item if it doesn't exist in Chopping List
-		if item_name not in name_list:
+		if not await detect_search_errors(message, item_name, item_info):
 			continue
 
+		item_name = item_info['name']
+
+		# prefix smoothie type to smoothie name
+		if 'category' in item_info and 'smoothie' in item_info['category'].lower():
+			item_name = item_info['recipe_name']
+
+		print(item_info)
+
 		# delete entire entry if quantity is -1
-		if input_quantity == -1:
+		'''if input_quantity == -1:
 			ddb_remove_item(CHOPPING_LIST, item_name)
 		
 		# otherwise, update quantity and adjust component quantities correspondingly
 		else:
-			pass
+			pass'''

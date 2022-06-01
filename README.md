@@ -58,11 +58,11 @@ The overall roadmap and development tracker for this project can be found on the
   - Displays the help menu.
 - `.search <object_name>`
   - Displays any available details of the object, including its picture and description. Works with any Grounded wiki page with an infobox, e.g. creatures, equipment, resources, building components, resource nodes, landmarks.
-  - *Use flag `-f` to force the search to bypass any binded shortcuts.*
+  - *Use flag `-o` to override any binded shortcuts.*
 - `.card <creature_name>`
   - Displays the specified creature's bestiary card.
   - *Use flag `-g` to display the creature's gold bestiary card.*
-  - *Use flag `-f` to force the search to bypass any binded shortcuts.*
+  - *Use flag `-o` to override any binded shortcuts.*
 - `.bind <object_name>, <shortcut_1>, [shortcut_2], ...`
   - Binds an object name to one or more shortcut phrases.
   - *Use flag `-v` to view all binded shortcuts (no arguments required).*

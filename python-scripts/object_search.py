@@ -87,14 +87,14 @@ def get_object_info(search_query):
 # returns a dictionary containing attributes of the searched object if located
 # otherwise, can return error codes 101, 102 or 103 depending on the failure case
 # function also caches results for succesful retrieval, as well as errors 101 and 102
-def process_object_input(user_input, flag_presence={'force_search': False}):
+def process_object_input(user_input, flag_presence={'override': False}):
 	result = None
 
 	# detect smoothie type
 	user_input, smoothie_type = detect_smoothie_type(user_input)
 
-	# if user forces search of actual query, then bypass both shortcut table as well as cache
-	if not flag_presence['force_search']:
+	# if user overrides shortcut table and cache, then perform search on the exact input provided
+	if not flag_presence['override']:
 
 		# check if corresponding object info exists in cache
 		result = retrieve_from_cache(OBJECT_INFO_CACHE, user_input)
@@ -111,9 +111,9 @@ def process_object_input(user_input, flag_presence={'force_search': False}):
 					if attribute in result:
 						result[attribute] = Counter(result[attribute])
 
-	# if query not in cache or -f flag present
+	# if query not in cache or -o flag present
 	if not result:
-		if flag_presence['force_search']:
+		if flag_presence['override']:
 			full_name = user_input
 		else:
 			full_name = retrieve_full_name(user_input)
@@ -121,8 +121,8 @@ def process_object_input(user_input, flag_presence={'force_search': False}):
 		# extract object info
 		result = get_object_info(full_name)
 
-		# cache results except when -f flag is present, or Google API error occurs (API could be available again at any time)
-		if result != 103 and not flag_presence['force_search'] and not DEBUG_MODE:
+		# cache results except when -o flag is present, or Google API error occurs (API could be available again at any time)
+		if result != 103 and not flag_presence['override'] and not DEBUG_MODE:
 			ddb_insert_item(OBJECT_INFO_CACHE, user_input, dumps(result))
 
 	# most attributes of smoothies are cached, except their smoothie base ingredient, since it is variable

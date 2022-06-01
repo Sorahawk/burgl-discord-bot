@@ -25,7 +25,7 @@ BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge', 'chop', 
 
 # dictionary of command flags
 # each flag can only be a single letter
-BOT_COMMAND_FLAGS = {'delete': 'd', 'force_search': 'f', 'get_gold': 'g', 'view': 'v'}
+BOT_COMMAND_FLAGS = {'delete': 'd', 'override': 'f', 'get_gold': 'g', 'view': 'v'}
 
 # color code for Embed messages
 # 0x6542E1 is the purple that BURG.L's icon has in-game while speaking
@@ -88,10 +88,10 @@ DDB_TABLE_HEADERS = {
 BOT_HELP_MENU = {
 	'Main': [
 		['.search <object_name>', 'Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
-		'*+Use flag `-f` to force the search to bypass any binded shortcuts.*'],
+		'*+Use flag `-o` to override any binded shortcuts.*'],
 
 		['.card <creature_name>', "Displays the specified creature's bestiary card.",
-		"*+Use flag `-g` to display the creature's gold bestiary card.*", '*+Use flag `-f` to force the search to bypass any binded shortcuts.*'],
+		"*+Use flag `-g` to display the creature's gold bestiary card.*", '*+Use flag `-o` to override any binded shortcuts.*'],
 
 		['.bind <object_name>, <shortcut_1>, [shortcut_2], ...', 'Binds an object name to one or more shortcut phrases.',
 		'*+Use flag `-v` to view all binded shortcuts (no arguments required).*', '*+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).*',
