@@ -88,23 +88,26 @@ DDB_TABLE_HEADERS = {
 BOT_HELP_MENU = {
 	'Main': [
 		['.search <object_name>', 'Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
-		'*+Use flag `-o` to override any binded shortcuts.*'],
+		'+Use flag `-o` to override any binded shortcuts.'],
 
 		['.card <creature_name>', "Displays the specified creature's bestiary card.",
-		"*+Use flag `-g` to display the creature's gold bestiary card.*", '*+Use flag `-o` to override any binded shortcuts.*'],
+		"+Use flag `-g` to display the creature's gold bestiary card.", '+Use flag `-o` to override any binded shortcuts.'],
 
 		['.bind <object_name>, <shortcut_1>, [shortcut_2], ...', 'Binds an object name to one or more shortcut phrases.',
-		'*+Use flag `-v` to view all binded shortcuts (no arguments required).*', '*+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).*',
-		'*+Parameters are case-insensitive and must be separated by a comma.*'],
+		'+Use flag `-v` to view all binded shortcuts (no arguments required).', '+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).',
+		'+Parameters are case-insensitive and must be separated by a comma.'],
 
 		['.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...', 'Adds one or more specified items to the Chopping List.',
-		'*+Parameters are case-insensitive and there is a maximum of 9 parameters per entry. Commas are optional unless two item_names are arranged consecutively.*']
+		'+Use flag `-v` to view all items in the Chopping List (no arguments required).', '+Use flag `-d` to check one or more specified items off from the Chopping List (quantity is optional; item will be marked as fully completed).',
+		"+Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required).",
+		'+Parameters are case-insensitive and there is a maximum of 9 parameters per entry.', '+Commas are optional unless two item_names are arranged consecutively.']
 	],
 
 	'Utility': [
-		['.help', 'Displays this help menu.'],
+		['.help [page_number]', 'Displays this help menu.'],
 		['.clear', 'Clears the webpage data and object information caches.'],
-		['.purge', 'Purges up to 100 recent messages (in server channels), and all bot messages (in private chats).']
+		['.purge', 'Purges up to 100 recent messages (in server channels), and all bot messages (in private chats).'],
+		['.sleep', 'Toggles sleep mode (ignores all other user commands).']
 	]
 }
 
@@ -117,6 +120,7 @@ BOT_VOICELINES = {
 	'debug': 'My data caches are missing!',
 	'cleared': 'Data caches have been cleared.',
 	'purging': 'Purging message history...',
+	'processing': 'Processing input...',
 	'unauthorised': 'You are not authorised to use this command.',
 	'empty': 'Please provide valid input parameters.',
 	'need_confirmation': "This command flag requires 'confirm' as a parameter.",

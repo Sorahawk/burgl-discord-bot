@@ -71,12 +71,18 @@ The overall roadmap and development tracker for this project can be found on the
 - `.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...`
   - Adds one or more specified items to the Chopping List, which tracks player-required resources and quantities.
   - If a specified item is not already a natural resource, it will be broken down into its component materials before being added to the list.
-  - *Parameters are case-insensitive and there is a maximum of 9 parameters per entry. Commas are optional unless two item_names are arranged consecutively.*
+  - *Use flag `-v` to view all items in the Chopping List (no arguments required).*
+  - *Use flag `-d` to check one or more specified items off from the Chopping List (quantity is optional; item will be marked as fully completed).*
+  - *Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required).*
+  - *Parameters are case-insensitive and there is a maximum of 9 parameters per entry.*
+  - *Commas are optional unless two item_names are arranged consecutively.*
 - `.clear`
   - Clears the webpage data and object information caches.
 - `.purge`
   - In a server channel: Purges up to 100 recent messages.
   - In a private message: Purges all of this bot's messages.
+- `.sleep`
+  - Toggles sleep mode (ignores all other user commands).
 
 <br>
 

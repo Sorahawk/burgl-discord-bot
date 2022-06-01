@@ -19,6 +19,9 @@ async def chop_default(message, user_input):
 	elif len(chopping_items) > MAX_CHOPPING_INPUT:
 		return await burgl_message('chop_exceeded', message)
 
+	# send voiceline to acknowledge command
+	reply = await burgl_message('processing', message)
+
 	embed_title = '**Chopping List - New Items**'
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
@@ -52,7 +55,8 @@ async def chop_default(message, user_input):
 
 	# TODO: Create Embed handler to insert 9 emojis and wait for responses
 
-	await message.channel.send(embed=summary_embed)
+	# edit earlier message to display summary embed
+	await reply.edit(content=None, embed=summary_embed)
 
 
 # view current Chopping List entries

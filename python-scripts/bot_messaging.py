@@ -12,6 +12,7 @@ def check_user_elevation(message):
 
 
 # inserts BURG.L emoji to front of specified voiceline and sends message to the given channel
+# returns message object so that it can be edited by caller functions
 async def burgl_message(key, message=None, notify=False):
 	prefix = ''
 
@@ -20,12 +21,12 @@ async def burgl_message(key, message=None, notify=False):
 
 	voiceline = prefix_burgl_emoji(prefix + BOT_VOICELINES[key])
 
-	if message:
-		await message.channel.send(voiceline)
-
 	# send specific lines to main channel also so that real-time bot status is reflected
 	if not message or (key in ['hello', 'sleeping', 'debug', 'cleared'] and message.channel != global_variables.MAIN_CHANNEL):
 		await global_variables.MAIN_CHANNEL.send(voiceline)
+
+	if message:
+		return await message.channel.send(voiceline)
 
 
 # display corresponding error message if result is an error
@@ -113,6 +114,10 @@ async def multipage_embed_handler(bot, message, user_input, embed_list):
 				await embedded_message.remove_reaction(reaction, user)
 
 		except TimeoutError:
-			# after specified timeout period, remove 'buttons' from the message
-			# leaves the info on screen, but also informs the user that pages can no longer be navigated
-			return await embedded_message.clear_reactions()
+			try:
+				# after specified timeout period, remove 'buttons' from the message
+				# leaves the info on screen, but also informs the user that pages can no longer be navigated
+				return await embedded_message.clear_reactions()
+
+			except:  # MessageNotFound errors, which can happen if the message is deleted before timeout occurs
+				pass

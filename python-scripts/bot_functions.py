@@ -27,6 +27,12 @@ async def help_method(bot, message, user_input, flag_presence):
 		help_embed = Embed(title='**Command List**', description=f'**{category}**', color=EMBED_COLOR_CODE)
 
 		for command in BOT_HELP_MENU[category]:
+
+			# italicise lines that start with +
+			for index in range(len(command)):
+				if command[index][0] == '+':
+					command[index] = f'*{command[index]}*'
+
 			help_embed.add_field(name=command[0], value='\n'.join(command[1:]), inline=False)
 
 		help_embed.set_footer(text=f'Page {page + 1}/{len(category_names)}')
