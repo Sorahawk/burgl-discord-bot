@@ -38,6 +38,21 @@ def process_chop_input(user_input, allow_numberless=False):
 	return processed_input
 
 
+# checks if item is valid for Chopping List
+# returns True if a given item fulfils a given condition, otherwise False
+def check_valid_item(item_info, mode=0):
+	condition_1 = item_info['name'] in SPECIAL_ITEMS
+	condition_2 = 'category' in item_info and item_info['category'] == 'Natural Resources'
+	condition_3 = 'recipe' in item_info
+
+	if mode == 1:  # check against conditions 1 and 2 only
+		condition_3 = False
+	elif mode == 2:  # check against condition 3 only
+		condition_1, condition_2 = False, False
+
+	return condition_1 or condition_2 or condition_3
+
+
 # recursive function to break an item down to its base components and update Chopping List quantities
 # returns rolling Counter by default, also returns overall item name and quantity if it is the original function call
 def process_chop_components(item_name, quantity, base_components=None):
@@ -60,10 +75,10 @@ def process_chop_components(item_name, quantity, base_components=None):
 	item_name = item_info['name']
 
 	# stop recursion if item is natural resource, or in SPECIAL_ITEMS
-	if item_name in SPECIAL_ITEMS or ('category' in item_info and item_info['category'] == 'Natural Resources'):
+	if check_valid_item(item_info, 1):
 		base_components[item_name] += quantity
 
-	elif 'recipe' in item_info:
+	elif check_valid_item(item_info, 2):
 		recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
 
 		if recipe_quantity:

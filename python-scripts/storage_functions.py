@@ -109,10 +109,13 @@ def clear_cache():
 
 # checks for existing quantity for a specific item in Chopping List and updates it appropriately
 # returns ddb_insert_item(), which itself returns True for successful insertions, otherwise False
-def insert_chop_item(item_name, quantity, base_components):
+def insert_chop_item(item_name, quantity, base_components, ignore_existing=False):
 	table_name = CHOPPING_LIST
 
-	existing_entry = ddb_retrieve_item(table_name, item_name)
+	if not ignore_existing:
+		existing_entry = ddb_retrieve_item(table_name, item_name)
+	else:
+		existing_entry = None
 
 	if existing_entry:
 		quantity += existing_entry['quantity']
@@ -121,8 +124,8 @@ def insert_chop_item(item_name, quantity, base_components):
 	return ddb_insert_item(table_name, item_name, (quantity, base_components))
 
 
-# returns a tuple of two items, first is list of item names from Chopping List, sorted alphabetically
-# second is a list of dictionaries, each of which represents an entry in the Chopping List
+# returns a list of tuples, sorted alphabetically by item name, which is the first item in each tuple
+# second item of each tuple is item quantity, and third item is corresponding components
 def retrieve_chopping_list():
 	list_entries = ddb_retrieve_all(CHOPPING_LIST)
 	chopping_list = {}

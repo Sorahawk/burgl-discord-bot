@@ -129,7 +129,8 @@ BOT_VOICELINES = {
 	102: "**ERROR 102:** Wiki page for 'VAR1' has an unsupported layout.",
 	103: "**ERROR 103:** Google API daily limit exceeded. Type in the exact name of 'VAR1'.",
 	104: "**ERROR 104:** Unable to locate Creature Card for 'VAR1'. Type in the exact name of the creature.",
-	105: "**ERROR 105:** 'VAR1' is not a valid object for the Chopping List."
+	105: "**ERROR 105:** 'VAR1' is not a valid object for the Chopping List.",
+	106: "**ERROR 106:** 'VAR1' is not present in the Chopping List."
 }
 
 

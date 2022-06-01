@@ -123,7 +123,7 @@ def prefix_custom_emoji(input_string, is_robot=False):
 		elif is_robot and keyword == 'RobotBack':  # check if weak point is a robot's back
 			input_string = input_string.replace('Back', f'{emoji} Back')
 
-		else:
+		elif isinstance(keyword, str):
 			input_string = input_string.replace(keyword, f'{emoji} {keyword}')
 
 	return input_string

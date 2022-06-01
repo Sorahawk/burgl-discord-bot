@@ -84,11 +84,12 @@ The overall roadmap and development tracker for this project can be found on the
 
 | Code | Description |
 | ---- | ----------- |
-| 101 | Wiki page for the object cannot be located. |
-| 102 | Wiki page for the object has an unsupported layout. |
+| 101 | Wiki page for the specified object cannot be located. |
+| 102 | Wiki page for the specified object has an unsupported layout. |
 | 103 | Daily limit of 100 queries for Google Custom Search JSON API has been exceeded. |
-| 104 | Bestiary card for the creature cannot be located. |
-| 105 | Object is not compatible with the Chopping List. |
+| 104 | Bestiary card for the specified creature cannot be located. |
+| 105 | Specified object is not compatible with the Chopping List. |
+| 106 | Specified item is not present in the Chopping List. |
 
 <br>
 

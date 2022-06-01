@@ -46,13 +46,13 @@ async def chop_default(message, user_input):
 			summary_embed.add_field(name=f'{CUSTOM_EMOJIS[index]} {actual_name} (x{final_quantity})', value=base_components_string, inline=False)
 			index += 1
 
-	if len(summary_embed) == len(embed_title):  # if no valid items were added
-		await burgl_message('empty', message)
-	else:
+	# exit if no valid items were added
+	if len(summary_embed) == len(embed_title):
+		return
 
-		# TODO: Create Embed handler to insert 9 emojis and wait for responses
+	# TODO: Create Embed handler to insert 9 emojis and wait for responses
 
-		await message.channel.send(embed=summary_embed)
+	await message.channel.send(embed=summary_embed)
 
 
 # view current Chopping List entries
@@ -81,45 +81,71 @@ async def chop_view(bot, message, user_input):
 	return await multipage_embed_handler(bot, message, user_input, embed_list)
 
 
-# complete/delete items from the Chopping List
-
-# can also complete multiple items with different quantity (use the same processing algo as insert)
-# need to run each item input through string_processing.detect_smoothie_type()
-# then run the name through the shortcut list
-# then run the name through capitalise_object_name
-# if smoothie_type is default which is Basic, then try deleting without it first
-# only if item not found, then add basic to the front
-# if smoothie type not basic, then always add to the front
-
+# complete/delete items on the Chopping List
 async def chop_delete(message, user_input):
 	input_items = process_chop_input(user_input, True)
 
 	if not input_items:
 		return await burgl_message('empty', message)
 
-	# retrieve current Chopping List
-	chopping_list = retrieve_chopping_list()
-	name_list = [entry[0] for entry in chopping_list]
+	# retrieve current Chopping List and convert to dictionary
+	chopping_list = dict(retrieve_chopping_list())
+
+	string_header = 'Items checked off the Chopping List:\n'
+	formatted_string = ''
 
 	# process each item name input and check if it exists in the Chopping List
-	for input_name in input_items:
-		item_info = process_object_input(item_name)
+	for input_name, input_quantity in input_items.items():
 
-		if not await detect_search_errors(message, item_name, item_info):
+		# parse input through search algorithm
+		item_info = process_object_input(input_name)
+
+		# additional error detection
+		if isinstance(item_info, dict):
+
+			# prefix smoothie type to smoothie name
+			if 'category' in item_info and 'smoothie' in item_info['category'].lower():
+				item_name = item_info['recipe_name']
+			else:
+				item_name = item_info['name']
+
+			if not check_valid_item(item_info):
+				item_info = 105
+			elif item_name not in chopping_list:
+				item_info = 106
+
+			# update input name for error handling
+			input_name = item_name
+
+		if not await detect_search_errors(message, input_name, item_info):
 			continue
 
-		item_name = item_info['name']
+		existing_quantity = chopping_list[item_name][0]
+		base_components = chopping_list[item_name][1]
 
-		# prefix smoothie type to smoothie name
-		if 'category' in item_info and 'smoothie' in item_info['category'].lower():
-			item_name = item_info['recipe_name']
-
-		print(item_info)
+		# if existing quantity is smaller than or equal to input quantity, then remove entire entry
+		if existing_quantity <= input_quantity:
+			input_quantity = -1
 
 		# delete entire entry if quantity is -1
-		'''if input_quantity == -1:
+		if input_quantity == -1:
 			ddb_remove_item(CHOPPING_LIST, item_name)
-		
-		# otherwise, update quantity and adjust component quantities correspondingly
+			input_quantity = 'All'
+
+		# otherwise, deduct item quantity and adjust component quantities correspondingly
 		else:
-			pass'''
+			new_quantity = existing_quantity - input_quantity
+			ratio = new_quantity / existing_quantity
+			input_quantity = f'x{input_quantity}'
+
+			for material in base_components:
+				base_components[material] = int(base_components[material] * ratio)
+
+			# update Chopping List entry
+			insert_chop_item(item_name, new_quantity, base_components, True)
+
+		formatted_string += f'- **{item_name} ({input_quantity})**\n'
+
+	# send string to acknowledge entry deletion
+	if formatted_string:
+		await message.channel.send(string_header + formatted_string)
