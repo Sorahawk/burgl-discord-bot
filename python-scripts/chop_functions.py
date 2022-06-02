@@ -25,7 +25,6 @@ async def chop_default(message, user_input):
 	embed_title = '**Chopping List - New Items**'
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
-	index = 1
 	for item_name, initial_quantity in chopping_items.items():
 		item_entry = process_chop_components(item_name, initial_quantity)
 
@@ -41,14 +40,11 @@ async def chop_default(message, user_input):
 
 			# TODO: Forward base_components Counter to Task Scheduler
 
-			summary_embed.add_field(name=f'{CUSTOM_EMOJIS[index]} {actual_name} (x{final_quantity})', value=base_components_string, inline=False)
-			index += 1
+			summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
 
-	# exit if no valid items were added
-	if len(summary_embed) == len(embed_title):
-		return
-
-	await message.channel.send(embed=summary_embed)
+	# only send embed if valid items were added
+	if len(summary_embed) != len(embed_title):
+		await message.channel.send(embed=summary_embed)
 
 	# delete earlier acknowledgement message
 	await reply.delete()
