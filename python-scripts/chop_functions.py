@@ -27,11 +27,6 @@ async def chop_default(message, user_input):
 
 	index = 1
 	for item_name, initial_quantity in chopping_items.items():
-
-		# skip item if given quantity is 0
-		if initial_quantity == 0:
-			continue
-
 		item_entry = process_chop_components(item_name, initial_quantity)
 
 		if not await detect_search_errors(message, item_name, item_entry):
@@ -127,15 +122,16 @@ async def chop_delete(message, user_input):
 		existing_quantity = chopping_list[item_name][0]
 		base_components = chopping_list[item_name][1]
 
-		# check if recipe crafts more than one of the item
-		recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
+		# if item is craftable, check if recipe crafts more than one of the item
+		if check_valid_item(item_info, 2):
+			recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
 
-		if recipe_quantity:
-			# remove letter x and convert quantity to integer
-			recipe_quantity = int(recipe_quantity[0][1:])
+			if recipe_quantity:
+				# remove letter x and convert quantity to integer
+				recipe_quantity = int(recipe_quantity[0][1:])
 
-			# round up input quantity to nearest possible quantity
-			input_quantity = ceil(input_quantity / recipe_quantity) * recipe_quantity
+				# round up input quantity to nearest possible quantity
+				input_quantity = ceil(input_quantity / recipe_quantity) * recipe_quantity
 
 		# if existing quantity is smaller than or equal to input quantity, then remove entire entry
 		if existing_quantity <= input_quantity:
@@ -144,13 +140,12 @@ async def chop_delete(message, user_input):
 		# delete entire entry if quantity is -1
 		if input_quantity == -1:
 			ddb_remove_item(CHOPPING_LIST, item_name)
-			input_quantity = 'All'
+			input_quantity = existing_quantity
 
 		else:
 			# deduct item quantity
 			new_quantity = existing_quantity - input_quantity
 			ratio = new_quantity / existing_quantity
-			input_quantity = f'x{input_quantity}'
 
 			# adjust component quantities accordingly
 			for material in base_components:
@@ -159,7 +154,7 @@ async def chop_delete(message, user_input):
 			# update Chopping List entry
 			insert_chop_item(item_name, new_quantity, base_components, True)
 
-		formatted_string += f'- **{item_name} ({input_quantity})**\n'
+		formatted_string += f'- **{item_name} (x{input_quantity})**\n'
 
 	# send string to acknowledge entry deletion
 	if formatted_string:

@@ -25,6 +25,10 @@ def process_chop_input(user_input, allow_numberless=False):
 	for item in results:
 		item = item.split()
 
+		# ignore items with input quantity of 0
+		if '0' in item:
+			continue
+
 		# set default quantity of -1 for items with no specified quantity
 		item_qty = -1
 		if item[0].isdecimal():  # quantity came before item name
