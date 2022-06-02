@@ -21,7 +21,7 @@ NOTIFY_ROLE_NAME = '<@&981223991547158609>'
 BOT_COMMAND_PREFIX = '.'
 
 # list of bot commands
-BOT_COMMAND_LIST = ['help', 'search', 'card', 'bind', 'clear', 'purge', 'chop', 'sleep']
+BOT_COMMAND_LIST = ['search', 'card', 'bind', 'chop', 'task', 'help', 'clear', 'purge', 'sleep']
 
 # dictionary of command flags
 # each flag can only be a single letter
@@ -68,6 +68,11 @@ SPECIAL_NAMES = ['AARTZ', 'BBQ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the']
 
 # list of items not to be broken down into their component materials for the Chopping List
 SPECIAL_ITEMS = ['Berry Leather', 'Crude Rope', 'Mushroom Slurry', 'Pupa Leather', 'Repair Glue']
+
+# lists of words that correspond to each armor piece type
+ARMOR_HEAD = ['face', 'goggles', 'hat', 'helmet', 'hood', 'mask']
+ARMOR_UPPER_BODY = ['arm', 'chest', 'poncho', 'shoulder', 'vest']
+ARMOR_LOWER_BODY = ['boots', 'knee', 'leg', 'shin', 'shoes']
 
 
 # DynamoDB table names as strings, and a dictionary of their corresponding key and attribute headers

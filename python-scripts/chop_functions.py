@@ -19,7 +19,7 @@ async def chop_default(message, user_input):
 	elif len(chopping_items) > MAX_CHOPPING_INPUT:
 		return await burgl_message('chop_exceeded', message)
 
-	# send voiceline to acknowledge command
+	# acknowledge user command because waiting time might be a bit long
 	reply = await burgl_message('processing', message)
 
 	embed_title = '**Chopping List - New Items**'
@@ -48,10 +48,10 @@ async def chop_default(message, user_input):
 	if len(summary_embed) == len(embed_title):
 		return
 
-	# TODO: Create Embed handler to insert 9 emojis and wait for responses
+	await message.channel.send(embed=summary_embed)
 
-	# edit earlier message to display summary embed
-	await reply.edit(content=None, embed=summary_embed)
+	# delete earlier acknowledgement message
+	await reply.delete()
 
 
 # view current Chopping List entries
@@ -80,7 +80,7 @@ async def chop_view(bot, message, user_input):
 	return await multipage_embed_handler(bot, message, user_input, embed_list)
 
 
-# remove items from the Chopping List
+# check items off the Chopping List
 async def chop_delete(message, user_input):
 	input_items = process_chop_input(user_input, True)
 
@@ -137,6 +137,10 @@ async def chop_delete(message, user_input):
 		if existing_quantity <= input_quantity:
 			input_quantity = -1
 
+
+		# TODO: update Task Scheduler on new quantities
+
+
 		# delete entire entry if quantity is -1
 		if input_quantity == -1:
 			ddb_remove_item(CHOPPING_LIST, item_name)
@@ -172,5 +176,9 @@ async def chop_reset(message, user_input):
 		item_name = item[0]
 
 		ddb_remove_item(CHOPPING_LIST, item_name)
+
+
+	# TODO: Remove all harvesting tasks from Task Scheduler
+
 
 	await burgl_message('chop_reset', message)

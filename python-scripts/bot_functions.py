@@ -8,6 +8,7 @@ from bot_messaging import *
 from object_search import *
 from bind_functions import *
 from chop_functions import *
+from task_functions import *
 from global_variables import *
 from secret_variables import *
 from storage_functions import *
@@ -110,6 +111,24 @@ async def chop_method(bot, message, user_input, flag_presence):
 
 	else:
 		await chop_default(message, user_input)
+
+
+# task scheduler method
+async def task_method(bot, message, user_input, flag_presence):
+	if flag_presence['view']:
+		await task_view(bot, message, user_input)
+
+	elif not check_user_elevation(message):
+		await burgl_message('unauthorised', message)
+
+	elif user_input == '':
+		await burgl_message('empty', message)
+
+	elif flag_presence['delete']:
+		await task_delete(message, user_input)
+
+	else:
+		await task_default(message, user_input)
 
 
 # cache clearing method
