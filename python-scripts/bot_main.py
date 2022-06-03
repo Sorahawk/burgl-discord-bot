@@ -32,17 +32,16 @@ async def on_ready():
 	rotate_status.start(bot)
 	monitor_app_info.start()
 
+	# activate self-updating if running on Linux cloud instance
+	if platform == 'linux':
+		monitor_repository.start()
+
 	# if script becomes inactive for any reason, on_ready will be called again when reactivated
 	# but tasks with specific timings can't be started more than once
 	try:
 		clear_cache_weekly.start()
 	except Exception as e:
 		print(f'WARNING: {e}.\n')
-
-	# activate self-updating if running on Linux cloud instance
-	if platform == 'linux':
-		monitor_repository.start()
-		print('INFO: Watching project repository for updates.')
 
 
 @bot.event

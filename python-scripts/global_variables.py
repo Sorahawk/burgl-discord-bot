@@ -128,7 +128,7 @@ BOT_VOICELINES = {
 	'debug': 'My data caches are missing!',
 	'cleared': 'Data caches have been cleared.',
 	'assets_updated': 'New sign images available in the Swap Shop!',
-	'branch_active': "Movement detected on **'VAR1'** branch of the Oak Tree!",
+	'branch_active': 'Movement detected on VAR1 branch of the Oak Tree!',
 	'purging': 'Purging message history...',
 	'processing': 'Processing input...',
 	'unauthorised': 'You are not authorised to use this command.',
@@ -141,12 +141,12 @@ BOT_VOICELINES = {
 	'embed_close': 'Menu has been closed.',
 	'chop_reset': 'The Chopping List has been reset.',
 
-	101: "**ERROR 101:** Unable to locate 'VAR1'. Try typing in the object's full name.",
-	102: "**ERROR 102:** Wiki page for 'VAR1' has an unsupported layout.",
-	103: "**ERROR 103:** Google API daily limit exceeded. Type in the exact name of 'VAR1'.",
-	104: "**ERROR 104:** Unable to locate Creature Card for 'VAR1'. Type in the exact name of the creature.",
-	105: "**ERROR 105:** 'VAR1' is not a valid object for the Chopping List.",
-	106: "**ERROR 106:** 'VAR1' is not present in the Chopping List."
+	101: "**ERROR 101:** Unable to locate VAR1. Try typing in the object's full name.",
+	102: '**ERROR 102:** Wiki page for VAR1 has an unsupported layout.',
+	103: '**ERROR 103:** Google API daily limit exceeded. Type in the exact name of VAR1.',
+	104: '**ERROR 104:** Unable to locate Creature Card for VAR1. Type in the exact name of the creature.',
+	105: '**ERROR 105:** VAR1 is not a valid object for the Chopping List.',
+	106: '**ERROR 106:** VAR1 is not present in the Chopping List.'
 }
 
 
