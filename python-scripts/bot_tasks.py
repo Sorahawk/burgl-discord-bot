@@ -2,6 +2,7 @@ from requests import get
 from random import choice
 from subprocess import run
 from discord.ext.tasks import loop
+from steam.client import SteamClient
 from discord import Activity, Streaming
 from datetime import datetime, time, timedelta, timezone
 
@@ -31,10 +32,10 @@ async def clear_cache_weekly():
 		await burgl_message('cleared', notify=True)
 
 
-# initialise persistent header variable to store latest HTTP response ETag
+# initialise dictionary to store latest HTTP response ETag
 stored_headers = {}
 
-# checks project repository for new code every minute
+# checks project repository for new code
 # pulls new code and restarts bot service when update is detected
 @loop(minutes=1)
 async def monitor_repository():
@@ -55,3 +56,50 @@ async def monitor_repository():
 
 			# restart service
 			run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
+
+
+# initialise dictionary to store app update timings retrieved from Steam
+stored_timings = {}
+
+# checks Steam for new activity related to store assets and development branches
+# also notifies users when certain activities are detected
+@loop(hours=1)
+async def monitor_app_info():
+
+	# initialise anonymous Steam session
+	steam_client = SteamClient()
+	steam_client.anonymous_login()
+
+	# retrieve latest app info
+	app_info = steam_client.get_product_info([962130])
+
+	latest_assets = app_info['apps'][962130]['common']['store_asset_mtime']
+	branches_info = app_info['apps'][962130]['depots']['branches']
+
+	# populate dictionary when bot is first initialised
+	if not stored_timings:
+		stored_timings['asset_update'] = latest_assets
+
+		for branch_name in branches_info:
+			stored_timings[branch_name] = branches_info[branches_info]['timeupdated']
+
+		return
+
+	# check for store asset updates
+	if stored_timings['asset_update'] != latest_assets:
+		stored_timings['asset_update'] = latest_assets
+		await burgl_message('assets_updated', notify=True)
+
+	# check for development branch updates
+	for branch_name in branches_info:
+		branch_timing = branches_info[branch_name]['timeupdated']
+
+		# notify users when entirely new branches are added
+		if branch_name not in stored_timings:
+			stored_timings[branch_name] = branch_timing
+			await burgl_message('branch_active', replace=branch_name, notify=True)
+
+		elif stored_timings[branch_name] != branch_timing:
+			notify = branch_name in NOTIFY_BRANCHES
+			stored_timings[branch_name] = branch_timing
+			await burgl_message('branch_active', replace=branch_name, notify=notify)

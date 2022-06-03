@@ -17,6 +17,9 @@ ELEVATED_USERS = [261795156359905281, 498051548463628300]
 # Discord server role name to ping for notifications
 NOTIFY_ROLE_NAME = '<@&981223991547158609>'
 
+# list of Steam development branch names whose activity will notify users
+NOTIFY_BRANCHES = ['buddha', 'shipping_staging', 'public'] 
+
 # symbol to signify bot commands
 BOT_COMMAND_PREFIX = '.'
 
@@ -124,6 +127,8 @@ BOT_VOICELINES = {
 	'updating': 'Available OS update detected, please stand by while I restart.',
 	'debug': 'My data caches are missing!',
 	'cleared': 'Data caches have been cleared.',
+	'assets_updated': 'New sign images available in the Swap Shop!',
+	'branch_active': "Movement detected on **'VAR1'** branch of the Oak Tree!",
 	'purging': 'Purging message history...',
 	'processing': 'Processing input...',
 	'unauthorised': 'You are not authorised to use this command.',

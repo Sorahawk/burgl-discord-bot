@@ -30,6 +30,7 @@ async def on_ready():
 
 	await burgl_message('hello')
 	rotate_status.start(bot)
+	monitor_app_info.start()
 
 	# if script becomes inactive for any reason, on_ready will be called again when reactivated
 	# but tasks with specific timings can't be started more than once
@@ -38,7 +39,7 @@ async def on_ready():
 	except Exception as e:
 		print(f'WARNING: {e}.\n')
 
-	# activate self-updating if running on linux cloud instance
+	# activate self-updating if running on Linux cloud instance
 	if platform == 'linux':
 		monitor_repository.start()
 		print('INFO: Watching project repository for updates.')

@@ -13,13 +13,17 @@ def check_user_elevation(message):
 
 # inserts BURG.L emoji to front of specified voiceline and sends message to the given channel
 # returns message object so that it can be edited by caller functions
-async def burgl_message(key, message=None, notify=False):
-	prefix = ''
+async def burgl_message(key, message=None, replace=None, notify=False):
+	voiceline = BOT_VOICELINES[key]
 
-	if notify:
-		prefix = NOTIFY_ROLE_NAME + ' '
+	if replace:  # insert custom string into voiceline
+		voiceline = voiceline.replace('VAR1', replace)
 
-	voiceline = prefix_burgl_emoji(prefix + BOT_VOICELINES[key])
+	if notify:  # notify users
+		voiceline = f'{NOTIFY_ROLE_NAME} {voiceline}'
+
+	# append BURG.L emoji and italicise text content
+	voiceline = prefix_burgl_emoji(voiceline)
 
 	# send specific lines to main channel also so that real-time bot status is reflected
 	if not message or (key in ['hello', 'sleeping', 'debug', 'cleared'] and message.channel != global_variables.MAIN_CHANNEL):
@@ -35,18 +39,15 @@ async def detect_search_errors(message, user_input, result):
 
 	# catch specific error cases which return different data types, e.g. 102
 	if isinstance(result, list) and isinstance(result[0], int):
-		error_message = prefix_burgl_emoji(BOT_VOICELINES[result[0]]).replace('VAR1', result[1])
+		await burgl_message(result[0], message, result[1])
 
 	# check voiceline dictionary in global_variables directly so no need to keep updating here too
 	elif isinstance(result, int) and result in BOT_VOICELINES:
 		full_name = capitalise_object_name(retrieve_full_name(user_input))
-		error_message = prefix_burgl_emoji(BOT_VOICELINES[result]).replace('VAR1', full_name)
+		await burgl_message(result, message, full_name)
 
 	else:
 		return True
-
-	# send error message
-	await message.channel.send(error_message)
 
 
 # standard handler for multi-page messages, which allows for page navigation, as well as closing the menu
