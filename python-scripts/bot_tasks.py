@@ -65,13 +65,18 @@ stored_timings = {}
 # also notifies users when certain activities are detected
 @loop(hours=1)
 async def monitor_app_info():
+	try:
+		# initialise anonymous Steam session
+		steam_client = SteamClient()
+		steam_client.anonymous_login()
 
-	# initialise anonymous Steam session
-	steam_client = SteamClient()
-	steam_client.anonymous_login()
+		# retrieve latest app info
+		app_info = steam_client.get_product_info([962130])
 
-	# retrieve latest app info
-	app_info = steam_client.get_product_info([962130])
+		steam_client.logout()
+
+	except Exception as e:
+		return print(f'WARNING: {e}.\n')
 
 	latest_assets = app_info['apps'][962130]['common']['store_asset_mtime']
 	branches_info = app_info['apps'][962130]['depots']['branches']
@@ -81,7 +86,7 @@ async def monitor_app_info():
 		stored_timings['asset_update'] = latest_assets
 
 		for branch_name in branches_info:
-			stored_timings[branch_name] = branches_info[branches_info]['timeupdated']
+			stored_timings[branch_name] = branches_info[branch_name]['timeupdated']
 
 		return
 
