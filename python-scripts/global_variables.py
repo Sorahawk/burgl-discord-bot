@@ -141,6 +141,9 @@ BOT_VOICELINES = {
 	'embed_close': 'Menu has been closed.',
 	'chop_reset': 'The Chopping List has been reset.',
 
+	'check_successful': 'Branch monitoring ongoing.',
+	'check_failed': 'Hourly data update unsuccesful.',
+
 	101: "**ERROR 101:** Unable to locate VAR1. Try typing in the object's full name.",
 	102: '**ERROR 102:** Wiki page for VAR1 has an unsupported layout.',
 	103: '**ERROR 103:** Google API daily limit exceeded. Type in the exact name of VAR1.',

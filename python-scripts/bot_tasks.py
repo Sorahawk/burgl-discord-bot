@@ -76,7 +76,19 @@ async def monitor_app_info():
 		steam_client.logout()
 
 	except Exception as e:
+
+
+		# alert failure
+		await burgl_message('check_failed', notify=True)
+		await global_variables.MAIN_CHANNEL.send(e)
+
+
 		return print(f'WARNING: {e}.\n')
+
+
+	# TODO: Log the latest time checked so can tell if the function is working
+	await burgl_message('check_successful', notify=False)
+
 
 	latest_assets = app_info['apps'][962130]['common']['store_asset_mtime']
 	branches_info = app_info['apps'][962130]['depots']['branches']
