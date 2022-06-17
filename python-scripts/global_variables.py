@@ -141,6 +141,7 @@ BOT_VOICELINES = {
 	'embed_close': 'Menu has been closed.',
 	'chop_reset': 'The Chopping List has been reset.',
 
+	# TODO: remove these once done debugging steam monitoring
 	'check_successful': 'Branch monitoring ongoing.',
 	'check_failed': 'Hourly data update unsuccesful.',
 

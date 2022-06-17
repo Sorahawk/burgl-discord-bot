@@ -79,11 +79,9 @@ async def monitor_app_info():
 
 
 		# alert failure
-		await burgl_message('check_failed', notify=True)
-		await global_variables.MAIN_CHANNEL.send(e)
-
-
-		return print(f'WARNING: {e}.\n')
+		await global_variables.MAIN_CHANNEL.send('testing')
+		await global_variables.MAIN_CHANNEL.send(repr(e))
+		return print(f'WARNING: {repr(e)}.\n')
 
 
 	# TODO: Log the latest time checked so can tell if the function is working
@@ -120,3 +118,12 @@ async def monitor_app_info():
 			notify = branch_name in NOTIFY_BRANCHES
 			stored_timings[branch_name] = branch_timing
 			await burgl_message('branch_active', replace=branch_name, notify=notify)
+
+
+@monitor_app_info.after_loop
+async def restart_steam_monitoring():
+	await burgl_message('check_failed', notify=True)
+
+	# TODO: can restart the looping task again here? but still have to find out what is going on
+
+	run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
