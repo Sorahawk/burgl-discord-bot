@@ -32,22 +32,21 @@ async def clear_cache_weekly():
 		await burgl_message('cleared', notify=True)
 
 
-# initialise dictionary to store latest HTTP response ETag
-stored_headers = {}
-
 # checks project repository for new code
 # pulls new code and restarts bot service when update is detected
 @loop(minutes=1)
 async def monitor_repository():
 	url = 'https://api.github.com/repos/Sorahawk/burgl-discord-bot/commits'
-	response = get(url, headers=stored_headers)
+
+	repository_headers = global_variables.REPOSITORY_HEADERS
+	response = get(url, headers=repository_headers)
 
 	if response.status_code == 200:
-		if not stored_headers:
+		if not repository_headers:
 			etag = response.headers['ETag']
-			stored_headers['If-None-Match'] = etag
+			global_variables.REPOSITORY_HEADERS['If-None-Match'] = etag
 
-		# new repository update
+		# repository update detected
 		else:
 			await burgl_message('updating')
 
@@ -58,51 +57,34 @@ async def monitor_repository():
 			run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
 
 
-# initialise dictionary to store app update timings retrieved from Steam
-stored_timings = {}
-
 # checks Steam for new activity related to store assets and development branches
 # also notifies users when certain activities are detected
 @loop(hours=1)
 async def monitor_app_info():
-	try:
-		# initialise anonymous Steam session
-		steam_client = SteamClient()
-		steam_client.anonymous_login()
+	steam_timestamps = global_variables.STEAM_TIMESTAMPS
 
-		# retrieve latest app info
-		app_info = steam_client.get_product_info([962130])
-
-		steam_client.logout()
-
-	except Exception as e:
-
-
-		# alert failure
-		await global_variables.MAIN_CHANNEL.send('testing')
-		await global_variables.MAIN_CHANNEL.send(repr(e))
-		return print(f'WARNING: {repr(e)}.\n')
-
+	# retrieve latest app info
+	app_info = global_variables.STEAM_SESSION.get_product_info([962130])
 
 	# TODO: Log the latest time checked so can tell if the function is working
 	await burgl_message('check_successful', notify=False)
 
-
 	latest_assets = app_info['apps'][962130]['common']['store_asset_mtime']
 	branches_info = app_info['apps'][962130]['depots']['branches']
 
-	# populate dictionary when bot is first initialised
-	if not stored_timings:
-		stored_timings['asset_update'] = latest_assets
+	# populate dictionary when task is started for the first time
+	if not steam_timestamps:
+		global_variables.STEAM_TIMESTAMPS['asset_update'] = latest_assets
 
 		for branch_name in branches_info:
-			stored_timings[branch_name] = branches_info[branch_name]['timeupdated']
+			global_variables.STEAM_TIMESTAMPS[branch_name] = branches_info[branch_name]['timeupdated']
 
 		return
 
 	# check for store asset updates
-	if stored_timings['asset_update'] != latest_assets:
-		stored_timings['asset_update'] = latest_assets
+	if steam_timestamps['asset_update'] != latest_assets:
+		global_variables.STEAM_TIMESTAMPS['asset_update'] = latest_assets
+
 		await burgl_message('assets_updated', notify=True)
 
 	# check for development branch updates
@@ -110,13 +92,15 @@ async def monitor_app_info():
 		branch_timing = branches_info[branch_name]['timeupdated']
 
 		# notify users when entirely new branches are added
-		if branch_name not in stored_timings:
-			stored_timings[branch_name] = branch_timing
+		if branch_name not in steam_timestamps:
+			global_variables.STEAM_TIMESTAMPS[branch_name] = branch_timing
+
 			await burgl_message('branch_active', replace=branch_name, notify=True)
 
-		elif stored_timings[branch_name] != branch_timing:
+		elif steam_timestamps[branch_name] != branch_timing:
 			notify = branch_name in NOTIFY_BRANCHES
-			stored_timings[branch_name] = branch_timing
+			global_variables.STEAM_TIMESTAMPS[branch_name] = branch_timing
+
 			await burgl_message('branch_active', replace=branch_name, notify=notify)
 
 
