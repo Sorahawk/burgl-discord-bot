@@ -11,14 +11,11 @@ MAIN_CHANNEL_ID = 976308922010959892
 # main channel object, to be initialised when the bot calls on_ready()
 MAIN_CHANNEL = None
 
-# Steam session object, to be initialised when the bot starts monitor_app_info() for the first time
-STEAM_SESSION = None
+# dictionary to store latest headers of project repository on GitHub
+REPOSITORY_HEADERS = {}
 
 # dictionary to store latest timestamps of changes from Steam
 STEAM_TIMESTAMPS = {}
-
-# dictionary to store latest headers of project repository on GitHub
-REPOSITORY_HEADERS = {}
 
 # list of elevated Discord users
 ELEVATED_USERS = [261795156359905281, 498051548463628300]

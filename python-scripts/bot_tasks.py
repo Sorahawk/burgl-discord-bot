@@ -63,8 +63,13 @@ async def monitor_repository():
 async def monitor_app_info():
 	steam_timestamps = global_variables.STEAM_TIMESTAMPS
 
+	steam_session = SteamClient()
+	steam_session.anonymous_login()
+
 	# retrieve latest app info
-	app_info = global_variables.STEAM_SESSION.get_product_info([962130])
+	app_info = steam_session.get_product_info([962130])
+
+	steam_session.logout()
 
 	# TODO: Log the latest time checked so can tell if the function is working
 	await burgl_message('check_successful', notify=False)
