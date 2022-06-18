@@ -14,9 +14,6 @@ MAIN_CHANNEL = None
 # dictionary to store latest headers of project repository on GitHub
 REPOSITORY_HEADERS = {}
 
-# Steam session object, to be initialised when the bot starts monitor_app_info() for the first time
-STEAM_SESSION = None
-
 # dictionary to store latest timestamps of changes from Steam
 STEAM_TIMESTAMPS = {}
 
@@ -150,9 +147,8 @@ BOT_VOICELINES = {
 	'embed_close': 'Menu has been closed.',
 	'chop_reset': 'The Chopping List has been reset.',
 
-	# TODO: remove these once done debugging steam monitoring
-	'check_successful': 'Branch monitoring ongoing.',
-	'check_failed': 'Hourly data update unsuccesful.',
+	# TODO: Remove once confirmed working
+	'check_success': 'Branch monitoring ongoing.',
 
 	101: "**ERROR 101:** Unable to locate VAR1. Try typing in the object's full name.",
 	102: '**ERROR 102:** Wiki page for VAR1 has an unsupported layout.',

@@ -2,7 +2,6 @@ import global_variables
 
 from sys import platform
 from discord import Client, Intents
-from steam.client import SteamClient
 
 from bot_tasks import *
 from bot_functions import *
@@ -31,14 +30,11 @@ async def on_ready():
 
 	await burgl_message('hello')
 	rotate_status.start(bot)
+	monitor_app_info.start()
 
 	# activate self-updating if running on Linux cloud instance
 	if platform == 'linux':
 		monitor_repository.start()
-
-	global_variables.STEAM_SESSION = SteamClient()
-	global_variables.STEAM_SESSION.anonymous_login()
-	monitor_app_info.start()
 
 	# if script becomes inactive for any reason, on_ready will be called again when reactivated
 	# but tasks with specific timings can't be started more than once
