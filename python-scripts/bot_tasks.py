@@ -2,7 +2,6 @@ from requests import get
 from random import choice
 from subprocess import run
 from discord.ext.tasks import loop
-from steam.client import SteamClient
 from discord import Activity, Streaming
 from datetime import datetime, time, timedelta, timezone
 
@@ -59,17 +58,12 @@ async def monitor_repository():
 
 # checks Steam for new activity related to store assets and development branches
 # also notifies users when certain activities are detected
-@loop(hours=1)
+@loop(minutes=1)
 async def monitor_app_info():
 	steam_timestamps = global_variables.STEAM_TIMESTAMPS
 
-	steam_session = SteamClient()
-	steam_session.anonymous_login()
-
 	# retrieve latest app info
-	app_info = steam_session.get_product_info([962130])
-
-	steam_session.logout()
+	app_info = global_variables.STEAM_SESSION.get_product_info([962130])
 
 	# TODO: Log the latest time checked so can tell if the function is working
 	await burgl_message('check_successful', notify=False)
@@ -114,5 +108,4 @@ async def restart_steam_monitoring():
 	await burgl_message('check_failed', notify=True)
 
 	# TODO: can restart the looping task again here? but still have to find out what is going on
-
 	run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)

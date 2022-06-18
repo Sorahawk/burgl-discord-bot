@@ -14,6 +14,9 @@ MAIN_CHANNEL = None
 # dictionary to store latest headers of project repository on GitHub
 REPOSITORY_HEADERS = {}
 
+# Steam session object, to be initialised when the bot starts monitor_app_info() for the first time
+STEAM_SESSION = None
+
 # dictionary to store latest timestamps of changes from Steam
 STEAM_TIMESTAMPS = {}
 
