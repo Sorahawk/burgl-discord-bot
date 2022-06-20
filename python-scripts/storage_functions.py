@@ -26,7 +26,7 @@ def bind_shortcuts(full_name, shortcuts):
 	return formatted_string
 
 
-# returns corresponding full name if it exists in table, otherwise just returns the original input
+# returns corresponding full name if input is an existing shortcut, otherwise just returns the original input
 def retrieve_full_name(search_query):
 	table_name = SHORTCUT_STORAGE
 	attribute_header = ddb_table_headers(table_name)[1]

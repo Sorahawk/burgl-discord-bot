@@ -5,6 +5,9 @@ LINUX_ABSOLUTE_PATH = '~/burgl-discord-bot/'
 # name of the bot service running on the Linux cloud instance
 LINUX_SERVICE_NAME = 'burgl-bot.service'
 
+# name of AWS region in use
+AWS_REGION_NAME = 'ap-southeast-1'
+
 # ID of default Discord server channel that will receive notifications
 MAIN_CHANNEL_ID = 976308922010959892
 
