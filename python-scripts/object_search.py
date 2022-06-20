@@ -101,7 +101,7 @@ def process_object_input(user_input, flag_presence={'override': False}):
 	if not flag_presence['override']:
 
 		# check if corresponding object info exists in cache
-		result = retrieve_from_cache(OBJECT_INFO_CACHE, user_input)
+		result = retrieve_from_cache(INFO_TABLE, user_input)
 
 		if result:
 			# load dictionary from stored string
@@ -127,7 +127,7 @@ def process_object_input(user_input, flag_presence={'override': False}):
 
 		# cache results except when override flag is present, or Google API error occurs (API could be available again at any time)
 		if result != 103 and not flag_presence['override'] and not DEBUG_MODE:
-			ddb_insert_item(OBJECT_INFO_CACHE, user_input, dumps(result))
+			ddb_insert_item(INFO_TABLE, user_input, dumps(result))
 
 	# most attributes of smoothies are cached, except their smoothie base ingredient, since it is variable
 	if isinstance(result, dict) and 'category' in result and 'smoothie' in result['category'].lower():

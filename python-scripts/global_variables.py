@@ -1,12 +1,15 @@
 
+### LINUX ###
+
 # absolute path to the project folder on the Linux cloud instance
 LINUX_ABSOLUTE_PATH = '~/burgl-discord-bot/'
 
 # name of the bot service running on the Linux cloud instance
 LINUX_SERVICE_NAME = 'burgl-bot.service'
 
-# name of AWS region in use
-AWS_REGION_NAME = 'ap-southeast-1'
+
+
+### DISCORD ###
 
 # ID of default Discord server channel that will receive notifications
 MAIN_CHANNEL_ID = 976308922010959892
@@ -14,20 +17,59 @@ MAIN_CHANNEL_ID = 976308922010959892
 # main channel object, to be initialised when the bot calls on_ready()
 MAIN_CHANNEL = None
 
-# dictionary to store latest headers of project repository on GitHub
-REPOSITORY_HEADERS = {}
-
-# dictionary to store latest timestamps of changes from Steam
-STEAM_TIMESTAMPS = {}
-
 # list of elevated Discord users
 ELEVATED_USERS = [261795156359905281, 498051548463628300]
 
 # Discord server role name to ping for notifications
 NOTIFY_ROLE_NAME = '<@&981223991547158609>'
 
+
+
+### AMAZON WEB SERVICES ###
+
+# name of AWS region in use
+AWS_REGION_NAME = 'ap-southeast-1'
+
+# DynamoDB table names as strings, and a dictionary of their corresponding key and attribute headers
+SHORTCUT_TABLE = 'Shortcut_Storage'
+INFO_TABLE = 'ObjectInfo_Cache'
+HTML_TABLE = 'PageHTML_Cache'
+CHOPPING_TABLE = 'ChoppingList_Storage'
+TASK_TABLE = 'TaskScheduler_Storage'
+MISC_TABLE = 'Miscellaneous_Storage'
+
+TABLE_HEADERS = {
+	SHORTCUT_TABLE: ('short_name', 'full_name'),
+	INFO_TABLE: ('search_query', 'object_info'),
+	HTML_TABLE: ('wiki_url', 'page_html'),
+	CHOPPING_TABLE: ('item_name', ('quantity', 'components')),
+	TASK_TABLE: ('task_name', ('priority_level', 'task_type')),
+	MISC_TABLE: ('variable_name', 'variable_value')
+}
+
+
+
+### GITHUB ###
+
+# URL of the project GitHub repository
+REPOSITORY_URL = 'https://api.github.com/repos/Sorahawk/burgl-discord-bot/commits'
+
+# dictionary to store latest headers of project repository on GitHub
+REPOSITORY_HEADERS = {}
+
+
+
+### STEAM ###
+
+# dictionary to store latest timestamps of changes from Steam
+STEAM_TIMESTAMPS = {}
+
 # list of Steam development branch names whose activity will notify users
 NOTIFY_BRANCHES = ['buddha', 'shipping_staging', 'public'] 
+
+
+
+### MAIN ###
 
 # symbol to signify bot commands
 BOT_COMMAND_PREFIX = '.'
@@ -69,7 +111,7 @@ CACHE_CLEAR_DAY = 0
 # 0 is 12AM, 23 is 11PM
 CACHE_CLEAR_HOUR = 6
 
-# string of the base wiki URL
+# base URL for the Grounded Wiki
 BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
 
 # dictionary of smoothie bases and their base ingredients
@@ -85,20 +127,6 @@ SPECIAL_ITEMS = ['Berry Leather', 'Crude Rope', 'Mushroom Slurry', 'Pupa Leather
 ARMOR_HEAD = ['face', 'goggles', 'hat', 'helmet', 'hood', 'mask']
 ARMOR_UPPER_BODY = ['arm', 'chest', 'poncho', 'shoulder', 'vest']
 ARMOR_LOWER_BODY = ['boots', 'knee', 'leg', 'shin', 'shoes']
-
-
-# DynamoDB table names as strings, and a dictionary of their corresponding key and attribute headers
-SHORTCUT_STORAGE = 'ShortName-FullName'
-OBJECT_INFO_CACHE = 'SearchQuery-ObjectInfo'
-PAGE_HTML_CACHE = 'WikiURL-PageHTML'
-CHOPPING_LIST = 'Item-Quantity.Components'
-
-DDB_TABLE_HEADERS = {
-	SHORTCUT_STORAGE: ('short_name', 'full_name'),
-	OBJECT_INFO_CACHE: ('search_query', 'object_info'),
-	PAGE_HTML_CACHE: ('wiki_url', 'page_html'),
-	CHOPPING_LIST: ('item', ('quantity', 'components'))
-}
 
 
 # dictionary containing nested lists of strings to populate the help menu, categorised by command type
@@ -149,9 +177,6 @@ BOT_VOICELINES = {
 	'invalid_bind': 'Specified bindings not found.',
 	'embed_close': 'Menu has been closed.',
 	'chop_reset': 'The Chopping List has been reset.',
-
-	# TODO: Remove once confirmed working
-	'check_success': 'Branch monitoring ongoing.',
 
 	101: "**ERROR 101:** Unable to locate VAR1. Try typing in the object's full name.",
 	102: '**ERROR 102:** Wiki page for VAR1 has an unsupported layout.',

@@ -14,7 +14,7 @@ def get_page_data(wiki_url, get_title=False):
 
 	# many search queries can refer to the same object, thus caching the page HTML itself helps to speed up response times
 	# check if HTML of the wiki page has already been cached
-	html_string = retrieve_from_cache(PAGE_HTML_CACHE, wiki_url)
+	html_string = retrieve_from_cache(HTML_TABLE, wiki_url)
 
 	if not html_string:
 		# retrieve page HTML
@@ -27,7 +27,7 @@ def get_page_data(wiki_url, get_title=False):
 
 		# cache shortened page HTML
 		if not DEBUG_MODE:
-			ddb_insert_item(PAGE_HTML_CACHE, wiki_url, html_string)
+			ddb_insert_item(HTML_TABLE, wiki_url, html_string)
 
 	xml_data = html.fromstring(html_string)
 

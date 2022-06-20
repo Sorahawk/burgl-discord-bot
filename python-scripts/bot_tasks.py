@@ -34,27 +34,47 @@ async def clear_cache_weekly():
 
 # checks project repository for new code
 # pulls new code and restarts bot service when update is detected
-@loop(minutes=5)
+@loop(minutes=1)
 async def monitor_repository():
-	url = 'https://api.github.com/repos/Sorahawk/burgl-discord-bot/commits'
-
+	table_name = MISC_TABLE
+	key = 'Repository ETag'
 	repository_headers = global_variables.REPOSITORY_HEADERS
-	response = get(url, headers=repository_headers)
 
-	if response.status_code == 200:
-		if not repository_headers:
-			etag = response.headers['ETag']
+	# check repository status
+	response = get(REPOSITORY_URL, headers=repository_headers)
+
+	# if response status code is not 200, means etag is the same as the one provided in the request
+	if response.status_code != 200:
+		return
+
+	etag = response.headers['ETag']
+
+	# if stored headers empty, means the task is running for first time upon initialisation
+	if not repository_headers:
+		# check storage for latest etag value, if any
+		result = ddb_retrieve_item(table_name, key)
+
+		# if etag exists in storage, and is same as response etag, update local header and return
+		if result and result['variable_value'] == etag:
 			global_variables.REPOSITORY_HEADERS['If-None-Match'] = etag
+			return
 
-		# repository update detected
-		else:
-			await burgl_message('updating')
+	# if one of the following conditions are fulfilled:
+	# 1) stored headers not empty
+	# 2) stored headers empty, but no existing etag in storage
+	# 3) stored headers empty and storage has existing etag, but different value
+	# then update storage with latest etag, pull latest code and restart bot
+	
+	await burgl_message('updating')
 
-			# reset any changes that could have been made to the project folder and pull latest code
-			run(f'cd {LINUX_ABSOLUTE_PATH} && git reset --hard HEAD && git pull', shell=True)
+	# write latest etag value to persistent storage 
+	ddb_insert_item(table_name, key, etag)
 
-			# restart service
-			run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
+	# reset any changes that could have been made to the project folder and pull latest code
+	run(f'cd {LINUX_ABSOLUTE_PATH} && git reset --hard HEAD && git pull', shell=True)
+
+	# restart service
+	run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
 
 
 # returns latest app info retrieved from Steam
@@ -80,9 +100,6 @@ async def monitor_app_info():
 
 	# retrieve latest app info
 	app_info = get_app_info()
-
-	# TODO: Remove once confirmed working
-	await burgl_message('check_success')
 
 	latest_assets = app_info['apps'][962130]['common']['store_asset_mtime']
 	branches_info = app_info['apps'][962130]['depots']['branches']

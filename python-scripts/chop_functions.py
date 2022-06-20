@@ -139,7 +139,7 @@ async def chop_delete(message, user_input):
 
 		# delete entire entry if quantity is -1
 		if input_quantity == -1:
-			ddb_remove_item(CHOPPING_LIST, item_name)
+			ddb_remove_item(CHOPPING_TABLE, item_name)
 			input_quantity = existing_quantity
 
 		else:
@@ -171,7 +171,7 @@ async def chop_reset(message, user_input):
 	for item in chopping_list:
 		item_name = item[0]
 
-		ddb_remove_item(CHOPPING_LIST, item_name)
+		ddb_remove_item(CHOPPING_TABLE, item_name)
 
 
 	# TODO: Remove all harvesting tasks from Task Scheduler

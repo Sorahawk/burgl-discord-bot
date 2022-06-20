@@ -15,21 +15,21 @@ def bind_shortcuts(full_name, shortcuts):
 
 	for short_name in shortcuts:
 		short_name = short_name.strip()  # remove preceding whitespace before each word, e.g. 'a, b, c'
-		result = ddb_insert_item(SHORTCUT_STORAGE, short_name, full_name)
+		result = ddb_insert_item(SHORTCUT_TABLE, short_name, full_name)
 
 		if result:
 			formatted_string += f'- {short_name}\n'
 
 			# remove entry from object info cache with short_name as the key, if any
-			ddb_remove_item(OBJECT_INFO_CACHE, short_name)
+			ddb_remove_item(INFO_TABLE, short_name)
 
 	return formatted_string
 
 
 # returns corresponding full name if input is an existing shortcut, otherwise just returns the original input
 def retrieve_full_name(search_query):
-	table_name = SHORTCUT_STORAGE
-	attribute_header = ddb_table_headers(table_name)[1]
+	table_name = SHORTCUT_TABLE
+	attribute_header = get_table_headers(table_name)[1]
 
 	full_name = ddb_retrieve_item(table_name, search_query.lower())
 
@@ -47,7 +47,7 @@ def retrieve_all_shortcuts():
 
 	# it is almost impossible for this shortcut table to cross the 1MB limit as it would take at least 24k entries
 	# so one table.scan() will be enough to retrieve the entire table
-	items = ddb_retrieve_all(SHORTCUT_STORAGE)
+	items = ddb_retrieve_all(SHORTCUT_TABLE)
 
 	for binded_pair in items:
 		full_name = capitalise_object_name(binded_pair['full_name'])
@@ -77,7 +77,7 @@ def delete_shortcuts(full_names):
 
 			# for each binded shortcut, remove it from storage 
 			for short_name in shortcuts[full_name]:
-				result = ddb_remove_item(SHORTCUT_STORAGE, short_name)
+				result = ddb_remove_item(SHORTCUT_TABLE, short_name)
 
 				if not result:
 					# if deletion of any shortcut fails, break out of the loop
@@ -92,7 +92,7 @@ def delete_shortcuts(full_names):
 # returns corresponding attribute value if it exists in table, otherwise None by default
 def retrieve_from_cache(table_name, key):
 	if not DEBUG_MODE:
-		attribute_header = ddb_table_headers(table_name)[1]
+		attribute_header = get_table_headers(table_name)[1]
 		result = ddb_retrieve_item(table_name, key)
 
 		if result:
@@ -101,7 +101,7 @@ def retrieve_from_cache(table_name, key):
 
 # clear the cache tables (query-object info and url-HTML)
 def clear_cache():
-	tables = [OBJECT_INFO_CACHE, PAGE_HTML_CACHE]
+	tables = [INFO_TABLE, HTML_TABLE]
 
 	for table_name in tables:
 		ddb_remove_all(table_name)
@@ -110,7 +110,7 @@ def clear_cache():
 # checks for existing quantity for a specific item in Chopping List and updates it appropriately
 # returns ddb_insert_item(), which itself returns True for successful insertions, otherwise False
 def insert_chop_item(item_name, quantity, base_components, ignore_existing=False):
-	table_name = CHOPPING_LIST
+	table_name = CHOPPING_TABLE
 
 	if ignore_existing:
 		existing_entry = None
@@ -127,7 +127,7 @@ def insert_chop_item(item_name, quantity, base_components, ignore_existing=False
 # returns a list of tuples, sorted alphabetically by item name, which is the first item in each tuple
 # second item of each tuple is item quantity, and third item is corresponding components
 def retrieve_chopping_list():
-	list_entries = ddb_retrieve_all(CHOPPING_LIST)
+	list_entries = ddb_retrieve_all(CHOPPING_TABLE)
 	chopping_list = {}
 
 	for entry in list_entries:
