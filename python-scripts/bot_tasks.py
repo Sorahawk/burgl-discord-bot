@@ -80,20 +80,23 @@ async def monitor_repository():
 # returns latest app info retrieved from Steam
 def get_app_info():
 	while True:  # remain in the loop until a valid Steam session is obtained
-		try:
-			steam_session = SteamClient()
-			steam_session.anonymous_login()
+		global_variables.MAIN_CHANNEL.send('initialising steam session')
+		steam_session = SteamClient()
 
-		except Exception as e:  # possible ConnectionError might occur randomly
-			print(f'WARNING: {e}.\n')
-			continue
+		global_variables.MAIN_CHANNEL.send('logging in anonymously')
+		steam_session.anonymous_login()
 
+		global_variables.MAIN_CHANNEL.send('checking validity of steam session')
 		if hasattr(steam_session, 'connected') and steam_session.connected:
 			break
 
+	global_variables.MAIN_CHANNEL.send('obtaining app info')
 	app_info = steam_session.get_product_info([962130])
+
+	global_variables.MAIN_CHANNEL.send('logging out of steam session')
 	steam_session.logout()
 
+	global_variables.MAIN_CHANNEL.send('returning app info')
 	return app_info
 
 
@@ -104,6 +107,7 @@ async def monitor_app_info():
 	steam_timestamps = global_variables.STEAM_TIMESTAMPS
 
 	# retrieve latest app info
+	global_variables.MAIN_CHANNEL.send('calling get_app_info')
 	app_info = get_app_info()
 
 	latest_assets = app_info['apps'][962130]['common']['store_asset_mtime']

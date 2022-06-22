@@ -28,23 +28,18 @@ async def on_ready():
 	if DEBUG_MODE:
 		return await burgl_message('debug')
 
-	# if script becomes inactive for any reason, on_ready will be called again when reactivated
-	# but tasks that are already running will throw a RuntimeError
-	try:
-		rotate_status.start(bot)
-		monitor_app_info.start()
+	await burgl_message('hello')
 
-		# activate self-updating task if running on Linux cloud instance
-		if platform == 'linux':
-			monitor_repository.start()
+	# TODO: create helper function to check if task is running, restart if so else just start
 
-		clear_cache_weekly.start()
+	rotate_status.start(bot)
+	monitor_app_info.start()
 
-		# if entire startup process is smooth, display hello message
-		await burgl_message('hello')
+	# activate self-updating task if running on Linux cloud instance
+	if platform == 'linux':
+		monitor_repository.start()
 
-	except Exception as e:
-		print(f'WARNING: {e}.\n')
+	clear_cache_weekly.start()
 
 
 @bot.event
