@@ -80,8 +80,11 @@ async def monitor_repository():
 # returns latest app info retrieved from Steam
 def get_app_info():
 	while True:  # remain in the loop until a valid Steam session is obtained
-		steam_session = SteamClient()
-		steam_session.anonymous_login()
+		try:
+			steam_session = SteamClient()
+			steam_session.anonymous_login()
+		except:  # possible ConnectionError might occur randomly
+			continue
 
 		if hasattr(steam_session, 'connected') and steam_session.connected:
 			break
@@ -94,7 +97,7 @@ def get_app_info():
 
 # checks Steam for new activity related to store assets and development branches
 # also notifies users when certain activities are detected
-@loop(minutes=15)
+@loop(minutes=17)
 async def monitor_app_info():
 	steam_timestamps = global_variables.STEAM_TIMESTAMPS
 

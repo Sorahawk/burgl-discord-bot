@@ -235,6 +235,11 @@ def format_object_info(object_info):
 			for count in range(3):
 				embedded_info.remove_field(row_index - count)
 
+
+		# TODO: check for any rows with only one field then delete the rest and let it take the entire row (replace the if branch below)
+
+
+
 	# if last row only has leftmost field, then let it take the whole row
 	if embedded_info.fields[-1].value == '\u200b' and embedded_info.fields[-2].value == '\u200b':
 		for count in range(2):
@@ -243,6 +248,8 @@ def format_object_info(object_info):
 		field_name = embedded_info.fields[-1].name
 		field_value = embedded_info.fields[-1].value
 		embedded_info.set_field_at(-1, name=field_name, value=field_value, inline=False)
+
+
 
 	# check if description is empty
 	if embedded_info.fields[0].value == '\u200b':
