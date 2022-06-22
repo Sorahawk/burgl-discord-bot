@@ -28,18 +28,21 @@ async def on_ready():
 	if DEBUG_MODE:
 		return await burgl_message('debug')
 
-	await burgl_message('hello')
-	rotate_status.start(bot)
-	monitor_app_info.start()
-
-	# activate self-updating if running on Linux cloud instance
-	if platform == 'linux':
-		monitor_repository.start()
-
 	# if script becomes inactive for any reason, on_ready will be called again when reactivated
-	# but tasks with specific timings can't be started more than once
+	# but tasks that are already running will throw a RuntimeError
 	try:
+		rotate_status.start(bot)
+		monitor_app_info.start()
+
+		# activate self-updating task if running on Linux cloud instance
+		if platform == 'linux':
+			monitor_repository.start()
+
 		clear_cache_weekly.start()
+
+		# if entire startup process is smooth, display hello message
+		await burgl_message('hello')
+
 	except Exception as e:
 		print(f'WARNING: {e}.\n')
 

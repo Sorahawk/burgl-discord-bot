@@ -10,7 +10,7 @@ from string_processing import *
 
 # bind one or more shortcuts to a full object name
 async def bind_default(message, user_input):
-	name_pattern = "[a-z _+'?-]+"
+	name_pattern = "[a-z ._+'?-]+"
 	results = findall(name_pattern, user_input, IGNORECASE)
 
 	if len(results) < 2:

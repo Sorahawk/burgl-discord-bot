@@ -65,7 +65,7 @@ REPOSITORY_HEADERS = {}
 STEAM_TIMESTAMPS = {}
 
 # list of Steam development branch names whose activity will notify users
-NOTIFY_BRANCHES = ['buddha', 'shipping_staging', 'public'] 
+NOTIFY_BRANCHES = ['buddha', 'shipping_staging', 'public']
 
 
 

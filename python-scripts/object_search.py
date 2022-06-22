@@ -226,6 +226,10 @@ def format_object_info(object_info):
 
 	# check each row (indexes 1-3, 4-6, 7-9, 10-12)
 	for row_index in range(12, 3, -3):
+		row_indices = [row_index - 2, row_index - 1, row_index]  # left, middle, right
+
+		# TODO: create helper function to deal with this
+
 		right_field = embedded_info.fields[row_index]
 		middle_field = embedded_info.fields[row_index - 1]
 		left_field = embedded_info.fields[row_index - 2]
