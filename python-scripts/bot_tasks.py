@@ -85,6 +85,7 @@ def get_app_info():
 			steam_session.anonymous_login()
 		except Exception as e:  # possible ConnectionError might occur randomly
 			print(f'WARNING: {e}.\n')
+			continue
 
 		if hasattr(steam_session, 'connected') and steam_session.connected:
 			break
