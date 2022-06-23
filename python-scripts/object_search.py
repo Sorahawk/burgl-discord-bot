@@ -221,39 +221,38 @@ def format_object_info(object_info):
 
 			embedded_info.set_field_at(index, name=attribute_name, value=object_info[attribute], inline=True)
 
-	# look for any specific empty embed cases and process
+	# look for and process specific cases of empty embed fields
 	# start from bottom up so deleting fields won't affect the index while checking the fields on top
 
 	# check each row (indexes 1-3, 4-6, 7-9, 10-12)
-	for row_index in range(12, 3, -3):
-		row_indices = [row_index - 2, row_index - 1, row_index]  # left, middle, right
+	for row_index in range(12, 0, -3):
+		field_indices = [row_index - 2, row_index - 1, row_index]  # left, middle, right
 
-		# TODO: create helper function to deal with this
+		# generate a corresponding list of booleans that represent whether each field is empty
+		fields_empty = [embedded_info.fields[field_index].value == '\u200b' for field_index in field_indices]
 
-		right_field = embedded_info.fields[row_index]
-		middle_field = embedded_info.fields[row_index - 1]
-		left_field = embedded_info.fields[row_index - 2]
+		# calculate the number of True values in the list
+		num_empty = sum(fields_empty)
 
-		# check for empty rows
-		if left_field.value  == '\u200b' and middle_field.value == '\u200b' and right_field.value == '\u200b':
-			for count in range(3):
-				embedded_info.remove_field(row_index - count)
+		# all True; entire row is empty
+		if num_empty == 3:
+			# delete entire row from right to left
+			for field_index in field_indices[::-1]:
+				embedded_info.remove_field(field_index)
 
+		# only one field has content
+		elif num_empty == 2:
+			# traverse the row from right to left, deleting the empty fields and editing the last one to take up the entire row
+			for count in range(2, -1, -1):
+				field_index = field_indices[count]
+				is_empty = fields_empty[count]
 
-		# TODO: check for any rows with only one field then delete the rest and let it take the entire row (replace the if branch below)
-
-
-
-	# if last row only has leftmost field, then let it take the whole row
-	if embedded_info.fields[-1].value == '\u200b' and embedded_info.fields[-2].value == '\u200b':
-		for count in range(2):
-			embedded_info.remove_field(-1)
-
-		field_name = embedded_info.fields[-1].name
-		field_value = embedded_info.fields[-1].value
-		embedded_info.set_field_at(-1, name=field_name, value=field_value, inline=False)
-
-
+				if is_empty:
+					embedded_info.remove_field(field_index)
+				else:
+					# edit the field to take up the entire row by switching inline to False
+					field = embedded_info.fields[field_index]
+					embedded_info.set_field_at(field_index, name=field.name, value=field.value, inline=False)
 
 	# check if description is empty
 	if embedded_info.fields[0].value == '\u200b':
