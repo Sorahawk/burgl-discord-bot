@@ -71,6 +71,9 @@ NOTIFY_BRANCHES = ['buddha', 'shipping_staging', 'public']
 
 ### MAIN ###
 
+# object instance of the bot itself, to be set after initialisation in bot_main
+BOT_INSTANCE = None
+
 # symbol to signify bot commands
 BOT_COMMAND_PREFIX = '.'
 

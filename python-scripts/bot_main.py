@@ -22,38 +22,43 @@ intents = Intents.all()
 
 # initialise client
 bot = Client(intents=intents)
+global_variables.BOT_INSTANCE = bot
 
 
 @bot.event
 async def on_ready():
-	print(f'{bot.user} is online.\n')
 
-	# initialise global main channel object
-	global_variables.MAIN_CHANNEL = bot.get_channel(MAIN_CHANNEL_ID)
+	# on_ready() can be called more than once, typically whenever the bot loses, then regains, connection to Discord 
+	# check if this is first time bot is calling on_ready()
+	if not global_variables.MAIN_CHANNEL:
+		print(f'{bot.user} is online.\n')
 
-	if DEBUG_MODE:
-		return await burgl_message('debug')
+		# initialise global main channel object
+		global_variables.MAIN_CHANNEL = bot.get_channel(MAIN_CHANNEL_ID)
 
-	await burgl_message('hello')
+		if DEBUG_MODE:
+			return await burgl_message('debug')
 
-	# TODO: create helper function to check if task is running, restart if so else just start
+		rotate_status.start()
+		monitor_app_info.start()
+		clear_cache_weekly.start()
 
-	rotate_status.start(bot)
-	monitor_app_info.start()
+		# activate self-updating task if running on Linux cloud instance
+		if platform == 'linux':
+			monitor_repository.start()
 
-	# activate self-updating task if running on Linux cloud instance
-	if platform == 'linux':
-		monitor_repository.start()
+		await burgl_message('hello')
 
-	clear_cache_weekly.start()
+	else:  # do not start tasks again if they are alreayd ongoing as it will throw RuntimeError
+		print(f'{bot.user} has reconnected to Discord.\n')
 
 
 @bot.event
 async def on_message(message):
 	prefix_length = len(BOT_COMMAND_PREFIX)  # prefix might not always be single character
 
-	# ignore any messages sent from the bot itself, or messages that don't start with the command prefix
-	if message.author == bot.user or message.content[:prefix_length] != BOT_COMMAND_PREFIX:
+	# ignore any messages if bot is not ready, messages sent from the bot itself, or messages that don't start with the command prefix
+	if not bot.is_ready() or message.author == bot.user or message.content[:prefix_length] != BOT_COMMAND_PREFIX:
 		return
 
 	# check for any valid command if the message starts with the prefix symbol
@@ -69,14 +74,14 @@ async def on_message(message):
 	flag_presence, user_input = check_flags(user_input)
 
 	if DEBUG_MODE:
-		return await eval(command_method)(bot, message, user_input, flag_presence)
+		return await eval(command_method)(message, user_input, flag_presence)
 
 	# log any unexpected errors if not in debug mode
 	try:
-		await eval(command_method)(bot, message, user_input, flag_presence)
+		await eval(command_method)(message, user_input, flag_presence)
 
 	except Exception as e:  # log any errors if command fails in any unexpected way
-		print(f'WARNING: {e}.\n')
+		print(f'WARNING: {e}\n')
 
 
 bot.run(DISCORD_BOT_TOKEN)

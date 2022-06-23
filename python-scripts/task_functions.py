@@ -10,7 +10,7 @@ async def task_default(message, user_input):
 
 
 # view current to-do tasks
-async def task_view(bot, message, user_input):
+async def task_view(message, user_input):
 	await message.channel.send('Task - View')
 
 

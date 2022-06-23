@@ -21,7 +21,7 @@ async def bind_default(message, user_input):
 
 
 # view all existing bindings
-async def bind_view(bot, message, user_input):
+async def bind_view(message, user_input):
 	shortcut_list = retrieve_all_shortcuts()
 
 	# create embeds until all shortcuts are in a page
@@ -41,7 +41,7 @@ async def bind_view(bot, message, user_input):
 		shortcut_embed.set_footer(text=f'Page {page + 1}/{number_pages}')
 		embed_list.append(shortcut_embed)
 
-	return await multipage_embed_handler(bot, message, user_input, embed_list)
+	return await multipage_embed_handler(message, user_input, embed_list)
 
 
 # delete all shortcuts for one or more specified object names

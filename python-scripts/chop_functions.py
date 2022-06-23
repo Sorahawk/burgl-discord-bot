@@ -51,7 +51,7 @@ async def chop_default(message, user_input):
 
 
 # view current Chopping List entries
-async def chop_view(bot, message, user_input):
+async def chop_view(message, user_input):
 	chopping_list = retrieve_chopping_list()
 
 	embed_list = []
@@ -73,7 +73,7 @@ async def chop_view(bot, message, user_input):
 		chopping_embed.set_footer(text=f'Page {page + 1}/{number_pages}')
 		embed_list.append(chopping_embed)
 
-	return await multipage_embed_handler(bot, message, user_input, embed_list)
+	return await multipage_embed_handler(message, user_input, embed_list)
 
 
 # check items off the Chopping List

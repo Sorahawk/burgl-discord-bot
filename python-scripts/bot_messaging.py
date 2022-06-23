@@ -52,7 +52,7 @@ async def detect_search_errors(message, user_input, result):
 
 # standard handler for multi-page messages, which allows for page navigation, as well as closing the menu
 # unique input is embed_list, which is the list of discord.Embed messages to display, in page order
-async def multipage_embed_handler(bot, message, user_input, embed_list):
+async def multipage_embed_handler(message, user_input, embed_list):
 	if len(embed_list) == 0:
 		return await burgl_message('no_display', message)
 	
@@ -80,12 +80,12 @@ async def multipage_embed_handler(bot, message, user_input, embed_list):
 
 	# returns True if emoji reaction by user to the specific embed message is one of the specified emojis
 	def multipage_emoji_check(reaction, user):
-		return user != bot.user and reaction.message.id == embedded_message.id and reaction.emoji in [left_arrow, cross_mark, right_arrow]
+		return user != global_variables.BOT_INSTANCE.user and reaction.message.id == embedded_message.id and reaction.emoji in [left_arrow, cross_mark, right_arrow]
 
 
 	while True:
 		try:
-			reaction, user = await bot.wait_for('reaction_add', timeout=60, check=multipage_emoji_check)
+			reaction, user = await global_variables.BOT_INSTANCE.wait_for('reaction_add', timeout=60, check=multipage_emoji_check)
 
 			if reaction.emoji == cross_mark:
 				if isinstance(message.channel, DMChannel):  # check if channel is a private chat

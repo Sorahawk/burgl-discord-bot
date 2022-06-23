@@ -12,7 +12,7 @@ from global_variables import *
 
 # automatically rotate bot's Discord status every 10 minutes
 @loop(minutes=10)
-async def rotate_status(bot):
+async def rotate_status():
 	activity, activity_type = choice(list(BOT_ACTIVITY_STATUSES.items()))
 
 	if isinstance(activity_type, str):
@@ -20,7 +20,7 @@ async def rotate_status(bot):
 	else:
 		activity_status = Activity(type=activity_type, name=activity)
 
-	await bot.change_presence(activity=activity_status)
+	await global_variables.BOT_INSTANCE.change_presence(activity=activity_status)
 
 
 # automatically clear caches once a week
@@ -75,31 +75,6 @@ async def monitor_repository():
 
 	# restart service
 	run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
-
-
-<<<<<<< HEAD
-=======
-# returns latest app info retrieved from Steam
-def get_app_info():
-	while True:  # remain in the loop until a valid Steam session is obtained
-		global_variables.MAIN_CHANNEL.send('initialising steam session')
-		steam_session = SteamClient()
-
-		global_variables.MAIN_CHANNEL.send('logging in anonymously')
-		steam_session.anonymous_login()
-
-		global_variables.MAIN_CHANNEL.send('checking validity of steam session')
-		if hasattr(steam_session, 'connected') and steam_session.connected:
-			break
-
-	global_variables.MAIN_CHANNEL.send('obtaining app info')
-	app_info = steam_session.get_product_info([962130])
-
-	global_variables.MAIN_CHANNEL.send('logging out of steam session')
-	steam_session.logout()
-
-	global_variables.MAIN_CHANNEL.send('returning app info')
-	return app_info
 
 
 # checks Steam for new activity related to store assets and development branches

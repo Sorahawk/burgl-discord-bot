@@ -19,7 +19,7 @@ from string_processing import *
 # and must share the same name, followed by '_method'
 
 # help menu method
-async def help_method(bot, message, user_input, flag_presence):
+async def help_method(message, user_input, flag_presence):
 	embed_list = []
 	category_names = ['Main', 'Utility']
 
@@ -39,11 +39,11 @@ async def help_method(bot, message, user_input, flag_presence):
 		help_embed.set_footer(text=f'Page {page + 1}/{len(category_names)}')
 		embed_list.append(help_embed)
 
-	await multipage_embed_handler(bot, message, user_input, embed_list)
+	await multipage_embed_handler(message, user_input, embed_list)
 
 
 # object search method
-async def search_method(bot, message, user_input, flag_presence):
+async def search_method(message, user_input, flag_presence):
 	if user_input == '':
 		return await burgl_message('empty', message)
 
@@ -55,7 +55,7 @@ async def search_method(bot, message, user_input, flag_presence):
 
 
 # creature card search method
-async def card_method(bot, message, user_input, flag_presence):
+async def card_method(message, user_input, flag_presence):
 	if user_input == '':
 		return await burgl_message('empty', message)
 
@@ -75,9 +75,9 @@ async def card_method(bot, message, user_input, flag_presence):
 
 
 # shortcut binding method
-async def bind_method(bot, message, user_input, flag_presence):
+async def bind_method(message, user_input, flag_presence):
 	if flag_presence['view']:  # allow non-elevated users to view bindings
-		await bind_view(bot, message, user_input)
+		await bind_view(message, user_input)
 
 	elif not check_user_elevation(message):
 		await burgl_message('unauthorised', message)
@@ -93,9 +93,9 @@ async def bind_method(bot, message, user_input, flag_presence):
 
 
 # chopping list method
-async def chop_method(bot, message, user_input, flag_presence):
+async def chop_method(message, user_input, flag_presence):
 	if flag_presence['view']:
-		await chop_view(bot, message, user_input)
+		await chop_view(message, user_input)
 
 	elif not check_user_elevation(message):
 		await burgl_message('unauthorised', message)
@@ -114,9 +114,9 @@ async def chop_method(bot, message, user_input, flag_presence):
 
 
 # task scheduler method
-async def task_method(bot, message, user_input, flag_presence):
+async def task_method(message, user_input, flag_presence):
 	if flag_presence['view']:
-		await task_view(bot, message, user_input)
+		await task_view(message, user_input)
 
 	elif not check_user_elevation(message):
 		await burgl_message('unauthorised', message)
@@ -132,7 +132,7 @@ async def task_method(bot, message, user_input, flag_presence):
 
 
 # cache clearing method
-async def clear_method(bot, message, user_input, flag_presence):
+async def clear_method(message, user_input, flag_presence):
 	if not check_user_elevation(message):
 		await burgl_message('unauthorised', message)
 	else:
@@ -141,7 +141,7 @@ async def clear_method(bot, message, user_input, flag_presence):
 
 
 # message purging method
-async def purge_method(bot, message, user_input, flag_presence):
+async def purge_method(message, user_input, flag_presence):
 	await burgl_message('purging', message)
 
 	# flatten message history into a list
@@ -153,7 +153,7 @@ async def purge_method(bot, message, user_input, flag_presence):
 
 	else:  # if message is from a private message
 		for old_message in message_history:
-			if old_message.author == bot.user:
+			if old_message.author == global_variables.BOT_INSTANCE.user:
 				await old_message.delete()
 
 
@@ -162,7 +162,7 @@ async def purge_method(bot, message, user_input, flag_presence):
 full_command_list = BOT_COMMAND_LIST
 
 # toggle sleep mode method
-async def sleep_method(bot, message, user_input, flag_presence):
+async def sleep_method(message, user_input, flag_presence):
 	if DEBUG_MODE:
 		# ignore command if in development mode
 		return
@@ -176,11 +176,11 @@ async def sleep_method(bot, message, user_input, flag_presence):
 		global_variables.BOT_COMMAND_LIST = full_command_list
 
 		await burgl_message('hello', message)
-		rotate_status.start(bot)
+		rotate_status.start()
 
 	else:
 		global_variables.BOT_COMMAND_LIST = sleep_command
 
 		await burgl_message('sleeping', message)
-		await bot.change_presence(status=Status.idle)
+		await global_variables.BOT_INSTANCE.change_presence(status=Status.idle)
 		rotate_status.cancel()
