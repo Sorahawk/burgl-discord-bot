@@ -1,3 +1,9 @@
+
+# use monkey patch from Steam module to make stdlib gevent cooperative
+from steam.monkey import patch_minimal
+patch_minimal()
+
+
 import global_variables
 
 from sys import platform

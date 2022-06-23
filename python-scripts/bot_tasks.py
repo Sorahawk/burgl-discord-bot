@@ -1,3 +1,5 @@
+import global_variables
+
 from requests import get
 from random import choice
 from subprocess import run
@@ -77,6 +79,8 @@ async def monitor_repository():
 	run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
 
 
+<<<<<<< HEAD
+=======
 # returns latest app info retrieved from Steam
 def get_app_info():
 	while True:  # remain in the loop until a valid Steam session is obtained
@@ -100,18 +104,27 @@ def get_app_info():
 	return app_info
 
 
+>>>>>>> b8a8e00337cd6327ea1987f859c4a93a8afc0e21
 # checks Steam for new activity related to store assets and development branches
 # also notifies users when certain activities are detected
 @loop(minutes=17)
 async def monitor_app_info():
-	steam_timestamps = global_variables.STEAM_TIMESTAMPS
+	steam_session = SteamClient()
+	steam_session.anonymous_login()
 
+<<<<<<< HEAD
+	app_info = steam_session.get_product_info([962130])
+	steam_session.logout()
+=======
 	# retrieve latest app info
 	global_variables.MAIN_CHANNEL.send('calling get_app_info')
 	app_info = get_app_info()
+>>>>>>> b8a8e00337cd6327ea1987f859c4a93a8afc0e21
 
 	latest_assets = app_info['apps'][962130]['common']['store_asset_mtime']
 	branches_info = app_info['apps'][962130]['depots']['branches']
+
+	steam_timestamps = global_variables.STEAM_TIMESTAMPS
 
 	# populate dictionary when task is run for the first time
 	if not steam_timestamps:
