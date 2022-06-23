@@ -242,7 +242,7 @@ def format_object_info(object_info):
 
 		# only one field has content
 		elif num_empty == 2:
-			# traverse the row from right to left, deleting the empty fields and editing the last one to take up the entire row
+			# traverse the row from right to left, deleting the empty fields and editing the remaining one to take up the entire row
 			for count in range(2, -1, -1):
 				field_index = field_indices[count]
 				is_empty = fields_empty[count]

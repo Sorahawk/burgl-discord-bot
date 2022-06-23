@@ -1,9 +1,3 @@
-
-# use monkey patch from Steam module to make stdlib gevent cooperative
-from steam.monkey import patch_minimal
-patch_minimal()
-
-
 import global_variables
 
 from sys import platform
@@ -40,7 +34,7 @@ async def on_ready():
 			return await burgl_message('debug')
 
 		rotate_status.start()
-		monitor_app_info.start()
+		#monitor_app_info.start()
 		clear_cache_weekly.start()
 
 		# activate self-updating task if running on Linux cloud instance
