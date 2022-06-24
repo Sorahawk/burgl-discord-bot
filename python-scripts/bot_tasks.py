@@ -36,7 +36,7 @@ async def clear_cache_weekly():
 @loop(minutes=3)
 async def monitor_repository():
 	table_name = MISC_TABLE
-	key = 'Repository ETag'
+	key = 'Repository_ETag'
 	repository_headers = global_variables.REPOSITORY_HEADERS
 
 	# check repository status
@@ -48,7 +48,7 @@ async def monitor_repository():
 
 	etag = response.headers['ETag']
 
-	# if stored headers empty, means the task is running for first time upon initialisation
+	# if global header dictionary empty, means the task is running for first time upon initialisation
 	if not repository_headers:
 		# check storage for latest etag value, if any
 		result = ddb_retrieve_item(table_name, key)
@@ -59,9 +59,9 @@ async def monitor_repository():
 			return
 
 	# if one of the following conditions are fulfilled:
-	# 1) stored headers not empty
-	# 2) stored headers empty, but no existing etag in storage
-	# 3) stored headers empty and storage has existing etag, but different value
+	# 1) global headers not empty
+	# 2) global headers empty, but no existing etag in storage
+	# 3) global headers empty and storage has existing etag, but different value
 	# then update storage with latest etag, pull latest code and restart bot
 	
 	await burgl_message('updating')
@@ -80,24 +80,51 @@ async def monitor_repository():
 # also notifies users when certain activities are detected
 @loop(minutes=7)
 async def monitor_app_info():
-	app_info = get('https://api.steamcmd.net/v1/info/962130').json()
-
-	latest_assets = app_info['data']['962130']['common']['store_asset_mtime']
-	branches_info = app_info['data']['962130']['depots']['branches']
-
+	table_name = MISC_TABLE
+	key = 'Steam_Timestamps'
 	steam_timestamps = global_variables.STEAM_TIMESTAMPS
+	changes_detected = False
 
-	# populate dictionary when task is run for the first time
+	try:
+		response = get('https://api.steamcmd.net/v1/info/962130')
+
+		# ensure that response is valid and contains requested info
+		if response.status_code != 200:
+			return
+
+	# as the SteamCMD API is third-party and is not as established as something like GitHub,
+	# have to account for possible timeout resulting from API overload, as well as other unexpected errors
+	except Exception as e:
+		return await global_variables.MAIN_CHANNEL.send(f'WARNING: {e}\n')
+
+	app_info = response.json()['data']['962130']
+	latest_assets = app_info['common']['store_asset_mtime']
+	branches_info = app_info['depots']['branches']
+
+	# if global timestamp dictionary empty, means the task is running for first time upon initialisation
 	if not steam_timestamps:
-		global_variables.STEAM_TIMESTAMPS['asset_update'] = latest_assets
+		# retrieve timestamps from storage for latest values, if any
+		result = ddb_retrieve_item(table_name, key)
 
-		for branch_name in branches_info:
-			global_variables.STEAM_TIMESTAMPS[branch_name] = branches_info[branch_name]['timeupdated']
+		# if values are present in storage, update timestamps with latest for each category
+		if result:
+			result = result['variable_value']
 
-		return
+			for category in result:
+				global_variables.STEAM_TIMESTAMPS[category] = result[category]
+
+		else:  # populate global dictionary and update persistent storage
+			changes_detected = True
+
+			global_variables.STEAM_TIMESTAMPS['asset_update'] = latest_assets
+
+			for branch_name in branches_info:
+				global_variables.STEAM_TIMESTAMPS[branch_name] = branches_info[branch_name]['timeupdated']
 
 	# check for store asset updates
 	if steam_timestamps['asset_update'] != latest_assets:
+		changes_detected = True
+
 		global_variables.STEAM_TIMESTAMPS['asset_update'] = latest_assets
 
 		await burgl_message('assets_updated', notify=True)
@@ -108,12 +135,20 @@ async def monitor_app_info():
 
 		# notify users when entirely new branches are added
 		if branch_name not in steam_timestamps:
+			changes_detected = True
+
 			global_variables.STEAM_TIMESTAMPS[branch_name] = branch_timing
 
 			await burgl_message('branch_active', replace=branch_name, notify=True)
 
 		elif steam_timestamps[branch_name] != branch_timing:
+			changes_detected = True
+
 			notify = branch_name in NOTIFY_BRANCHES
 			global_variables.STEAM_TIMESTAMPS[branch_name] = branch_timing
 
 			await burgl_message('branch_active', replace=branch_name, notify=notify)
+
+	# write latest timestamps to persistent storage 
+	if changes_detected:
+		ddb_insert_item(table_name, key, global_variables.STEAM_TIMESTAMPS)

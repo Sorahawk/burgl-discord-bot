@@ -74,7 +74,7 @@ async def on_message(message):
 		await eval(command_method)(message, user_input, flag_presence)
 
 	except Exception as e:  # log any errors if command fails in any unexpected way
-		print(f'WARNING: {e}\n')
+		await global_variables.MAIN_CHANNEL.send(f'WARNING: {e}\n')
 
 
 bot.run(DISCORD_BOT_TOKEN)
