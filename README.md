@@ -45,6 +45,7 @@ The overall roadmap and development tracker for this project can be found on the
 - [Google Custom Search JSON API](https://developers.google.com/custom-search/v1/introduction/)
 - [Google Programmable Search Engine](https://programmablesearchengine.google.com/)
 - [Python](https://www.python.org/)
+- [SteamCMD API](https://www.steamcmd.net/)
 
 <br>
 

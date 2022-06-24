@@ -2,7 +2,6 @@ from requests import get
 from random import choice
 from subprocess import run
 from discord.ext.tasks import loop
-from steam.client import SteamClient
 from discord import Activity, Streaming
 from datetime import datetime, time, timedelta, timezone
 
@@ -34,7 +33,7 @@ async def clear_cache_weekly():
 
 # checks project repository for new code
 # pulls new code and restarts bot service when update is detected
-@loop(minutes=1)
+@loop(minutes=3)
 async def monitor_repository():
 	table_name = MISC_TABLE
 	key = 'Repository ETag'
@@ -79,16 +78,12 @@ async def monitor_repository():
 
 # checks Steam for new activity related to store assets and development branches
 # also notifies users when certain activities are detected
-@loop(minutes=17)
+@loop(minutes=7)
 async def monitor_app_info():
-	steam_session = SteamClient()
-	steam_session.anonymous_login()
+	app_info = get('https://api.steamcmd.net/v1/info/962130').json()
 
-	app_info = steam_session.get_product_info([962130])
-	steam_session.logout()
-
-	latest_assets = app_info['apps'][962130]['common']['store_asset_mtime']
-	branches_info = app_info['apps'][962130]['depots']['branches']
+	latest_assets = app_info['data']['962130']['common']['store_asset_mtime']
+	branches_info = app_info['data']['962130']['depots']['branches']
 
 	steam_timestamps = global_variables.STEAM_TIMESTAMPS
 

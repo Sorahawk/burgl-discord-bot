@@ -21,8 +21,7 @@ global_variables.BOT_INSTANCE = bot
 
 @bot.event
 async def on_ready():
-
-	# on_ready() can be called more than once, typically whenever the bot loses, then regains, connection to Discord 
+	# on_ready() can be called more than once, typically whenever the bot momentarily loses connection to Discord 
 	# check if this is first time bot is calling on_ready()
 	if not global_variables.MAIN_CHANNEL:
 		print(f'{bot.user} is online.\n')
@@ -34,7 +33,7 @@ async def on_ready():
 			return await burgl_message('debug')
 
 		rotate_status.start()
-		#monitor_app_info.start()
+		monitor_app_info.start()
 		clear_cache_weekly.start()
 
 		# activate self-updating task if running on Linux cloud instance
