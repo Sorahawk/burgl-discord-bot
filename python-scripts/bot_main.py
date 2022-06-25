@@ -5,6 +5,7 @@ from discord import Client, Intents
 
 from bot_tasks import *
 from bot_functions import *
+from status_logging import *
 from global_variables import *
 from secret_variables import *
 from string_processing import *
@@ -76,5 +77,6 @@ async def on_message(message):
 	except Exception as e:  # log any errors if command fails in any unexpected way
 		await global_variables.MAIN_CHANNEL.send(f'WARNING: {e}\n')
 
+init_logger()
 
 bot.run(DISCORD_BOT_TOKEN)
