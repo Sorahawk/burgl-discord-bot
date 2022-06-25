@@ -79,9 +79,14 @@ async def on_message(message):
 		await global_variables.MAIN_CHANNEL.send(f'WARNING: {e}\n')
 
 
+# get current directory
+filepath = getcwd()
+
+# check if script is running from Linux root directory (systemd service)
+if filepath == '/':
+	filepath = LINUX_ABSOLUTE_PATH
+
 # initialise logging module
-if platform == 'linux': filepath = LINUX_ABSOLUTE_PATH
-else: filepath = getcwd()
 init_logger(filepath)
 
 # start bot
