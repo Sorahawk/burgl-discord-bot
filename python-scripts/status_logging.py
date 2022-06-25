@@ -1,9 +1,11 @@
 import logging
 
+from os import getcwd
+
 
 def init_logger():
 	logging.basicConfig(
-		filename='status.log',
+		filename=f'{getcwd()}/status.log',
 		filemode='w',
 		format='{asctime} {name} - [{levelname}] {message}',
 		datefmt='%d/%m/%Y %I:%M:%S %p',

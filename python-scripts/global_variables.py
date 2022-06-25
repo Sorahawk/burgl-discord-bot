@@ -1,9 +1,6 @@
 
 ### LINUX ###
 
-# absolute path to the project folder on the Linux cloud instance
-LINUX_ABSOLUTE_PATH = '~/burgl-discord-bot/'
-
 # name of the bot service running on the Linux cloud instance
 LINUX_SERVICE_NAME = 'burgl-bot.service'
 
