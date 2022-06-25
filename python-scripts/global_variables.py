@@ -1,6 +1,10 @@
 
 ### LINUX ###
 
+# absolute path to the project folder on the Linux cloud instance
+# cannot use os.getcwd() because the systemd service runs it from root directory
+LINUX_ABSOLUTE_PATH = '/home/ubuntu/burgl-discord-bot/python-scripts'
+
 # name of the bot service running on the Linux cloud instance
 LINUX_SERVICE_NAME = 'burgl-bot.service'
 

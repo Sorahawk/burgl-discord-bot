@@ -1,5 +1,6 @@
 import global_variables
 
+from os import getcwd
 from sys import platform
 from discord import Client, Intents
 
@@ -77,6 +78,11 @@ async def on_message(message):
 	except Exception as e:  # log any errors if command fails in any unexpected way
 		await global_variables.MAIN_CHANNEL.send(f'WARNING: {e}\n')
 
-init_logger()
 
+# initialise logging module
+if platform == 'linux': filepath = LINUX_ABSOLUTE_PATH
+else: filepath = getcwd()
+init_logger(filepath)
+
+# start bot
 bot.run(DISCORD_BOT_TOKEN)
