@@ -3,5 +3,5 @@ __pycache__/
 cloud-hosting/ec2.pem
 cloud-hosting/ip.txt
 
-python-scripts/secret_variables.py
+python-scripts/secrets.py
 python-scripts/status.log

@@ -1,7 +1,8 @@
-import global_variables
+import global_constants
 
 from discord import DMChannel, Embed, Status
 
+from secrets import *
 from bot_tasks import *
 from card_search import *
 from bot_messaging import *
@@ -9,8 +10,7 @@ from object_search import *
 from bind_functions import *
 from chop_functions import *
 from task_functions import *
-from global_variables import *
-from secret_variables import *
+from global_constants import *
 from storage_functions import *
 from string_processing import *
 
@@ -153,7 +153,7 @@ async def purge_method(message, user_input, flag_presence):
 
 	else:  # if message is from a private message
 		for old_message in message_history:
-			if old_message.author == global_variables.BOT_INSTANCE.user:
+			if old_message.author == global_constants.BOT_INSTANCE.user:
 				await old_message.delete()
 
 
@@ -172,15 +172,15 @@ async def sleep_method(message, user_input, flag_presence):
 
 	sleep_command = ['sleep']
 
-	if global_variables.BOT_COMMAND_LIST == sleep_command:  # switch off sleep mode
-		global_variables.BOT_COMMAND_LIST = full_command_list
+	if global_constants.BOT_COMMAND_LIST == sleep_command:  # switch off sleep mode
+		global_constants.BOT_COMMAND_LIST = full_command_list
 
 		await burgl_message('hello', message)
 		rotate_status.start()
 
 	else:
-		global_variables.BOT_COMMAND_LIST = sleep_command
+		global_constants.BOT_COMMAND_LIST = sleep_command
 
 		await burgl_message('sleeping', message)
-		await global_variables.BOT_INSTANCE.change_presence(status=Status.idle)
+		await global_constants.BOT_INSTANCE.change_presence(status=Status.idle)
 		rotate_status.cancel()

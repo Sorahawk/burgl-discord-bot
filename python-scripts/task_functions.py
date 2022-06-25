@@ -1,7 +1,7 @@
 from discord import Embed
 
 from bot_messaging import *
-from global_variables import *
+from global_constants import *
 
 
 # adds a to-do entry to the Task Scheduler

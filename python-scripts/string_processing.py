@@ -1,8 +1,8 @@
-import re, global_variables
+import re, global_constants
 
 from difflib import SequenceMatcher
 
-from global_variables import *
+from global_constants import *
 
 
 # determines which command is being used, if any (remember that bot reads all messages)
@@ -12,7 +12,7 @@ from global_variables import *
 def check_command(user_input):
 	lowered_input = user_input.lower() + ' '
 
-	for command_name in global_variables.BOT_COMMAND_LIST:
+	for command_name in global_constants.BOT_COMMAND_LIST:
 		command = command_name + ' '
 
 		if lowered_input.startswith(command):

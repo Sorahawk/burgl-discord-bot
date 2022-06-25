@@ -1,14 +1,14 @@
-import global_variables
+import global_constants
 
 from os import getcwd
 from sys import platform
 from discord import Client, Intents
 
+from secrets import *
 from bot_tasks import *
 from bot_functions import *
 from status_logging import *
-from global_variables import *
-from secret_variables import *
+from global_constants import *
 from string_processing import *
 
 
@@ -18,18 +18,18 @@ intents = Intents.all()
 
 # initialise client
 bot = Client(intents=intents)
-global_variables.BOT_INSTANCE = bot
+global_constants.BOT_INSTANCE = bot
 
 
 @bot.event
 async def on_ready():
 	# on_ready() can be called more than once, typically whenever the bot momentarily loses connection to Discord 
 	# check if this is first time bot is calling on_ready()
-	if not global_variables.MAIN_CHANNEL:
+	if not global_constants.MAIN_CHANNEL:
 		print(f'{bot.user} is online.\n')
 
 		# initialise global main channel object
-		global_variables.MAIN_CHANNEL = bot.get_channel(MAIN_CHANNEL_ID)
+		global_constants.MAIN_CHANNEL = bot.get_channel(MAIN_CHANNEL_ID)
 
 		if DEBUG_MODE:
 			return await burgl_message('debug')
@@ -76,7 +76,7 @@ async def on_message(message):
 		await eval(command_method)(message, user_input, flag_presence)
 
 	except Exception as e:  # log any errors if command fails in any unexpected way
-		await global_variables.MAIN_CHANNEL.send(f'WARNING: {e}\n')
+		await global_constants.MAIN_CHANNEL.send(f'WARNING: {e}\n')
 
 
 # get current directory

@@ -3,7 +3,7 @@ from discord import Embed
 from re import findall, IGNORECASE
 
 from bot_messaging import *
-from global_variables import *
+from global_constants import *
 from storage_functions import *
 from string_processing import *
 

@@ -6,7 +6,7 @@ from discord import Activity, Streaming
 from datetime import datetime, time, timedelta, timezone
 
 from bot_messaging import *
-from global_variables import *
+from global_constants import *
 
 
 # automatically rotate bot's Discord status every 10 minutes
@@ -19,7 +19,7 @@ async def rotate_status():
 	else:
 		activity_status = Activity(type=activity_type, name=activity)
 
-	await global_variables.BOT_INSTANCE.change_presence(activity=activity_status)
+	await global_constants.BOT_INSTANCE.change_presence(activity=activity_status)
 
 
 # automatically clear caches once a week
@@ -37,7 +37,7 @@ async def clear_cache_weekly():
 async def monitor_repository():
 	table_name = MISC_TABLE
 	key = 'Repository_ETag'
-	repository_headers = global_variables.REPOSITORY_HEADERS
+	repository_headers = global_constants.REPOSITORY_HEADERS
 
 	# check repository status
 	response = get(REPOSITORY_URL, headers=repository_headers)
@@ -55,7 +55,7 @@ async def monitor_repository():
 
 		# if etag exists in storage, and is same as response etag, update local header and return
 		if result and result['variable_value'] == etag:
-			global_variables.REPOSITORY_HEADERS['If-None-Match'] = etag
+			global_constants.REPOSITORY_HEADERS['If-None-Match'] = etag
 			return
 
 	# if one of the following conditions are fulfilled:
@@ -82,7 +82,7 @@ async def monitor_repository():
 async def monitor_app_info():
 	table_name = MISC_TABLE
 	key = 'Steam_Timestamps'
-	steam_timestamps = global_variables.STEAM_TIMESTAMPS
+	steam_timestamps = global_constants.STEAM_TIMESTAMPS
 	changes_detected = False
 
 	try:
@@ -95,7 +95,7 @@ async def monitor_app_info():
 	# as the SteamCMD API is third-party and is not as established as something like GitHub,
 	# have to account for possible timeout resulting from API overload, as well as other unexpected errors
 	except Exception as e:
-		return await global_variables.MAIN_CHANNEL.send(f'WARNING: {e}\n')
+		return await global_constants.MAIN_CHANNEL.send(f'WARNING: {e}\n')
 
 	app_info = response.json()['data']['962130']
 	latest_assets = app_info['common']['store_asset_mtime']
@@ -111,21 +111,21 @@ async def monitor_app_info():
 			result = result['variable_value']
 
 			for category in result:
-				global_variables.STEAM_TIMESTAMPS[category] = result[category]
+				global_constants.STEAM_TIMESTAMPS[category] = result[category]
 
 		else:  # populate global dictionary and update persistent storage
 			changes_detected = True
 
-			global_variables.STEAM_TIMESTAMPS['asset_update'] = latest_assets
+			global_constants.STEAM_TIMESTAMPS['asset_update'] = latest_assets
 
 			for branch_name in branches_info:
-				global_variables.STEAM_TIMESTAMPS[branch_name] = branches_info[branch_name]['timeupdated']
+				global_constants.STEAM_TIMESTAMPS[branch_name] = branches_info[branch_name]['timeupdated']
 
 	# check for store asset updates
 	if steam_timestamps['asset_update'] != latest_assets:
 		changes_detected = True
 
-		global_variables.STEAM_TIMESTAMPS['asset_update'] = latest_assets
+		global_constants.STEAM_TIMESTAMPS['asset_update'] = latest_assets
 
 		await burgl_message('assets_updated', notify=True)
 
@@ -137,7 +137,7 @@ async def monitor_app_info():
 		if branch_name not in steam_timestamps:
 			changes_detected = True
 
-			global_variables.STEAM_TIMESTAMPS[branch_name] = branch_timing
+			global_constants.STEAM_TIMESTAMPS[branch_name] = branch_timing
 
 			await burgl_message('branch_active', replace=branch_name, notify=True)
 
@@ -145,10 +145,10 @@ async def monitor_app_info():
 			changes_detected = True
 
 			notify = branch_name in NOTIFY_BRANCHES
-			global_variables.STEAM_TIMESTAMPS[branch_name] = branch_timing
+			global_constants.STEAM_TIMESTAMPS[branch_name] = branch_timing
 
 			await burgl_message('branch_active', replace=branch_name, notify=notify)
 
 	# write latest timestamps to persistent storage 
 	if changes_detected:
-		ddb_insert_item(table_name, key, global_variables.STEAM_TIMESTAMPS)
+		ddb_insert_item(table_name, key, global_constants.STEAM_TIMESTAMPS)

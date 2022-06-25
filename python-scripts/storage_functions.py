@@ -1,8 +1,8 @@
 from collections import Counter
 
+from secrets import *
 from dynamodb_methods import *
-from global_variables import *
-from secret_variables import *
+from global_constants import *
 from string_processing import *
 
 

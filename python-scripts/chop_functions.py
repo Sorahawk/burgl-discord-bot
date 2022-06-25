@@ -3,7 +3,7 @@ from discord import Embed
 
 from bot_messaging import *
 from chop_processing import *
-from global_variables import *
+from global_constants import *
 from storage_functions import *
 from string_processing import *
 

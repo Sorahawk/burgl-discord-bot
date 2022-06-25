@@ -2,9 +2,9 @@ import requests  # don't import requests.get directly as dict.get() is used as w
 
 from lxml import html
 
+from secrets import *
 from dynamodb_methods import *
-from global_variables import *
-from secret_variables import *
+from global_constants import *
 from storage_functions import *
 from string_processing import *
 

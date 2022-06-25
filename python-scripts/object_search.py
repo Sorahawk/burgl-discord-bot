@@ -3,7 +3,7 @@ from json import dumps, loads
 from collections import Counter
 
 from url_processing import *
-from global_variables import *
+from global_constants import *
 from object_extraction import *
 from string_processing import *
 

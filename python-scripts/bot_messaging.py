@@ -1,7 +1,7 @@
 from discord import DMChannel
 from asyncio import TimeoutError
 
-from global_variables import *
+from global_constants import *
 from storage_functions import *
 from string_processing import *
 
@@ -26,8 +26,8 @@ async def burgl_message(key, message=None, replace=None, notify=False):
 	voiceline = prefix_burgl_emoji(voiceline)
 
 	# send specific lines to main channel also so that real-time bot status is reflected
-	if not message or (key in ['hello', 'sleeping', 'debug', 'cleared'] and message.channel != global_variables.MAIN_CHANNEL):
-		await global_variables.MAIN_CHANNEL.send(voiceline)
+	if not message or (key in ['hello', 'sleeping', 'debug', 'cleared'] and message.channel != global_constants.MAIN_CHANNEL):
+		await global_constants.MAIN_CHANNEL.send(voiceline)
 
 	if message:
 		return await message.channel.send(voiceline)
@@ -41,7 +41,7 @@ async def detect_search_errors(message, user_input, result):
 	if isinstance(result, list) and isinstance(result[0], int):
 		await burgl_message(result[0], message, result[1])
 
-	# check voiceline dictionary in global_variables directly so no need to keep updating here too
+	# check voiceline dictionary in global_constants directly so no need to keep updating here too
 	elif isinstance(result, int) and result in BOT_VOICELINES:
 		full_name = capitalise_object_name(retrieve_full_name(user_input))
 		await burgl_message(result, message, full_name)
@@ -80,12 +80,12 @@ async def multipage_embed_handler(message, user_input, embed_list):
 
 	# returns True if emoji reaction by user to the specific embed message is one of the specified emojis
 	def multipage_emoji_check(reaction, user):
-		return user != global_variables.BOT_INSTANCE.user and reaction.message.id == embedded_message.id and reaction.emoji in [left_arrow, cross_mark, right_arrow]
+		return user != global_constants.BOT_INSTANCE.user and reaction.message.id == embedded_message.id and reaction.emoji in [left_arrow, cross_mark, right_arrow]
 
 
 	while True:
 		try:
-			reaction, user = await global_variables.BOT_INSTANCE.wait_for('reaction_add', timeout=60, check=multipage_emoji_check)
+			reaction, user = await global_constants.BOT_INSTANCE.wait_for('reaction_add', timeout=60, check=multipage_emoji_check)
 
 			if reaction.emoji == cross_mark:
 				if isinstance(message.channel, DMChannel):  # check if channel is a private chat
