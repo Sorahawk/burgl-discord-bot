@@ -1,4 +1,4 @@
-import global_constants
+import global_constants, logging
 
 from os import getcwd
 from sys import platform
@@ -76,7 +76,7 @@ async def on_message(message):
 		await eval(command_method)(message, user_input, flag_presence)
 
 	except Exception as e:  # log any errors if command fails in any unexpected way
-		await global_constants.MAIN_CHANNEL.send(f'WARNING: {e}\n')
+		logging.warning(e)
 
 
 # get current directory

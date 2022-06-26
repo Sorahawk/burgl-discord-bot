@@ -1,4 +1,5 @@
-from requests import get
+import logging, requests
+
 from random import choice
 from subprocess import run
 from discord.ext.tasks import loop
@@ -40,7 +41,7 @@ async def monitor_repository():
 	repository_headers = global_constants.REPOSITORY_HEADERS
 
 	# check repository status
-	response = get(REPOSITORY_URL, headers=repository_headers)
+	response = requests.get(REPOSITORY_URL, headers=repository_headers)
 
 	# if response status code is not 200, means etag is the same as the one provided in the request
 	if response.status_code != 200:
@@ -78,7 +79,7 @@ async def monitor_repository():
 
 # checks Steam for new activity related to store assets and development branches
 # also notifies users when certain activities are detected
-@loop(minutes=7)
+@loop(minutes=17)
 async def monitor_app_info():
 	table_name = MISC_TABLE
 	key = 'Steam_Timestamps'
@@ -86,7 +87,7 @@ async def monitor_app_info():
 	changes_detected = False
 
 	try:
-		response = get('https://api.steamcmd.net/v1/info/962130')
+		response = requests.get('https://api.steamcmd.net/v1/info/962130', timeout=3)
 
 		# ensure that response is valid and contains requested info
 		if response.status_code != 200:
@@ -95,7 +96,8 @@ async def monitor_app_info():
 	# as the SteamCMD API is third-party and is not as established as something like GitHub,
 	# have to account for possible timeout resulting from API overload, as well as other unexpected errors
 	except Exception as e:
-		return await global_constants.MAIN_CHANNEL.send(f'WARNING: {e}\n')
+		logger = logging.getLogger('monitoring_app_info')
+		return logger.warning(e)
 
 	app_info = response.json()['data']['962130']
 	latest_assets = app_info['common']['store_asset_mtime']

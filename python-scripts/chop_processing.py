@@ -1,3 +1,5 @@
+import logging
+
 from math import ceil
 from collections import Counter
 from re import findall, IGNORECASE
@@ -73,7 +75,7 @@ def process_chop_components(item_name, quantity, base_components=None):
 			return item_info
 
 		else:  # print warning if any errors occur for component materials
-			print(f"WARNING: Error {item_info} occurred for component material '{item_name}'.\n")
+			logging.warning(f"Error {item_info} occurred for component material '{item_name}'.")
 			return base_components
 
 	item_name = item_info['name']

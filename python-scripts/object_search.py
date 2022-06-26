@@ -1,3 +1,5 @@
+import logging
+
 from discord import Embed
 from json import dumps, loads
 from collections import Counter
@@ -76,14 +78,14 @@ def get_object_info(search_query):
 			object_info['recipe'], object_info['recipe_name'], = get_recipe_table(page_content, object_info['name'])
 		except:
 			# recipe extraction failed
-			print(f"WARNING: Recipe extraction for {object_info['name']} failed.\n")
+			logging.warning(f"Recipe extraction for {object_info['name']} failed.")
 
 	if has_repair_cost:
 		try:
 			object_info['repair_cost'] = get_repair_cost(page_content)
 		except:
 			# repair cost extraction failed
-			print(f"WARNING: Repair cost extraction for {object_info['name']} failed.\n")
+			logging.warning(f"Repair cost extraction for {object_info['name']} failed.")
 
 	return object_info
 

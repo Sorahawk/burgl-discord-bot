@@ -1,4 +1,4 @@
-import requests  # don't import requests.get directly as dict.get() is used as well
+import requests  # don't import requests.get directly to avoid confusion as get() is a common function name
 
 from lxml import html
 
@@ -72,11 +72,11 @@ def locate_object_url(search_query):
 	results = requests.get(url).json()
 
 	# check for suggested spelling by Google, in the case of typos
-	if results.get('spelling') is not None:
+	if 'spelling' in results:
 		corrected_spelling = results['spelling']['correctedQuery']
 		return locate_object_url(corrected_spelling)
 
-	elif results.get('items') is not None:
+	elif 'items' in results:
 		# Get the top result
 		top_url = results['items'][0]['link']
 
@@ -93,6 +93,6 @@ def locate_object_url(search_query):
 				return result
 
 	# check if daily quota is exceeded
-	elif results.get('error') is not None:
+	elif 'error' in results:
 		if results['error']['code'] == 429:
 			return False
