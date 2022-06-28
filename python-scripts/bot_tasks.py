@@ -79,7 +79,7 @@ async def monitor_repository():
 
 # checks Steam for new activity related to store assets and development branches
 # also notifies users when certain activities are detected
-@loop(minutes=17)
+@loop(minutes=13)
 async def monitor_app_info():
 	table_name = MISC_TABLE
 	key = 'Steam_Timestamps'
@@ -87,7 +87,7 @@ async def monitor_app_info():
 	changes_detected = False
 
 	try:
-		response = requests.get('https://api.steamcmd.net/v1/info/962130', timeout=3)
+		response = requests.get('https://api.steamcmd.net/v1/info/962130', timeout=10)
 
 		# ensure that response is valid and contains requested info
 		if response.status_code != 200:
