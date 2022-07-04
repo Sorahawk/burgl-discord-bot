@@ -9,7 +9,7 @@ from bot_messaging import *
 from object_search import *
 from bind_functions import *
 from chop_functions import *
-from task_functions import *
+from todo_functions import *
 from global_constants import *
 from storage_functions import *
 from string_processing import *
@@ -114,9 +114,9 @@ async def chop_method(message, user_input, flag_presence):
 
 
 # task scheduler method
-async def task_method(message, user_input, flag_presence):
+async def todo_method(message, user_input, flag_presence):
 	if flag_presence['view']:
-		await task_view(message, user_input)
+		await todo_view(message, user_input)
 
 	elif not check_user_elevation(message):
 		await burgl_message('unauthorised', message)
@@ -125,10 +125,10 @@ async def task_method(message, user_input, flag_presence):
 		await burgl_message('empty', message)
 
 	elif flag_presence['delete']:
-		await task_delete(message, user_input)
+		await todo_delete(message, user_input)
 
 	else:
-		await task_default(message, user_input)
+		await todo_default(message, user_input)
 
 
 # cache clearing method

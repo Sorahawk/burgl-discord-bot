@@ -53,9 +53,10 @@ async def monitor_repository():
 	if not repository_headers:
 		# check storage for latest etag value, if any
 		result = ddb_retrieve_item(table_name, key)
+		value_header = get_table_headers(table_name)[1]
 
 		# if etag exists in storage, and is same as response etag, update local header and return
-		if result and result['variable_value'] == etag:
+		if result and result[value_header] == etag:
 			global_constants.REPOSITORY_HEADERS['If-None-Match'] = etag
 			return
 
@@ -107,10 +108,11 @@ async def monitor_app_info():
 	if not steam_timestamps:
 		# retrieve timestamps from storage for latest values, if any
 		result = ddb_retrieve_item(table_name, key)
+		value_header = get_table_headers(table_name)[1]
 
 		# if values are present in storage, update timestamps with latest for each category
 		if result:
-			result = result['variable_value']
+			result = result[value_header]
 
 			for category in result:
 				global_constants.STEAM_TIMESTAMPS[category] = result[category]

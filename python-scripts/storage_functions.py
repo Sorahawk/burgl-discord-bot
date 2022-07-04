@@ -43,15 +43,18 @@ def retrieve_full_name(search_query):
 # returns a list of tuples, sorted alphabetically by object name which is first item in the tuple
 # second item in each tuple is a list of the corresponding shortcuts
 def retrieve_all_shortcuts():
+	table_name = SHORTCUT_TABLE
 	shortcuts = {}
+
+	short_header, full_header = get_table_headers(table_name)
 
 	# it is almost impossible for this shortcut table to cross the 1MB limit as it would take at least 24k entries
 	# so one table.scan() will be enough to retrieve the entire table
-	items = ddb_retrieve_all(SHORTCUT_TABLE)
+	items = ddb_retrieve_all(table_name)
 
 	for binded_pair in items:
-		full_name = capitalise_object_name(binded_pair['full_name'])
-		short_name = binded_pair['short_name']
+		short_name = binded_pair[short_header]
+		full_name = capitalise_object_name(binded_pair[full_header])
 
 		if full_name not in shortcuts:
 			shortcuts[full_name] = [short_name]
@@ -109,8 +112,9 @@ def clear_cache():
 
 # checks for existing quantity for a specific item in Chopping List and updates it appropriately
 # returns ddb_insert_item(), which itself returns True for successful insertions, otherwise False
-def insert_chop_item(item_name, quantity, base_components, ignore_existing=False):
+def update_chopping_list(item_name, quantity, base_components, ignore_existing=False):
 	table_name = CHOPPING_TABLE
+	quantity_header, components_header = get_table_headers(table_name)[1]
 
 	if ignore_existing:
 		existing_entry = None
@@ -118,8 +122,8 @@ def insert_chop_item(item_name, quantity, base_components, ignore_existing=False
 		existing_entry = ddb_retrieve_item(table_name, item_name)
 
 	if existing_entry:
-		quantity += existing_entry['quantity']
-		base_components += Counter(existing_entry['components'])
+		quantity += existing_entry[quantity_header]
+		base_components += Counter(existing_entry[components_header])
 
 	return ddb_insert_item(table_name, item_name, (quantity, base_components))
 
@@ -127,13 +131,16 @@ def insert_chop_item(item_name, quantity, base_components, ignore_existing=False
 # returns a list of tuples, sorted alphabetically by item name, which is the first item in each tuple
 # second item of each tuple is item quantity, and third item is corresponding components
 def retrieve_chopping_list():
-	list_entries = ddb_retrieve_all(CHOPPING_TABLE)
+	table_name = CHOPPING_TABLE
 	chopping_list = {}
 
+	item_header, (quantity_header, components_header) = get_table_headers(table_name)
+	list_entries = ddb_retrieve_all(table_name)
+
 	for entry in list_entries:
-		item_name = entry['item']
-		quantity = entry['quantity']
-		components = entry['components']
+		item_name = entry[item_header]
+		quantity = entry[quantity_header]
+		components = entry[components_header]
 
 		chopping_list[item_name] = quantity, components
 

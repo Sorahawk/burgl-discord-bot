@@ -46,7 +46,7 @@ def process_chop_input(user_input, allow_numberless=False):
 
 # checks if item is valid for Chopping List
 # returns True if a given item fulfils a given condition, otherwise False
-def check_valid_item(item_info, mode=0):
+def check_valid_chop_item(item_info, mode=0):
 	condition_1 = item_info['name'] in SPECIAL_ITEMS
 	condition_2 = 'category' in item_info and item_info['category'] == 'Natural Resources'
 	condition_3 = 'recipe' in item_info
@@ -57,6 +57,66 @@ def check_valid_item(item_info, mode=0):
 		condition_1, condition_2 = False, False
 
 	return condition_1 or condition_2 or condition_3
+
+
+# insert an item into the Chopping List
+def insert_chop_item(item_entry, summary_embed=None):
+	actual_name, final_quantity, base_components = item_entry
+
+	# generate component string here instead of after database insertion as base_components gets updated with existing quantities
+	base_components_string = generate_recipe_string(base_components)
+
+	if update_chopping_list(actual_name, final_quantity, base_components):
+
+		# TODO: Forward base_components Counter to Task Scheduler
+
+		if summary_embed:
+			summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
+			return summary_embed
+
+
+# removes an item from the Chopping List and returns the final removed quantity
+def remove_chop_item(item_name, item_info, input_quantity, chopping_list):
+	existing_quantity = chopping_list[item_name][0]
+	base_components = chopping_list[item_name][1]
+
+	# if item is craftable, check if recipe crafts more than one of the item
+	if check_valid_chop_item(item_info, 2):
+		recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
+
+		if recipe_quantity:
+			# remove letter x and convert quantity to integer
+			recipe_quantity = int(recipe_quantity[0][1:])
+
+			# round up input quantity to nearest possible quantity
+			input_quantity = ceil(input_quantity / recipe_quantity) * recipe_quantity
+
+	# if existing quantity is smaller than or equal to input quantity, then remove entire entry
+	if existing_quantity <= input_quantity:
+		input_quantity = -1
+
+
+	# TODO: update Task Scheduler on new quantities
+
+
+	# delete entire entry if quantity is -1
+	if input_quantity == -1:
+		ddb_remove_item(CHOPPING_TABLE, item_name)
+		input_quantity = existing_quantity
+
+	else:
+		# deduct item quantity
+		new_quantity = existing_quantity - input_quantity
+		ratio = new_quantity / existing_quantity
+
+		# adjust component quantities accordingly
+		for material in base_components:
+			base_components[material] = int(base_components[material] * ratio)
+
+		# update Chopping List entry
+		update_chopping_list(item_name, new_quantity, base_components, True)
+
+	return input_quantity
 
 
 # recursive function to break an item down to its base components and update Chopping List quantities
@@ -81,10 +141,10 @@ def process_chop_components(item_name, quantity, base_components=None):
 	item_name = item_info['name']
 
 	# stop recursion if item is natural resource, or in SPECIAL_ITEMS
-	if check_valid_item(item_info, 1):
+	if check_valid_chop_item(item_info, 1):
 		base_components[item_name] += quantity
 
-	elif check_valid_item(item_info, 2):
+	elif check_valid_chop_item(item_info, 2):
 		recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
 
 		if recipe_quantity:

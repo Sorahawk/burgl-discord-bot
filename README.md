@@ -77,6 +77,15 @@ The overall roadmap and development tracker for this project can be found on the
   - *Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required).*
   - *Parameters are case-insensitive and there is a maximum of 9 parameters per entry.*
   - *Commas are optional unless two item_names are arranged consecutively.*
+- `.todo [priority_level], <task>`
+  - Adds the given task to the Task Scheduler, which tracks both player-specified tasks as well as auto-generated tasks.
+  - *Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).*
+  - *Use flag `-d` to check one or more specified tasks off the Task Scheduler.*
+  - *Valid task priority levels are:*
+    - Low
+    - Medium (Default)
+    - High
+    - Recurring
 - `.clear`
   - Clears the webpage data and object information caches.
 - `.purge`

@@ -44,7 +44,7 @@ TABLE_HEADERS = {
 	INFO_TABLE: ('search_query', 'object_info'),
 	HTML_TABLE: ('wiki_url', 'page_html'),
 	CHOPPING_TABLE: ('item_name', ('quantity', 'components')),
-	TASK_TABLE: ('task_name', ('priority_level', 'task_type')),
+	TASK_TABLE: ('task_name', 'priority_level'),
 	MISC_TABLE: ('variable_name', 'variable_value')
 }
 
@@ -79,7 +79,7 @@ BOT_INSTANCE = None
 BOT_COMMAND_PREFIX = '.'
 
 # list of bot commands
-BOT_COMMAND_LIST = ['search', 'card', 'bind', 'chop', 'task', 'help', 'clear', 'purge', 'sleep']
+BOT_COMMAND_LIST = ['search', 'card', 'bind', 'chop', 'todo', 'help', 'clear', 'purge', 'sleep']
 
 # dictionary of command flags
 # each flag can only be a single letter
@@ -142,14 +142,18 @@ BOT_HELP_MENU = {
 		['.card <creature_name>', "Displays the specified creature's bestiary card.",
 		"+Use flag `-g` to display the creature's gold bestiary card.", '+Use flag `-o` to override any binded shortcuts.'],
 
-		['.bind <object_name>, <shortcut_1>, [shortcut_2], ...', 'Binds an object name to one or more shortcut phrases.',
+		['.bind <object_name>, <shortcut_1>, [shortcut_2], ...', 'Binds the object name to one or more shortcut phrases.',
 		'+Use flag `-v` to view all binded shortcuts (no arguments required).', '+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).',
 		'+Parameters are case-insensitive and must be separated by a comma.'],
 
 		['.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...', 'Adds one or more specified items to the Chopping List.',
-		'+Use flag `-v` to view all items in the Chopping List (no arguments required).', '+Use flag `-d` to check one or more specified items off from the Chopping List (quantity is optional; item will be marked as fully completed).',
+		'+Use flag `-v` to view all items in the Chopping List (no arguments required).', '+Use flag `-d` to check one or more specified items off the Chopping List (quantity is optional; item will be marked as fully completed).',
 		"+Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required).",
-		'+Parameters are case-insensitive and there is a maximum of 9 parameters per entry.', '+Commas are optional unless two item_names are arranged consecutively.']
+		f'+Parameters are case-insensitive and there is a maximum of {MAX_CHOPPING_INPUT} parameters per entry.', '+Commas are optional unless two item_names are arranged consecutively.'],
+
+		['.todo [priority_level], <task>', 'Adds the given task to the Task Scheduler.',
+		'+Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).', '+Use flag `-d` to check one or more specified tasks off the Task Scheduler.',
+		"+Valid task priority levels are: 'Low', 'Medium', 'High', 'Recurring'. Defaults to 'Medium' if not provided."]
 	],
 
 	'Utility': [

@@ -31,16 +31,8 @@ async def chop_default(message, user_input):
 		if not await detect_search_errors(message, item_name, item_entry):
 			continue
 
-		actual_name, final_quantity, base_components = item_entry
-
-		# generate component string here instead of after database insertion as base_components gets updated with existing quantities
-		base_components_string = generate_recipe_string(base_components)
-
-		if insert_chop_item(actual_name, final_quantity, base_components):
-
-			# TODO: Forward base_components Counter to Task Scheduler
-
-			summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
+		# proceed with item insertion
+		summary_embed = insert_chop_item(item_entry, summary_embed)
 
 	# only send embed if valid items were added
 	if len(summary_embed) != len(embed_title):
@@ -104,7 +96,7 @@ async def chop_delete(message, user_input):
 			else:
 				item_name = item_info['name']
 
-			if not check_valid_item(item_info):
+			if not check_valid_chop_item(item_info):
 				item_info = 105
 			elif item_name not in chopping_list:
 				item_info = 106
@@ -115,44 +107,8 @@ async def chop_delete(message, user_input):
 		if not await detect_search_errors(message, input_name, item_info):
 			continue
 
-		existing_quantity = chopping_list[item_name][0]
-		base_components = chopping_list[item_name][1]
-
-		# if item is craftable, check if recipe crafts more than one of the item
-		if check_valid_item(item_info, 2):
-			recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
-
-			if recipe_quantity:
-				# remove letter x and convert quantity to integer
-				recipe_quantity = int(recipe_quantity[0][1:])
-
-				# round up input quantity to nearest possible quantity
-				input_quantity = ceil(input_quantity / recipe_quantity) * recipe_quantity
-
-		# if existing quantity is smaller than or equal to input quantity, then remove entire entry
-		if existing_quantity <= input_quantity:
-			input_quantity = -1
-
-
-		# TODO: update Task Scheduler on new quantities
-
-
-		# delete entire entry if quantity is -1
-		if input_quantity == -1:
-			ddb_remove_item(CHOPPING_TABLE, item_name)
-			input_quantity = existing_quantity
-
-		else:
-			# deduct item quantity
-			new_quantity = existing_quantity - input_quantity
-			ratio = new_quantity / existing_quantity
-
-			# adjust component quantities accordingly
-			for material in base_components:
-				base_components[material] = int(base_components[material] * ratio)
-
-			# update Chopping List entry
-			insert_chop_item(item_name, new_quantity, base_components, True)
+		# proceed with item deletion
+		input_quantity = remove_chop_item(item_name, item_info, input_quantity, chopping_list)
 
 		formatted_string += f'- **{item_name} (x{input_quantity})**\n'
 
