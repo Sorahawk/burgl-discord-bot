@@ -1,3 +1,4 @@
+from random import randint
 from collections import Counter
 
 from secrets import *
@@ -145,3 +146,44 @@ def retrieve_chopping_list():
 		chopping_list[item_name] = quantity, components
 
 	return sorted(chopping_list.items())
+
+
+# returns a random but unique Task Scheduler ID
+def generate_random_id(priority_level):
+	task_id = None
+
+	while not task_id:
+		numeric_id = str(randint(1, 99))
+
+		# pad numeric ID with leading zero if not double-digit
+		if len(numeric_id) == 1:
+			numeric_id = f'0{numeric_id}'
+
+		task_id = priority_level[0].upper() + numeric_id
+
+		if not ddb_retrieve_item(TASK_TABLE, task_id):
+			return task_id
+
+		task_id = None
+
+
+# either inserts a new entry into the Task Scheduler
+# or updates an existing task's description and/or priority
+def update_task_scheduler(task_description, task_priority, task_id=None):
+	table_name = TASK_TABLE
+
+	# TODO: update task info
+	if task_id:
+
+		# TODO: if task_priority doesn't match first letter of task_id
+		# delete old task_id entry and create new one
+
+		return
+
+	# generate task ID
+	task_id = generate_random_id(task_priority)
+
+	# insert task entry
+	ddb_insert_item(table_name, task_id, task_description)
+
+	return task_id

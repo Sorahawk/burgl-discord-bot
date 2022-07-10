@@ -10,7 +10,6 @@ from global_constants import *
 
 # returns a Counter containing processed item names as keys and their quantities
 def process_chop_input(user_input, allow_numberless=False):
-
 	# regex search patterns
 	name_pattern = "[a-z _+'?-]+"
 	qty_pattern = '[0-9]+'

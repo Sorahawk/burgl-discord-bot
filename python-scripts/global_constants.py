@@ -44,7 +44,7 @@ TABLE_HEADERS = {
 	INFO_TABLE: ('search_query', 'object_info'),
 	HTML_TABLE: ('wiki_url', 'page_html'),
 	CHOPPING_TABLE: ('item_name', ('quantity', 'components')),
-	TASK_TABLE: ('task_name', 'priority_level'),
+	TASK_TABLE: ('task_id', 'task_description'),
 	MISC_TABLE: ('variable_name', 'variable_value')
 }
 
@@ -97,6 +97,9 @@ MAX_CHOPPING_INPUT = 9
 
 # max number of fields per embed page when viewing the Chopping List
 MAX_CHOPPING_FIELDS = 10
+
+# array of valid to-do priority levels for Task Scheduler
+TODO_PRIORITY_LEVELS = ['Low', 'Medium', 'High', 'Recurring']
 
 # decimal value for minimum ratio of string similarity between search query and predicted result
 SIMILAR_THRESHOLD_API = 0.35
@@ -151,7 +154,7 @@ BOT_HELP_MENU = {
 		"+Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required).",
 		f'+Parameters are case-insensitive and there is a maximum of {MAX_CHOPPING_INPUT} parameters per entry.', '+Commas are optional unless two item_names are arranged consecutively.'],
 
-		['.todo [priority_level], <task>', 'Adds the given task to the Task Scheduler.',
+		['.todo <task_description>, [priority_level]', 'Adds the given task to the Task Scheduler.',
 		'+Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).', '+Use flag `-d` to check one or more specified tasks off the Task Scheduler.',
 		"+Valid task priority levels are: 'Low', 'Medium', 'High', 'Recurring'. Defaults to 'Medium' if not provided."]
 	],
