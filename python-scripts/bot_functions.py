@@ -50,7 +50,7 @@ async def search_method(message, user_input, flag_presence):
 	result = process_object_input(user_input, flag_presence)
 
 	# check for errors and proceed if none detected
-	if await detect_search_errors(message, user_input, result):
+	if await detect_errors(message, user_input, result):
 		await message.channel.send(embed=format_object_info(result))
 
 
@@ -66,7 +66,7 @@ async def card_method(message, user_input, flag_presence):
 	result = get_creature_card(full_name, flag_presence['gold'])
 
 	# check for errors and proceed if none detected
-	if await detect_search_errors(message, user_input, result):
+	if await detect_errors(message, user_input, result):
 		embedded_card = Embed(title=f'{result[0]}', color=EMBED_COLOR_CODE)
 		embedded_card.set_image(url=result[1])
 		embedded_card.set_footer(text='Creature Card')
@@ -126,6 +126,9 @@ async def todo_method(message, user_input, flag_presence):
 
 	elif flag_presence['delete']:
 		await todo_delete(message, user_input)
+
+	elif flag_presence['edit']:
+		await todo_edit(message, user_input)
 
 	else:
 		await todo_default(message, user_input)

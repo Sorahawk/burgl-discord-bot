@@ -67,30 +67,16 @@ def retrieve_all_shortcuts():
 
 
 # delete all shortcuts from one or more given full names
-def delete_shortcuts(full_names):
-	string_header = 'All shortcuts removed for the following:\n'
-	formatted_string = ''
+def delete_shortcut(full_name, all_shortcuts):
+	full_name = capitalise_object_name(full_name)
 
-	shortcuts = dict(retrieve_all_shortcuts())
+	# check if given full name exists in storage
+	# for each binded shortcut, remove it from storage 
+	if full_name not in all_shortcuts:
+		return 106
 
-	for full_name in full_names:
-		full_name = capitalise_object_name(full_name)
-
-		# check if given full name exists in storage
-		if full_name in shortcuts:
-
-			# for each binded shortcut, remove it from storage 
-			for short_name in shortcuts[full_name]:
-				result = ddb_remove_item(SHORTCUT_TABLE, short_name)
-
-				if not result:
-					# if deletion of any shortcut fails, break out of the loop
-					break
-
-			if result:
-				formatted_string += f'- **{capitalise_object_name(full_name)}**\n'
-
-	return string_header + formatted_string if formatted_string else None
+	for short_name in all_shortcuts[full_name]:
+		ddb_remove_item(SHORTCUT_TABLE, short_name)
 
 
 # returns corresponding attribute value if it exists in table, otherwise None by default
@@ -112,7 +98,6 @@ def clear_cache():
 
 
 # checks for existing quantity for a specific item in Chopping List and updates it appropriately
-# returns ddb_insert_item(), which itself returns True for successful insertions, otherwise False
 def update_chopping_list(item_name, quantity, base_components, ignore_existing=False):
 	table_name = CHOPPING_TABLE
 	quantity_header, components_header = get_table_headers(table_name)[1]
@@ -126,7 +111,7 @@ def update_chopping_list(item_name, quantity, base_components, ignore_existing=F
 		quantity += existing_entry[quantity_header]
 		base_components += Counter(existing_entry[components_header])
 
-	return ddb_insert_item(table_name, item_name, (quantity, base_components))
+	ddb_insert_item(table_name, item_name, (quantity, base_components))
 
 
 # returns a list of tuples, sorted alphabetically by item name, which is the first item in each tuple
@@ -149,17 +134,20 @@ def retrieve_chopping_list():
 
 
 # returns a random but unique Task Scheduler ID
-def generate_random_id(priority_level):
+def generate_task_id(priority_level=None):
+	if not priority_level:
+		priority_level = 'Medium'
+
 	task_id = None
 
 	while not task_id:
-		numeric_id = str(randint(1, 99))
+		numeric_id = str(randint(1, MAXIMUM_ID))
 
-		# pad numeric ID with leading zero if not double-digit
-		if len(numeric_id) == 1:
+		# pad numeric ID with leading zero if not full-length
+		while len(numeric_id) < len(str(MAXIMUM_ID)):
 			numeric_id = f'0{numeric_id}'
 
-		task_id = priority_level[0].upper() + numeric_id
+		task_id = priority_level[0] + numeric_id
 
 		if not ddb_retrieve_item(TASK_TABLE, task_id):
 			return task_id
@@ -177,13 +165,57 @@ def update_task_scheduler(task_description, task_priority, task_id=None):
 
 		# TODO: if task_priority doesn't match first letter of task_id
 		# delete old task_id entry and create new one
+		if task_priority[0] != task_id[0]:
+			pass
 
 		return
 
 	# generate task ID
-	task_id = generate_random_id(task_priority)
+	task_id = generate_task_id(task_priority)
 
 	# insert task entry
 	ddb_insert_item(table_name, task_id, task_description)
 
 	return task_id
+
+
+# returns a dictionary where the item key is the task ID and corresponding value is the task description
+def retrieve_task_scheduler_flat():
+	table_name = TASK_TABLE
+	todo_list = {}
+
+	id_header, description_header = get_table_headers(table_name)
+	list_entries = ddb_retrieve_all(table_name)
+
+	for entry in list_entries:
+		task_id = entry[id_header]
+		task_description = entry[description_header]
+
+		todo_list[task_id] = task_description
+
+	return todo_list
+
+# returns a dictionary of lists, where each key is the first character of the priority level
+# each list contains tasks of that corresponding priority level
+# each item in the list is a tuple, first item is the task ID and the second is the task description
+def retrieve_task_scheduler_sorted():
+	table_name = TASK_TABLE
+	todo_list = {}
+
+	for priority_level in TODO_PRIORITY_LEVELS:
+		todo_list[priority_level[0]] = []
+
+	id_header, description_header = get_table_headers(table_name)
+	list_entries = ddb_retrieve_all(table_name)
+
+	for entry in list_entries:
+		task_id = entry[id_header]
+		task_description = entry[description_header]
+
+		task = (task_id, task_description)
+		todo_list[task_id[0]].append(task)
+
+	for key in todo_list:
+		todo_list[key].sort()
+
+	return todo_list

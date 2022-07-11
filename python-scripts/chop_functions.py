@@ -28,7 +28,7 @@ async def chop_default(message, user_input):
 	for item_name, initial_quantity in chopping_items.items():
 		item_entry = process_chop_components(item_name, initial_quantity)
 
-		if not await detect_search_errors(message, item_name, item_entry):
+		if not await detect_errors(message, item_name, item_entry):
 			continue
 
 		# proceed with item insertion
@@ -68,7 +68,7 @@ async def chop_view(message, user_input):
 	return await multipage_embed_handler(message, user_input, embed_list)
 
 
-# check items off the Chopping List
+# check one or more items off the Chopping List
 async def chop_delete(message, user_input):
 	input_items = process_chop_input(user_input, True)
 
@@ -104,12 +104,11 @@ async def chop_delete(message, user_input):
 			# update input name for error handling
 			input_name = item_name
 
-		if not await detect_search_errors(message, input_name, item_info):
+		if not await detect_errors(message, input_name, item_info):
 			continue
 
 		# proceed with item deletion
 		input_quantity = remove_chop_item(item_name, item_info, input_quantity, chopping_list)
-
 		formatted_string += f'- **{item_name} (x{input_quantity})**\n'
 
 	# send string to acknowledge entry deletion

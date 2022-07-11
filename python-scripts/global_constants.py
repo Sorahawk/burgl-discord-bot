@@ -83,7 +83,7 @@ BOT_COMMAND_LIST = ['search', 'card', 'bind', 'chop', 'todo', 'help', 'clear', '
 
 # dictionary of command flags
 # each flag can only be a single letter
-BOT_COMMAND_FLAGS = {'delete': 'd', 'gold': 'g', 'override': 'o', 'reset': 'r', 'view': 'v'}
+BOT_COMMAND_FLAGS = {'delete': 'd', 'edit': 'e', 'gold': 'g', 'override': 'o', 'reset': 'r', 'view': 'v'}
 
 # color code for Embed messages
 # 0x6542E1 is the purple that BURG.L's icon has in-game while speaking
@@ -98,7 +98,13 @@ MAX_CHOPPING_INPUT = 9
 # max number of fields per embed page when viewing the Chopping List
 MAX_CHOPPING_FIELDS = 10
 
-# array of valid to-do priority levels for Task Scheduler
+# max number of fields per embed page when viewing the Task Scheduler
+MAX_TODO_FIELDS = 10
+
+# max number that can be used to generate task IDs
+MAXIMUM_ID = 999
+
+# list of valid to-do priority levels for Task Scheduler
 TODO_PRIORITY_LEVELS = ['Low', 'Medium', 'High', 'Recurring']
 
 # decimal value for minimum ratio of string similarity between search query and predicted result
@@ -125,7 +131,7 @@ BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
 SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
 
 # list of words which have atypical capitalisation, excluding robot and device names like BURG.L or TAYZ.T
-SPECIAL_NAMES = ['AARTZ', 'BBQ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the']
+SPECIAL_NAMES = ['AARTZ', 'BBQ', 'BLT', 'EverChar', 'de', 'of', 'on', 'the', 'x']
 
 # list of items not to be broken down into their component materials for the Chopping List
 SPECIAL_ITEMS = ['Berry Leather', 'Crude Rope', 'Mushroom Slurry', 'Pupa Leather', 'Repair Glue']
@@ -143,19 +149,25 @@ BOT_HELP_MENU = {
 		'+Use flag `-o` to override any binded shortcuts.'],
 
 		['.card <creature_name>', "Displays the specified creature's bestiary card.",
-		"+Use flag `-g` to display the creature's gold bestiary card.", '+Use flag `-o` to override any binded shortcuts.'],
+		"+Use flag `-g` to display the creature's gold bestiary card.",
+		'+Use flag `-o` to override any binded shortcuts.'],
 
 		['.bind <object_name>, <shortcut_1>, [shortcut_2], ...', 'Binds the object name to one or more shortcut phrases.',
-		'+Use flag `-v` to view all binded shortcuts (no arguments required).', '+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).',
+		'+Use flag `-v` to view all binded shortcuts (no arguments required).',
+		'+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).',
 		'+Parameters are case-insensitive and must be separated by a comma.'],
 
 		['.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...', 'Adds one or more specified items to the Chopping List.',
-		'+Use flag `-v` to view all items in the Chopping List (no arguments required).', '+Use flag `-d` to check one or more specified items off the Chopping List (quantity is optional; item will be marked as fully completed).',
+		'+Use flag `-v` to view all items in the Chopping List (no arguments required).',
+		'+Use flag `-d` to check one or more specified items off the Chopping List (quantity is optional; item will be marked as fully completed).',
 		"+Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required).",
-		f'+Parameters are case-insensitive and there is a maximum of {MAX_CHOPPING_INPUT} parameters per entry.', '+Commas are optional unless two item_names are arranged consecutively.'],
+		f'+Parameters are case-insensitive and there is a maximum of {MAX_CHOPPING_INPUT} parameters per entry.',
+		'+Commas are optional unless two item_names are arranged consecutively.'],
 
 		['.todo <task_description>, [priority_level]', 'Adds the given task to the Task Scheduler.',
-		'+Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).', '+Use flag `-d` to check one or more specified tasks off the Task Scheduler.',
+		'+Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).',
+		'+Use flag `-d` to check one or more specified tasks off the Task Scheduler (at least one task_ID is required).',
+		"+Use flag `-e` to edit a task's details and/or priority level (task_ID is required).",
 		"+Valid task priority levels are: 'Low', 'Medium', 'High', 'Recurring'. Defaults to 'Medium' if not provided."]
 	],
 
@@ -185,7 +197,6 @@ BOT_VOICELINES = {
 	'insufficient': 'A minimum of two comma-separated parameters are required.',
 	'chop_exceeded': f'A maximum of {MAX_CHOPPING_INPUT} items are allowed per entry.',
 	'no_display': 'There is nothing to display.',
-	'invalid_bind': 'Specified bindings not found.',
 	'embed_close': 'Menu has been closed.',
 	'chop_reset': 'The Chopping List has been reset.',
 
@@ -194,7 +205,7 @@ BOT_VOICELINES = {
 	103: '**ERROR 103:** Google API daily limit exceeded. Type in the exact name of VAR1.',
 	104: '**ERROR 104:** Unable to locate Creature Card for VAR1. Type in the exact name of the creature.',
 	105: '**ERROR 105:** VAR1 is not a valid object for the Chopping List.',
-	106: '**ERROR 106:** VAR1 is not present in the Chopping List.'
+	106: '**ERROR 106:** VAR1 is not present in the list.'
 }
 
 

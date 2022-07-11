@@ -88,5 +88,4 @@ def ddb_remove_all(table_name):
 			break
 
 		for item in items:
-			table.delete_item(Key={
-				key_header: item[key_header]})
+			table.delete_item(Key={key_header: item[key_header]})

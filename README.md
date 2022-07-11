@@ -80,7 +80,8 @@ The overall roadmap and development tracker for this project can be found on the
 - `.todo <task_description>, [priority_level]`
   - Adds the given task to the Task Scheduler, which tracks both player-specified tasks as well as auto-generated tasks.
   - *Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).*
-  - *Use flag `-d` to check one or more specified tasks off the Task Scheduler.*
+  - *Use flag `-d` to check one or more specified tasks off the Task Scheduler (at least one task_ID is required).*
+  - *Use flag `-e` to edit a task's details and/or priority level (task_ID is required).*
   - *Valid task priority levels are:*
     - Low
     - Medium (Default)
@@ -106,6 +107,7 @@ The overall roadmap and development tracker for this project can be found on the
 | 104 | Bestiary card for the specified creature cannot be located. |
 | 105 | Specified object is not compatible with the Chopping List. |
 | 106 | Specified item is not present in the Chopping List. |
+| 107 | Specified task does not exist in the Task Scheduler. |
 
 <br>
 

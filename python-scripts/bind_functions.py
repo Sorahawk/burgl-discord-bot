@@ -46,11 +46,21 @@ async def bind_view(message, user_input):
 
 # delete all shortcuts for one or more specified object names
 async def bind_delete(message, user_input):
+	string_header = 'All shortcuts removed for the following:\n'
+	formatted_string = ''
+
+	all_shortcuts = dict(retrieve_all_shortcuts())
+
 	user_input = user_input.lower().strip(',').split(',')  # remove any edge commas, then split by comma
 
-	formatted_string = delete_shortcuts(user_input)
+	for item_name in user_input:
+		result = delete_shortcut(item_name, all_shortcuts)
+
+		# if shortcut not found, move to next one inputted
+		if not await detect_errors(message, item_name, result):
+			continue
+
+		formatted_string += f'- **{capitalise_object_name(item_name)}**\n'
 
 	if formatted_string:
-		await message.channel.send(formatted_string)
-	else:
-		await burgl_message('invalid_bind', message)
+		await message.channel.send(string_header + formatted_string)

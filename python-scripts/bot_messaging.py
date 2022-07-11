@@ -35,7 +35,7 @@ async def burgl_message(key, message=None, replace=None, notify=False):
 
 # display corresponding error message if result is an error
 # returns True if no error, else returns None by default
-async def detect_search_errors(message, user_input, result):
+async def detect_errors(message, user_input, result):
 
 	# catch specific error cases which return different data types, e.g. 102
 	if isinstance(result, list) and isinstance(result[0], int):

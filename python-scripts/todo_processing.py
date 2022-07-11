@@ -24,15 +24,10 @@ def process_todo_input(user_input):
 			priority_level = level
 			user_input = user_input.rpartition(back)[0]
 
-	# remove edge symbols
-	user_input = user_input.strip('., ').replace(' ,', ',')
+	# lower all letters and remove edge symbols
+	user_input = user_input.lower().strip('., ').replace(' ,', ',')
 
 	return user_input, priority_level
-
-
-def insert_todo_item():
-	pass
-
 
 
 def create_harvesting_task():

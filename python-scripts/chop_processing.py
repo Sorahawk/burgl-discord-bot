@@ -65,13 +65,13 @@ def insert_chop_item(item_entry, summary_embed=None):
 	# generate component string here instead of after database insertion as base_components gets updated with existing quantities
 	base_components_string = generate_recipe_string(base_components)
 
-	if update_chopping_list(actual_name, final_quantity, base_components):
+	update_chopping_list(actual_name, final_quantity, base_components)
 
-		# TODO: Forward base_components Counter to Task Scheduler
+	# TODO: Forward base_components Counter to Task Scheduler
 
-		if summary_embed:
-			summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
-			return summary_embed
+	if summary_embed:
+		summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
+		return summary_embed
 
 
 # removes an item from the Chopping List and returns the final removed quantity
