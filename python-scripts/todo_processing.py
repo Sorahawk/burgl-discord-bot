@@ -1,6 +1,9 @@
+import global_constants
+
 from re import findall, IGNORECASE
 
 from global_constants import *
+from storage_functions import *
 
 
 # returns processed task description and its priority level as a tuple of strings
@@ -57,9 +60,18 @@ def extract_task_id(user_input):
 	return regex_results
 
 
-def create_harvesting_task():
+# 
+def create_harvesting_task(material_name, quantity):
+	if global_constants.HARVEST_TASK_REFERENCE == {}:
+		populate_harvest_reference()
+
 	# create new task for that material if doesn't exist
 	# otherwise update the amount to reflect increase
+
+	# update local reference table
+
+
+def remove_all_harvesting():
 	pass
 
 

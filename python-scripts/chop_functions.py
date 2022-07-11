@@ -32,7 +32,18 @@ async def chop_default(message, user_input):
 			continue
 
 		# proceed with item insertion
-		summary_embed = insert_chop_item(item_entry, summary_embed)
+		actual_name, final_quantity, base_components = item_entry
+
+		# generate component string here instead of after database insertion as base_components gets updated with existing quantities
+		base_components_string = generate_recipe_string(base_components)
+
+		update_chopping_list(actual_name, final_quantity, base_components)
+
+
+		# TODO: Forward base_components Counter to Task Scheduler
+
+
+		summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
 
 	# only send embed if valid items were added
 	if len(summary_embed) != len(embed_title):
@@ -123,13 +134,11 @@ async def chop_reset(message, user_input):
 
 	chopping_list = retrieve_chopping_list()
 
-	for item in chopping_list:
-		item_name = item[0]
-
-		ddb_remove_item(CHOPPING_TABLE, item_name)
+	ddb_remove_all(CHOPPING_TABLE)
 
 
-	# TODO: Remove all generated harvesting tasks from Task Scheduler
+	# TODO: Remove all (Generated) harvesting tasks from Task Scheduler
+	# basically delete all the tasks in the HARVEST_TASK_REFERENCE dictionary
 
 
-	await burgl_message('chop_reset', message)
+	await burgl_message('list_reset', message)

@@ -115,3 +115,13 @@ async def todo_edit(message, user_input):
 
 	if formatted_string:
 		await message.channel.send(string_header + formatted_string)
+
+
+# wipe the entire Task Scheduler
+async def todo_reset(message, user_input):
+	if 'confirm' not in user_input.lower():
+		return await burgl_message('need_confirmation', message)
+
+	ddb_remove_all(TASK_TABLE)
+
+	await burgl_message('list_reset', message)

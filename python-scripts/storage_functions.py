@@ -1,3 +1,5 @@
+import global_constants
+
 from random import randint
 from collections import Counter
 
@@ -225,3 +227,19 @@ def retrieve_task_scheduler_sorted():
 		todo_list[key].sort()
 
 	return todo_list
+
+
+# updates the global dictionary harvesting task reference dictionary
+def populate_harvest_reference():
+	todo_list = retrieve_task_scheduler_flat()
+	keyword = HARVEST_DESCRIPTION_TEMPLATE.split()[0]
+
+	for task_id, task_description in todo_list.items():
+		task_description = task_description.split()
+
+		# check for keyword indicating generated task
+		if task_description[0].title() != keyword:
+			continue
+
+		material_name = capitalise_object_name(' '.join(task_description[3:]))
+		global_constants.HARVEST_TASK_REFERENCE[material_name] = task_id

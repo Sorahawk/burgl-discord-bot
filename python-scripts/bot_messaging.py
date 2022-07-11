@@ -8,7 +8,11 @@ from string_processing import *
 
 # returns True if message author is elevated, otherwise False
 def check_user_elevation(message):
-	return message.author.id in ELEVATED_USERS
+	for role in message.author.roles:
+		if role.id in ELEVATED_USER_ROLES:
+			return True
+
+	return False
 
 
 # inserts BURG.L emoji to front of specified voiceline and sends message to the given channel

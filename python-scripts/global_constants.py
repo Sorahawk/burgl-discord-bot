@@ -18,8 +18,8 @@ MAIN_CHANNEL_ID = 976308922010959892
 # main channel object, to be initialised when the bot calls on_ready()
 MAIN_CHANNEL = None
 
-# list of elevated Discord users
-ELEVATED_USERS = [261795156359905281, 498051548463628300]
+# list of elevated Discord roles
+ELEVATED_USER_ROLES = [981223991547158609, 886572468012199967]
 
 # Discord server role name to ping for notifications
 NOTIFY_ROLE_NAME = '<@&981223991547158609>'
@@ -106,6 +106,13 @@ MAXIMUM_ID = 999
 
 # list of valid to-do priority levels for Task Scheduler
 TODO_PRIORITY_LEVELS = ['Low', 'Medium', 'High', 'Recurring']
+
+# template format for harvesting task descriptions
+HARVEST_DESCRIPTION_TEMPLATE = '[Chop] Harvest VAR1 VAR2'
+
+# dictionary to act as a global reference table linking harvesting task materials to their task IDs
+# to be populated during runtime
+HARVEST_TASK_REFERENCE = {}
 
 # decimal value for minimum ratio of string similarity between search query and predicted result
 SIMILAR_THRESHOLD_API = 0.35
@@ -198,7 +205,7 @@ BOT_VOICELINES = {
 	'chop_exceeded': f'A maximum of {MAX_CHOPPING_INPUT} items are allowed per entry.',
 	'no_display': 'There is nothing to display.',
 	'embed_close': 'Menu has been closed.',
-	'chop_reset': 'The Chopping List has been reset.',
+	'list_reset': 'The specified list has been reset.',
 
 	101: "**ERROR 101:** Unable to locate VAR1. Try typing in the object's full name.",
 	102: '**ERROR 102:** Wiki page for VAR1 has an unsupported layout.',

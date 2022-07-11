@@ -121,6 +121,9 @@ async def todo_method(message, user_input, flag_presence):
 	elif not check_user_elevation(message):
 		await burgl_message('unauthorised', message)
 
+	elif flag_presence['reset']:
+		await todo_reset(message, user_input)
+
 	elif user_input == '':
 		await burgl_message('empty', message)
 

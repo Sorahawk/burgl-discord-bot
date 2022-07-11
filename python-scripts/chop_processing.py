@@ -58,22 +58,6 @@ def check_valid_chop_item(item_info, mode=0):
 	return condition_1 or condition_2 or condition_3
 
 
-# insert an item into the Chopping List
-def insert_chop_item(item_entry, summary_embed=None):
-	actual_name, final_quantity, base_components = item_entry
-
-	# generate component string here instead of after database insertion as base_components gets updated with existing quantities
-	base_components_string = generate_recipe_string(base_components)
-
-	update_chopping_list(actual_name, final_quantity, base_components)
-
-	# TODO: Forward base_components Counter to Task Scheduler
-
-	if summary_embed:
-		summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
-		return summary_embed
-
-
 # removes an item from the Chopping List and returns the final removed quantity
 def remove_chop_item(item_name, item_info, input_quantity, chopping_list):
 	existing_quantity = chopping_list[item_name][0]
@@ -93,10 +77,6 @@ def remove_chop_item(item_name, item_info, input_quantity, chopping_list):
 	# if existing quantity is smaller than or equal to input quantity, then remove entire entry
 	if existing_quantity <= input_quantity:
 		input_quantity = -1
-
-
-	# TODO: update Task Scheduler on new quantities
-
 
 	# delete entire entry if quantity is -1
 	if input_quantity == -1:
