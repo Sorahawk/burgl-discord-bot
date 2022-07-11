@@ -129,7 +129,7 @@ async def chop_reset(message, user_input):
 		ddb_remove_item(CHOPPING_TABLE, item_name)
 
 
-	# TODO: Remove all harvesting tasks from Task Scheduler
+	# TODO: Remove all generated harvesting tasks from Task Scheduler
 
 
 	await burgl_message('chop_reset', message)

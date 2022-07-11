@@ -145,7 +145,7 @@ ARMOR_LOWER_BODY = ['boots', 'knee', 'leg', 'shin', 'shoes']
 # dictionary containing nested lists of strings to populate the help menu, categorised by command type
 BOT_HELP_MENU = {
 	'Main': [
-		['.search <object_name>', 'Displays any available details of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
+		['.search <object_name>', 'Displays any available information of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
 		'+Use flag `-o` to override any binded shortcuts.'],
 
 		['.card <creature_name>', "Displays the specified creature's bestiary card.",
@@ -167,7 +167,7 @@ BOT_HELP_MENU = {
 		['.todo <task_description>, [priority_level]', 'Adds the given task to the Task Scheduler.',
 		'+Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).',
 		'+Use flag `-d` to check one or more specified tasks off the Task Scheduler (at least one task_ID is required).',
-		"+Use flag `-e` to edit a task's details and/or priority level (task_ID is required).",
+		"+Use flag `-e` to edit a task's priority level (task_ID and new priority level required).",
 		"+Valid task priority levels are: 'Low', 'Medium', 'High', 'Recurring'. Defaults to 'Medium' if not provided."]
 	],
 

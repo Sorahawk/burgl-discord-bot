@@ -58,7 +58,7 @@ The overall roadmap and development tracker for this project can be found on the
 - `.help`
   - Displays the help menu.
 - `.search <object_name>`
-  - Displays any available details of the object, including its picture and description. Works with any Grounded wiki page with an infobox, e.g. creatures, equipment, resources, building components, resource nodes, landmarks.
+  - Displays any available information of the object, including its picture and description. Works with any Grounded wiki page with an infobox, e.g. creatures, equipment, resources, building components, resource nodes, landmarks.
   - *Use flag `-o` to override any binded shortcuts.*
 - `.card <creature_name>`
   - Displays the specified creature's bestiary card.
@@ -81,7 +81,7 @@ The overall roadmap and development tracker for this project can be found on the
   - Adds the given task to the Task Scheduler, which tracks both player-specified tasks as well as auto-generated tasks.
   - *Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).*
   - *Use flag `-d` to check one or more specified tasks off the Task Scheduler (at least one task_ID is required).*
-  - *Use flag `-e` to edit a task's details and/or priority level (task_ID is required).*
+  - *Use flag `-e` to edit a task's priority level (task_ID and new priority level required).*
   - *Valid task priority levels are:*
     - Low
     - Medium (Default)

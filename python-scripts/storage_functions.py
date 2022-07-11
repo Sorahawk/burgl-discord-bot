@@ -155,20 +155,25 @@ def generate_task_id(priority_level=None):
 		task_id = None
 
 
-# either inserts a new entry into the Task Scheduler
-# or updates an existing task's description and/or priority
-def update_task_scheduler(task_description, task_priority, task_id=None):
+# either inserts a new entry into the Task Scheduler or edits an existing task
+# returns the task ID of the inserted task
+def update_task_scheduler(task_priority, task_description=None, task_id=None):
 	table_name = TASK_TABLE
+	description_header = get_table_headers(table_name)[1]
 
-	# TODO: update task info
+	# if task ID is provided, delete the existing entry before creating a new one
 	if task_id:
+		existing_entry = ddb_retrieve_item(table_name, task_id)
 
-		# TODO: if task_priority doesn't match first letter of task_id
-		# delete old task_id entry and create new one
-		if task_priority[0] != task_id[0]:
-			pass
+		# confirm that given task ID exists
+		if not existing_entry:
+			return False
 
-		return
+		if not task_description:
+			task_description = existing_entry[description_header]
+
+		# delete existing entry
+		ddb_remove_item(table_name, task_id)
 
 	# generate task ID
 	task_id = generate_task_id(task_priority)
@@ -176,7 +181,7 @@ def update_task_scheduler(task_description, task_priority, task_id=None):
 	# insert task entry
 	ddb_insert_item(table_name, task_id, task_description)
 
-	return task_id
+	return task_id, task_description
 
 
 # returns a dictionary where the item key is the task ID and corresponding value is the task description
@@ -194,6 +199,7 @@ def retrieve_task_scheduler_flat():
 		todo_list[task_id] = task_description
 
 	return todo_list
+
 
 # returns a dictionary of lists, where each key is the first character of the priority level
 # each list contains tasks of that corresponding priority level

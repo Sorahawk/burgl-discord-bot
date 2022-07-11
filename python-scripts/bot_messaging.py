@@ -39,12 +39,12 @@ async def detect_errors(message, user_input, result):
 
 	# catch specific error cases which return different data types, e.g. 102
 	if isinstance(result, list) and isinstance(result[0], int):
-		await burgl_message(result[0], message, result[1])
+		await burgl_message(result[0], message, replace=result[1])
 
 	# check voiceline dictionary in global_constants directly so no need to keep updating here too
 	elif isinstance(result, int) and result in BOT_VOICELINES:
 		full_name = capitalise_object_name(retrieve_full_name(user_input))
-		await burgl_message(result, message, full_name)
+		await burgl_message(result, message, replace=full_name)
 
 	else:
 		return True

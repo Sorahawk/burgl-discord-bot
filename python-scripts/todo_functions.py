@@ -11,11 +11,11 @@ from string_processing import *
 
 # adds a to-do entry to the Task Scheduler
 async def todo_default(message, user_input):
-	# process input to separate priority level from details
+	# process input to separate priority level from description
 	task_description, task_priority = process_todo_input(user_input)
 
 	# insert new entry into Task Scheduler
-	task_id = update_task_scheduler(task_description, task_priority)
+	task_id = update_task_scheduler(task_priority, task_description=task_description)[0]
 
 	embed_title = '**New To-Do Entry**'
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
@@ -57,15 +57,7 @@ async def todo_view(message, user_input):
 
 # check one or more tasks off the Task Scheduler
 async def todo_delete(message, user_input):
-	regex_pattern = '[\W_][a-z][0-9]{3}[\W_]'
-
-	# double every whitespace so it won't overlap when performing regex 
-	user_input = user_input.replace(' ', '  ')
-
-	# insert surrounding whitespace so leading and trailing task IDs can be detected
-	user_input = f' {user_input} '
-
-	regex_results = findall(regex_pattern, user_input, IGNORECASE)
+	regex_results = extract_task_id(user_input)
 
 	# check if any valid input was provided
 	if not regex_results:
@@ -77,19 +69,18 @@ async def todo_delete(message, user_input):
 	todo_list = retrieve_task_scheduler_flat()
 
 	# slice each result as there are leading and trailing whitespaces/symbols
-	for index in range(len(regex_results)):
-		task_id = regex_results[index][1:-1].upper()
-
+	for task_id in regex_results:
 		# check if given task ID exists
 		if task_id not in todo_list:
 			await detect_errors(message, f'Task {task_id}', 106)
 			continue
 
-
-		# TODO: port the below out into a processing function for deleting a given task
-
 		# delete each task ID
 		ddb_remove_item(TASK_TABLE, task_id)
+
+
+		# TODO: check if harvest task, and send corresponding change to CL if so
+
 
 		task_description = capitalise_object_name(todo_list[task_id])
 		formatted_string += f'- **{task_id}**: {task_description}\n'
@@ -98,6 +89,29 @@ async def todo_delete(message, user_input):
 		await message.channel.send(string_header + formatted_string)
 
 
-# edit task priority and/or description
+# edit priority of one or more tasks
 async def todo_edit(message, user_input):
-	await message.channel.send('Task - Edit')
+	# extract priority level from user input
+	task_priority = process_todo_input(user_input)[1]
+
+	# get list of entered task IDs
+	id_list = extract_task_id(user_input)
+
+	if not id_list:
+		return await burgl_message('empty', message)
+
+	string_header = 'Details of Edited Tasks\n'
+	formatted_string = ''
+
+	for task_id in id_list:
+		result = update_task_scheduler(task_priority, task_id=task_id)
+
+		if not result:
+			await detect_errors(message, f'Task {task_id}', 106)
+			continue
+
+		new_id, task_description = result[0], capitalise_object_name(result[1])
+		formatted_string += f'- **{task_id} -> {new_id}**: {task_description}\n'
+
+	if formatted_string:
+		await message.channel.send(string_header + formatted_string)
