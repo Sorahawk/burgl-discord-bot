@@ -60,19 +60,52 @@ def extract_task_id(user_input):
 	return regex_results
 
 
-# 
+# returns priority level for harvesting task based on quantity
+def get_harvest_priority(quantity):
+	if quantity > 150:
+		return 'High'
+
+	elif quantity > 50:
+		return 'Medium'
+
+	else:
+		return 'Low'
+
+
+# increases harvest amount for a given material if a harvest task for it already exists
+# otherwise creates a new harvesting task for that material with the given quantity
 def create_harvesting_task(material_name, quantity):
-	if global_constants.HARVEST_TASK_REFERENCE == {}:
-		populate_harvest_reference()
+	# if already exists, retrieve the old amount and delete the existing entry first
+	if material_name in global_constants.HARVEST_TASK_REFERENCE:
+		# look up the existing task ID
+		old_id = global_constants.HARVEST_TASK_REFERENCE[material_name]
 
-	# create new task for that material if doesn't exist
-	# otherwise update the amount to reflect increase
+		# get the old task description while removing the existing entry
+		old_description = remove_task_scheduler(old_id)
 
-	# update local reference table
+		# calculate the new total quantity
+		old_quantity = int(old_description.split()[2])
+		quantity += old_quantity
+
+	# get the task priority level based on the harvest quantity
+	priority_level = get_harvest_priority(quantity)
+
+	# fill in harvesting task description
+	task_description = HARVEST_DESCRIPTION_TEMPLATE.replace('VAR1', str(quantity)).replace('VAR2', material_name)
+
+	# insert entry into Task Scheduler
+	task_id = insert_task_scheduler(priority_level, task_description)
+
+	# update reference table
+	global_constants.HARVEST_TASK_REFERENCE[material_name] = task_id
 
 
-def remove_all_harvesting():
-	pass
+# removes all generated harvesting tasks tagged with [Chop] at the front of the task description
+def remove_all_harvesting_tasks():
+	for material_name, task_id in global_constants.HARVEST_TASK_REFERENCE.items():
+		remove_task_scheduler(task_id)
+
+	global_constants.HARVEST_TASK_REFERENCE = {}
 
 
 def update_harvest_amount():

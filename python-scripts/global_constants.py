@@ -85,6 +85,9 @@ BOT_COMMAND_LIST = ['search', 'card', 'bind', 'chop', 'todo', 'help', 'clear', '
 # each flag can only be a single letter
 BOT_COMMAND_FLAGS = {'delete': 'd', 'edit': 'e', 'gold': 'g', 'override': 'o', 'reset': 'r', 'view': 'v'}
 
+# logger object to be instantiated at initialisation
+OPERATIONS_LOG = None
+
 # color code for Embed messages
 # 0x6542E1 is the purple that BURG.L's icon has in-game while speaking
 EMBED_COLOR_CODE = 0x6542E1

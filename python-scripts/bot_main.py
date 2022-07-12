@@ -9,6 +9,7 @@ from bot_tasks import *
 from bot_functions import *
 from status_logging import *
 from global_constants import *
+from storage_functions import *
 from string_processing import *
 
 
@@ -28,8 +29,14 @@ async def on_ready():
 	if not global_constants.MAIN_CHANNEL:
 		print(f'{bot.user} is online.\n')
 
+		global_constants.OPERATIONS_LOG = logging.getLogger('BURG.L Operations Log')
+		global_constants.OPERATIONS_LOG.info('BURG.L initialised.')
+
 		# initialise global main channel object
 		global_constants.MAIN_CHANNEL = bot.get_channel(MAIN_CHANNEL_ID)
+
+		# populate harvesting task global reference table
+		populate_harvest_reference()
 
 		if DEBUG_MODE:
 			return await burgl_message('debug')
@@ -76,7 +83,7 @@ async def on_message(message):
 		await eval(command_method)(message, user_input, flag_presence)
 
 	except Exception as e:  # log any errors if command fails in any unexpected way
-		logging.warning(e)
+		global_constants.OPERATIONS_LOG.warning(e)
 
 
 # get current directory

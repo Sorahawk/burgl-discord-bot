@@ -11,7 +11,3 @@ def init_logger(filepath):
 		level=logging.DEBUG,
 		encoding='utf-8'
 	)
-
-
-	logger = logging.getLogger('BURG.L Operations Log')
-	logger.info('BURG.L Operations Log initialised.')

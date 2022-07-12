@@ -130,7 +130,7 @@ def prefix_custom_emoji(input_string, is_robot=False):
 
 
 # returns properly capitalised object name, accounting for names with periods, e.g. BURG.L, MIX.R
-def capitalise_object_name(object_name):
+def custom_capitalise_string(object_name):
 	if '.' in object_name and '. ' not in object_name + ' ':  # make sure not shortform like Asst.
 		object_name = object_name.upper()
 	else:
@@ -160,7 +160,7 @@ def get_appended_url(search_query):
 	if search_query.strip()[-6:].lower() == 'arrows':
 		search_query = search_query[:-1]
 
-	search_query = capitalise_object_name(search_query)
+	search_query = custom_capitalise_string(search_query)
 	return f'{BASE_WIKI_URL}{search_query}'.replace(' ', '_')
 
 
@@ -192,3 +192,13 @@ def generate_recipe_string(recipe_list):
 		recipe_string += f'{item[1]} {item[0]}\n'
 
 	return recipe_string
+
+
+# returns the material name if a given task description matches the harvesting task template
+# otherwise returns None by default
+def check_harvest_task(task_description):
+	keyword = HARVEST_DESCRIPTION_TEMPLATE.split()[0]
+	task_description = task_description.split()
+
+	if len(task_description) > 3 and task_description[0].title() == keyword:
+		return custom_capitalise_string(' '.join(task_description[3:]))

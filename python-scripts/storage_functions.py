@@ -12,7 +12,7 @@ from string_processing import *
 # binds one or more shortcut phrases to a full name
 def bind_shortcuts(full_name, shortcuts):
 	added_items = []
-	display_name = capitalise_object_name(full_name)
+	display_name = custom_capitalise_string(full_name)
 
 	formatted_string = f'Case-insensitive shortcuts added for **{display_name}**:\n'
 
@@ -57,7 +57,7 @@ def retrieve_all_shortcuts():
 
 	for binded_pair in items:
 		short_name = binded_pair[short_header]
-		full_name = capitalise_object_name(binded_pair[full_header])
+		full_name = custom_capitalise_string(binded_pair[full_header])
 
 		if full_name not in shortcuts:
 			shortcuts[full_name] = [short_name]
@@ -70,7 +70,7 @@ def retrieve_all_shortcuts():
 
 # delete all shortcuts from one or more given full names
 def delete_shortcut(full_name, all_shortcuts):
-	full_name = capitalise_object_name(full_name)
+	full_name = custom_capitalise_string(full_name)
 
 	# check if given full name exists in storage
 	# for each binded shortcut, remove it from storage 
@@ -157,33 +157,31 @@ def generate_task_id(priority_level=None):
 		task_id = None
 
 
-# either inserts a new entry into the Task Scheduler or edits an existing task
-# returns the task ID of the inserted task
-def update_task_scheduler(task_priority, task_description=None, task_id=None):
-	table_name = TASK_TABLE
-	description_header = get_table_headers(table_name)[1]
-
-	# if task ID is provided, delete the existing entry before creating a new one
-	if task_id:
-		existing_entry = ddb_retrieve_item(table_name, task_id)
-
-		# confirm that given task ID exists
-		if not existing_entry:
-			return False
-
-		if not task_description:
-			task_description = existing_entry[description_header]
-
-		# delete existing entry
-		ddb_remove_item(table_name, task_id)
-
+# insert a new entry into the Task Scheduler
+# returns ID of the inserted task
+def insert_task_scheduler(task_priority, task_description):
 	# generate task ID
 	task_id = generate_task_id(task_priority)
 
 	# insert task entry
-	ddb_insert_item(table_name, task_id, task_description)
+	ddb_insert_item(TASK_TABLE, task_id, task_description)
 
-	return task_id, task_description
+	return task_id
+
+
+# removes an existing entry from the Task Scheduler
+# returns description if that task ID existed, and False otherwise
+def remove_task_scheduler(task_id):
+	table_name = TASK_TABLE
+	description_header = get_table_headers(table_name)[1]
+
+	# verify that the given task ID existed in the table
+	result = ddb_remove_item(table_name, task_id)
+
+	if 'Attributes' not in result:
+		return False
+
+	return result['Attributes']['task_description']
 
 
 # returns a dictionary where the item key is the task ID and corresponding value is the task description
@@ -232,14 +230,15 @@ def retrieve_task_scheduler_sorted():
 # updates the global dictionary harvesting task reference dictionary
 def populate_harvest_reference():
 	todo_list = retrieve_task_scheduler_flat()
-	keyword = HARVEST_DESCRIPTION_TEMPLATE.split()[0]
 
 	for task_id, task_description in todo_list.items():
-		task_description = task_description.split()
 
-		# check for keyword indicating generated task
-		if task_description[0].title() != keyword:
+		# verify that the task is a generated one
+		material_name = check_harvest_task(task_description)
+
+		if not material_name:
 			continue
 
-		material_name = capitalise_object_name(' '.join(task_description[3:]))
 		global_constants.HARVEST_TASK_REFERENCE[material_name] = task_id
+
+	global_constants.OPERATIONS_LOG.info('Reference table for harvesting tasks succesfully populated.')

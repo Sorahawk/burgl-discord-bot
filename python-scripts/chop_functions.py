@@ -3,6 +3,7 @@ from discord import Embed
 
 from bot_messaging import *
 from chop_processing import *
+from todo_processing import *
 from global_constants import *
 from storage_functions import *
 from string_processing import *
@@ -39,9 +40,9 @@ async def chop_default(message, user_input):
 
 		update_chopping_list(actual_name, final_quantity, base_components)
 
-
-		# TODO: Forward base_components Counter to Task Scheduler
-
+		# forward the raw material counts to the Task Scheduler to update harvesting tasks
+		for material_name, quantity in base_components.items():
+			create_harvesting_task(material_name, quantity)
 
 		summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
 
@@ -134,11 +135,10 @@ async def chop_reset(message, user_input):
 
 	chopping_list = retrieve_chopping_list()
 
+	# wipe the entire DynamoDB table
 	ddb_remove_all(CHOPPING_TABLE)
 
-
-	# TODO: Remove all (Generated) harvesting tasks from Task Scheduler
-	# basically delete all the tasks in the HARVEST_TASK_REFERENCE dictionary
-
+	# Send signal to Task Scheduler to remove all generated harvest tasks
+	remove_all_harvesting_tasks()
 
 	await burgl_message('list_reset', message)

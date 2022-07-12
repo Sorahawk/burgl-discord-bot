@@ -1,4 +1,4 @@
-import logging, requests
+import global_constants, requests
 
 from random import choice
 from subprocess import run
@@ -97,8 +97,7 @@ async def monitor_app_info():
 	# as the SteamCMD API is third-party and is not as established as something like GitHub,
 	# have to account for possible timeout resulting from API overload, as well as other unexpected errors
 	except Exception as e:
-		logger = logging.getLogger('monitoring_app_info')
-		return logger.warning(e)
+		return global_constants.OPERATIONS_LOG.warning(e)
 
 	app_info = response.json()['data']['962130']
 	latest_assets = app_info['common']['store_asset_mtime']

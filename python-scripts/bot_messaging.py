@@ -47,7 +47,7 @@ async def detect_errors(message, user_input, result):
 
 	# check voiceline dictionary in global_constants directly so no need to keep updating here too
 	elif isinstance(result, int) and result in BOT_VOICELINES:
-		full_name = capitalise_object_name(retrieve_full_name(user_input))
+		full_name = custom_capitalise_string(retrieve_full_name(user_input))
 		await burgl_message(result, message, replace=full_name)
 
 	else:

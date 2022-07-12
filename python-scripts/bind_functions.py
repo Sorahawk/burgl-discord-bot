@@ -60,7 +60,7 @@ async def bind_delete(message, user_input):
 		if not await detect_errors(message, item_name, result):
 			continue
 
-		formatted_string += f'- **{capitalise_object_name(item_name)}**\n'
+		formatted_string += f'- **{custom_capitalise_string(item_name)}**\n'
 
 	if formatted_string:
 		await message.channel.send(string_header + formatted_string)

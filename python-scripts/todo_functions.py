@@ -1,3 +1,5 @@
+import global_constants
+
 from math import ceil
 from discord import Embed
 
@@ -15,12 +17,12 @@ async def todo_default(message, user_input):
 	task_description, task_priority = process_todo_input(user_input)
 
 	# insert new entry into Task Scheduler
-	task_id = update_task_scheduler(task_priority, task_description=task_description)[0]
+	task_id = insert_task_scheduler(task_priority, task_description)
 
 	embed_title = '**New To-Do Entry**'
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
-	summary_embed.add_field(name=f'Task {task_id}', value=capitalise_object_name(task_description), inline=False)
+	summary_embed.add_field(name=f'Task {task_id}', value=custom_capitalise_string(task_description), inline=False)
 
 	await message.channel.send(embed=summary_embed)
 
@@ -47,7 +49,7 @@ async def todo_view(message, user_input):
 			task_id = entry[0]
 			task_description = entry[1]
 
-			todo_embed.add_field(name=f'{task_id}', value=capitalise_object_name(task_description), inline=False)
+			todo_embed.add_field(name=f'{task_id}', value=custom_capitalise_string(task_description), inline=False)
 
 		todo_embed.set_footer(text=f'Page {page + 1}/{number_pages}')
 		embed_list.append(todo_embed)
@@ -66,24 +68,29 @@ async def todo_delete(message, user_input):
 	string_header = 'Tasks checked off the Task Scheduler:\n'
 	formatted_string = ''
 
-	todo_list = retrieve_task_scheduler_flat()
-
 	# slice each result as there are leading and trailing whitespaces/symbols
 	for task_id in regex_results:
-		# check if given task ID exists
-		if task_id not in todo_list:
+		# try to delete each task ID
+		task_description = remove_task_scheduler(task_id)
+
+		# if given task ID did not exist, display error for that task ID
+		if not task_description:
 			await detect_errors(message, f'Task {task_id}', 106)
 			continue
 
-		# delete each task ID
-		ddb_remove_item(TASK_TABLE, task_id)
+		# check if the task is a generated harvesting task
+		material_name = check_harvest_task(task_description)
 
+		# if deleted task was a harvesting task, try to delete corresponding raw material entry from the CL
+		if material_name:
+			ddb_remove_item(CHOPPING_TABLE, material_name)
+			global_constants.OPERATIONS_LOG.info(f'Corresponding entry for {material_name} on the Chopping List was deleted.')
 
-		# TODO: check if harvest task, and send corresponding change to CL if so
+		# update reference table
+		if material_name in global_constants.HARVEST_TASK_REFERENCE:
+			del global_constants.HARVEST_TASK_REFERENCE[material_name]
 
-
-		task_description = capitalise_object_name(todo_list[task_id])
-		formatted_string += f'- **{task_id}**: {task_description}\n'
+		formatted_string += f'- **{task_id}**: {custom_capitalise_string(task_description)}\n'
 
 	if formatted_string:
 		await message.channel.send(string_header + formatted_string)
@@ -104,13 +111,17 @@ async def todo_edit(message, user_input):
 	formatted_string = ''
 
 	for task_id in id_list:
-		result = update_task_scheduler(task_priority, task_id=task_id)
+		task_description = remove_task_scheduler(task_id)
 
-		if not result:
+		# if given task ID did not exist, display error for that task ID
+		if not task_description:
 			await detect_errors(message, f'Task {task_id}', 106)
 			continue
 
-		new_id, task_description = result[0], capitalise_object_name(result[1])
+		# insert new entry with the new priority level
+		new_id = insert_task_scheduler(task_priority, task_description)
+
+		task_description = custom_capitalise_string(task_description)
 		formatted_string += f'- **{task_id} -> {new_id}**: {task_description}\n'
 
 	if formatted_string:
@@ -122,6 +133,7 @@ async def todo_reset(message, user_input):
 	if 'confirm' not in user_input.lower():
 		return await burgl_message('need_confirmation', message)
 
+	# wipe the entire DynamoDB table
 	ddb_remove_all(TASK_TABLE)
 
 	await burgl_message('list_reset', message)

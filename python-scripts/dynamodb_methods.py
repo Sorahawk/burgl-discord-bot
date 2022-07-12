@@ -67,8 +67,7 @@ def ddb_remove_item(table_name, key):
 	key_header = get_table_headers(table_name)[0]
 
 	try:
-		table.delete_item(Key={key_header: key})
-		return True
+		return table.delete_item(Key={key_header: key}, ReturnValues='ALL_OLD')
 
 	except:  # can fail if key input is empty
 		return False
