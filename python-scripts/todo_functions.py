@@ -16,6 +16,9 @@ async def todo_default(message, user_input):
 	# process input to separate priority level from description
 	task_description, task_priority = process_todo_input(user_input)
 
+	if not task_description:
+		return await burgl_message('empty', message)
+
 	# insert new entry into Task Scheduler
 	task_id = insert_task_scheduler(task_priority, task_description)
 

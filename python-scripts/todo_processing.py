@@ -9,7 +9,7 @@ from storage_functions import *
 # returns processed task description and its priority level as a tuple of strings
 def process_todo_input(user_input):
 	# split user input into individual words
-	regex_pattern = ' [a-z]+ '
+	regex_pattern = '[a-z]+[\W_]'
 
 	# insert surrounding whitespace so leading and trailing task IDs can be detected
 	user_input = f' {user_input} '
@@ -22,7 +22,7 @@ def process_todo_input(user_input):
 	# just use default level if no valid input was detected
 	if results:
 		# check front and back for presence of priority level
-		front, back = results[0].strip(), results[-1].strip()
+		front, back = results[0][:-1], results[-1][:-1]
 
 		for level in TODO_PRIORITY_LEVELS:
 			if front in level.lower():
