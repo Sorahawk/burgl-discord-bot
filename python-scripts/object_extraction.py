@@ -68,7 +68,7 @@ def get_infobox_info(page_content):
 		elif content == 'Effect' or header.lower() == content.lower():
 			continue
 
-		standard_headers = ['aggression', 'tamewith', 'effectresistance', 'weakpoint',
+		standard_headers = ['aggression', 'tamewith', 'immune', 'weakpoint',
 							'tooltype', 'augmenttype',  'class', 'water', 'health',
 							'species', 'gender', 'description+']
 		stat_headers = ['damage', 'stun', 'speed', 'defense', 'sturdiness', 'weight']
