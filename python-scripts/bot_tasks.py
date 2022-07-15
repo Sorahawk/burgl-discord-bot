@@ -92,7 +92,7 @@ async def monitor_app_info():
 
 		# ensure that response is valid and contains requested info
 		if response.status_code != 200:
-			return
+			return global_constants.OPERATIONS_LOG.warning(response)
 
 	# as the SteamCMD API is third-party and is not as established as something like GitHub,
 	# have to account for possible timeout resulting from API overload, as well as other unexpected errors
