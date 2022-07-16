@@ -62,6 +62,8 @@ async def todo_view(message, user_input):
 
 # find tasks with descriptions matching the given input
 async def todo_find(message, user_input):
+	user_input = user_input.lower()
+
 	todo_list = retrieve_task_scheduler_sorted()
 	matching_tasks = []
 
