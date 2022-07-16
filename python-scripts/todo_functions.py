@@ -62,15 +62,17 @@ async def todo_view(message, user_input):
 
 # find tasks with descriptions matching the given input
 async def todo_find(message, user_input):
-	todo_list = retrieve_task_scheduler_flat()
+	todo_list = retrieve_task_scheduler_sorted()
 	matching_tasks = []
 
-	# iterate through task list to check each description
-	for task_id in todo_list:
-		task_description = todo_list[task_id]
+	# iterate through task list in descending priority and check each description
+	for priority_level in TODO_PRIORITY_LEVELS[::-1]:
+		for todo_task in todo_list[priority_level[0]]:
+			task_id = todo_task[0]
+			task_description = todo_task[1]
 
-		if user_input in task_description:
-			matching_tasks.append((task_id, task_description))
+			if user_input in task_description:
+				matching_tasks.append((task_id, task_description))
 
 	# process matches into pages and display
 	embed_list = []
