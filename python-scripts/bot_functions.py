@@ -127,6 +127,9 @@ async def todo_method(message, user_input, flag_presence):
 	elif user_input == '':
 		await burgl_message('empty', message)
 
+	elif flag_presence['find']:
+		await todo_find(message, user_input)
+
 	elif flag_presence['delete']:
 		await todo_delete(message, user_input)
 

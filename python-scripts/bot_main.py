@@ -39,7 +39,8 @@ async def on_ready():
 		populate_harvest_reference()
 
 		if DEBUG_MODE:
-			return await burgl_message('debug')
+			#await burgl_message('debug')
+			return
 
 		rotate_status.start()
 		monitor_app_info.start()

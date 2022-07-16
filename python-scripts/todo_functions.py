@@ -60,6 +60,72 @@ async def todo_view(message, user_input):
 	return await multipage_embed_handler(message, user_input, embed_list)
 
 
+# find tasks with descriptions matching the given input
+async def todo_find(message, user_input):
+	todo_list = retrieve_task_scheduler_flat()
+	matching_tasks = []
+
+	# iterate through task list to check each description
+	for task_id in todo_list:
+		task_description = todo_list[task_id]
+
+		if user_input in task_description:
+			matching_tasks.append((task_id, task_description))
+
+	# process matches into pages and display
+	embed_list = []
+	number_pages = ceil(len(matching_tasks) / MAX_TODO_FIELDS)
+
+	for page in range(number_pages):
+		find_embed = Embed(title=f"**Matching Tasks - '{custom_capitalise_string(user_input)}'**", color=EMBED_COLOR_CODE)
+
+		start_index = page * MAX_TODO_FIELDS
+		end_index = start_index + MAX_TODO_FIELDS
+
+		for entry in matching_tasks[start_index:end_index]:
+			task_id = entry[0]
+			task_description = entry[1]
+
+			find_embed.add_field(name=f'{task_id}', value=custom_capitalise_string(task_description), inline=False)
+
+		find_embed.set_footer(text=f'Page {page + 1}/{number_pages}')
+		embed_list.append(find_embed)
+
+	return await multipage_embed_handler(message, user_input, embed_list)
+
+
+# edit priority of one or more tasks
+async def todo_edit(message, user_input):
+	# extract priority level from user input
+	task_priority = process_todo_input(user_input)[1]
+
+	# get list of entered task IDs
+	id_list = extract_task_id(user_input)
+
+	if not id_list:
+		return await burgl_message('empty', message)
+
+	string_header = 'Details of Edited Tasks\n'
+	formatted_string = ''
+
+	for task_id in id_list:
+		task_description = remove_task_scheduler(task_id)
+
+		# if given task ID did not exist, display error for that task ID
+		if not task_description:
+			await detect_errors(message, f'Task {task_id}', 106)
+			continue
+
+		# insert new entry with the new priority level
+		new_id = insert_task_scheduler(task_priority, task_description)
+
+		task_description = custom_capitalise_string(task_description)
+		formatted_string += f'- **{task_id} -> {new_id}**: {task_description}\n'
+
+	if formatted_string:
+		await message.channel.send(string_header + formatted_string)
+
+
 # check one or more tasks off the Task Scheduler
 async def todo_delete(message, user_input):
 	regex_results = extract_task_id(user_input)
@@ -94,38 +160,6 @@ async def todo_delete(message, user_input):
 			del global_constants.HARVEST_TASK_REFERENCE[material_name]
 
 		formatted_string += f'- **{task_id}**: {custom_capitalise_string(task_description)}\n'
-
-	if formatted_string:
-		await message.channel.send(string_header + formatted_string)
-
-
-# edit priority of one or more tasks
-async def todo_edit(message, user_input):
-	# extract priority level from user input
-	task_priority = process_todo_input(user_input)[1]
-
-	# get list of entered task IDs
-	id_list = extract_task_id(user_input)
-
-	if not id_list:
-		return await burgl_message('empty', message)
-
-	string_header = 'Details of Edited Tasks\n'
-	formatted_string = ''
-
-	for task_id in id_list:
-		task_description = remove_task_scheduler(task_id)
-
-		# if given task ID did not exist, display error for that task ID
-		if not task_description:
-			await detect_errors(message, f'Task {task_id}', 106)
-			continue
-
-		# insert new entry with the new priority level
-		new_id = insert_task_scheduler(task_priority, task_description)
-
-		task_description = custom_capitalise_string(task_description)
-		formatted_string += f'- **{task_id} -> {new_id}**: {task_description}\n'
 
 	if formatted_string:
 		await message.channel.send(string_header + formatted_string)
