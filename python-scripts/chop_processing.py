@@ -63,7 +63,7 @@ def remove_chop_item(item_name, item_info, input_quantity, chopping_list):
 
 	# if item is craftable, check if recipe crafts more than one of the item
 	if check_valid_chop_item(item_info, 2):
-		recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
+		recipe_quantity = findall('x\d+', item_info['recipe_name'])
 
 		if recipe_quantity:
 			# remove letter x and convert quantity to integer
@@ -122,7 +122,7 @@ def process_chop_components(item_name, quantity, base_components=None):
 		base_components[item_name] += quantity
 
 	elif check_valid_chop_item(item_info, 2):
-		recipe_quantity = re.findall('x\d+', item_info['recipe_name'])
+		recipe_quantity = findall('x\d+', item_info['recipe_name'])
 
 		if recipe_quantity:
 			# remove letter x and convert quantity to integer

@@ -141,7 +141,7 @@ BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
 SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
 
 # list of words which have atypical capitalisation
-SPECIAL_NAMES = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 'at', 'as well as', 'de', 'is', 'of', 'on', 'the', 'to']
+SPECIAL_WORDS = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 'at', 'as well as', 'de', 'is', 'of', 'on', 'the', 'to']
 
 # list of items not to be broken down into their component materials for the Chopping List
 SPECIAL_ITEMS = ['Berry Leather', 'Crude Rope', 'Mushroom Slurry', 'Pupa Leather', 'Repair Glue']

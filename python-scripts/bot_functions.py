@@ -76,7 +76,7 @@ async def card_method(message, user_input, flag_presence):
 
 # shortcut binding method
 async def bind_method(message, user_input, flag_presence):
-	if flag_presence['view']:  # allow non-elevated users to view bindings
+	if flag_presence['view']:  # allow non-elevated users to view
 		await bind_view(message, user_input)
 
 	elif not check_user_elevation(message):

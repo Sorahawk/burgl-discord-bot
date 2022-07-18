@@ -1,3 +1,4 @@
+from re import findall
 from discord import DMChannel
 from asyncio import TimeoutError
 
@@ -61,7 +62,7 @@ async def multipage_embed_handler(message, user_input, embed_list):
 		return await burgl_message('no_display', message)
 	
 	current_page = 0
-	direct_page = re.findall('\d+', user_input)
+	direct_page = findall('\d+', user_input)
 
 	# see if a valid page number was specified and navigate to it directly if so
 	for number in direct_page:

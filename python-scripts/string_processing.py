@@ -158,7 +158,7 @@ def custom_capitalise_string(string):
 	contraction_pattern = "['’][a-z]+"
 	string = sub(contraction_pattern, convert_lowercase, string, flags=IGNORECASE)
 
-	for phrase in SPECIAL_NAMES:
+	for phrase in SPECIAL_WORDS:
 		phrase = f' {phrase} '  # make sure the phrase is standalone and not part of a word
 
 		# replace phrases with their proper capitalisation
