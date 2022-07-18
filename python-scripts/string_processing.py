@@ -1,5 +1,6 @@
-import re, global_constants
+import global_constants
 
+from re import sub, Match, IGNORECASE
 from difflib import SequenceMatcher
 
 from global_constants import *
@@ -43,7 +44,7 @@ def check_flags(user_input):
 
 	# remove any other 'flags', a dash followed by a single letter, even if they are not valid
 	other_flags = '-[a-zA-Z] '
-	user_input = re.sub(other_flags, ' ', user_input + ' ')
+	user_input = sub(other_flags, ' ', user_input + ' ')
 
 	# remove any excess whitespace, have to be done here instead of when checking command because clean up after replacing the flags
 	user_input = ' '.join(user_input.split())
@@ -61,7 +62,7 @@ def detect_smoothie_type(search_query):
 	# does not account for multiple smoothie types, will just take the last one iterated
 	for special in SMOOTHIE_BASES:
 		if special in search_query.lower():
-			new_search_query = re.compile(special, re.IGNORECASE).sub('', search_query)
+			new_search_query = sub(special, '', search_query, flags=IGNORECASE)
 
 			# if the input was just the smoothie type alone, do not remove it
 			if new_search_query:
@@ -129,20 +130,42 @@ def prefix_custom_emoji(input_string, is_robot=False):
 	return input_string
 
 
-# returns properly capitalised object name, accounting for names with periods, e.g. BURG.L, MIX.R
-def custom_capitalise_string(object_name):
-	if '.' in object_name and '. ' not in object_name + ' ':  # make sure not shortform like Asst.
-		object_name = object_name.upper()
-	else:
-		object_name = object_name.title().replace("'S", "'s").replace('’S', '’s')
+# functions to convert a given string to lowercase or uppercase
+# main purpose is to work with regex match objects
+def convert_lowercase(string):
+	if isinstance(string, Match):
+		string = string[0]
+
+	return string.lower()
+
+def convert_uppercase(string):
+	if isinstance(string, Match):
+		string = string[0]
+
+	return string.upper()
+
+
+# returns string with properly capitalised words
+def custom_capitalise_string(string):
+	if len(string) < 2:
+		return string.upper()
+
+	# regex pattern for Ominent names like BURG.L, MIX.R, etc.
+	ominent_pattern = '[a-z]+[.][a-z][^a-z]'
+	string = sub(ominent_pattern, convert_uppercase, string.title() + ' ', flags=IGNORECASE)
+
+	# regex pattern for contractions, matching the portion following the apostrophe
+	contraction_pattern = "['’][a-z]+"
+	string = sub(contraction_pattern, convert_lowercase, string, flags=IGNORECASE)
 
 	for phrase in SPECIAL_NAMES:
-		titled_phrase = f' {phrase.title()} '  # make sure the phrase is standalone and not part of a word
+		phrase = f' {phrase} '  # make sure the phrase is standalone and not part of a word
 
-		if titled_phrase in f' {object_name} ':
-			object_name = object_name.replace(phrase.title(), phrase)
+		# replace phrases with their proper capitalisation
+		string = sub(phrase, phrase, string, flags=IGNORECASE)
 
-	return object_name.strip()
+	string = string.strip()
+	return string[0].upper() + string[1:]
 
 
 # returns page URL, comprised of sanitised search query appended to the base wiki URL
@@ -151,7 +174,7 @@ def get_appended_url(search_query):
 	# symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
 	illegal_symbols = '[+%<>|}{[\]]+'
 
-	search_query = re.sub(illegal_symbols, '', search_query)
+	search_query = sub(illegal_symbols, '', search_query)
 
 	# replace ? with %3F, e.g. Smoothie?
 	search_query = search_query.replace('?', '%3F')

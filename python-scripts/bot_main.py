@@ -52,7 +52,7 @@ async def on_ready():
 
 		await burgl_message('hello')
 
-	else:  # do not start tasks again if they are alreayd ongoing as it will throw RuntimeError
+	else:  # do not start tasks again if they are alreay ongoing as RuntimeError will be thrown
 		print(f'{bot.user} has reconnected to Discord.\n')
 
 
