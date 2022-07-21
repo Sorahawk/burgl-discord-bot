@@ -1,11 +1,11 @@
-from discord import Embed
-from json import dumps, loads
-from collections import Counter
-
 from url_processing import *
 from global_constants import *
 from object_extraction import *
 from string_processing import *
+
+from discord import Embed
+from json import dumps, loads
+from collections import Counter
 
 
 # returns booleans representing presence of recipe and repair costs on an object's page

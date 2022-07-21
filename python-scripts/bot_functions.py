@@ -1,7 +1,5 @@
 import global_constants
 
-from discord import DMChannel, Embed, Status
-
 from secrets import *
 from bot_tasks import *
 from card_search import *
@@ -13,6 +11,8 @@ from todo_functions import *
 from global_constants import *
 from storage_functions import *
 from string_processing import *
+
+from discord import DMChannel, Embed, Status
 
 
 # all bot methods below have to correspond to an item in BOT_COMMAND_LIST

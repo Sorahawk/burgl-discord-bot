@@ -1,8 +1,8 @@
-from collections import Counter
-
 from url_processing import *
 from global_constants import *
 from string_processing import *
+
+from collections import Counter
 
 
 # returns dictionary of extracted information for a given status effect or mutation

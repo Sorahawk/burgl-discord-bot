@@ -1,12 +1,12 @@
 import requests  # don't import requests.get directly to avoid confusion as get() is a common function name
 
-from lxml import html
-
 from secrets import *
 from dynamodb_methods import *
 from global_constants import *
 from storage_functions import *
 from string_processing import *
+
+from lxml import html
 
 
 # returns content of wiki page as an lxml.html.HtmlElement object

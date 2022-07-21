@@ -1,12 +1,12 @@
-from math import ceil
-from discord import Embed
-
 from bot_messaging import *
 from chop_processing import *
 from todo_processing import *
 from global_constants import *
 from storage_functions import *
 from string_processing import *
+
+from math import ceil
+from discord import Embed
 
 
 # add one or more items to the Chopping List

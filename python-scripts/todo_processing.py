@@ -1,9 +1,9 @@
 import global_constants
 
-from re import findall, IGNORECASE
-
 from global_constants import *
 from storage_functions import *
+
+from re import findall, IGNORECASE
 
 
 # returns processed task description and its priority level as a tuple of strings

@@ -1,9 +1,9 @@
 import global_constants
 
-from re import sub, Match, IGNORECASE
-from difflib import SequenceMatcher
-
 from global_constants import *
+
+from difflib import SequenceMatcher
+from re import IGNORECASE, Match, sub
 
 
 # determines which command is being used, if any (remember that bot reads all messages)

@@ -1,7 +1,7 @@
-from boto3 import resource
-
 from secrets import *
 from global_constants import *
+
+from boto3 import resource
 
 
 # initialises and returns DynamoDB session

@@ -1,12 +1,12 @@
 import global_constants
 
-from random import randint
-from collections import Counter
-
 from secrets import *
 from dynamodb_methods import *
 from global_constants import *
 from string_processing import *
+
+from random import randint
+from collections import Counter
 
 
 # binds one or more shortcut phrases to a full name

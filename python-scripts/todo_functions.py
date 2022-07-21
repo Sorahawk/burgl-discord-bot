@@ -1,14 +1,14 @@
 import global_constants
 
-from math import ceil
-from discord import Embed
-
 from bot_messaging import *
 from todo_processing import *
 from dynamodb_methods import *
 from global_constants import *
 from storage_functions import *
 from string_processing import *
+
+from math import ceil
+from discord import Embed
 
 
 # adds a to-do entry to the Task Scheduler

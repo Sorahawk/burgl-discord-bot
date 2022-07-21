@@ -1,8 +1,4 @@
-import global_constants, logging
-
-from os import getcwd
-from sys import platform
-from discord import Client, Intents
+import global_constants
 
 from secrets import *
 from bot_tasks import *
@@ -11,6 +7,11 @@ from status_logging import *
 from global_constants import *
 from storage_functions import *
 from string_processing import *
+
+from os import getcwd
+from sys import platform
+from logging import getLogger
+from discord import Client, Intents
 
 
 # declare bot intents
@@ -29,7 +30,7 @@ async def on_ready():
 	if not global_constants.MAIN_CHANNEL:
 		print(f'{bot.user} is online.\n')
 
-		global_constants.OPERATIONS_LOG = logging.getLogger('BURG.L Operations Log')
+		global_constants.OPERATIONS_LOG = getLogger('BURG.L Operations Log')
 		global_constants.OPERATIONS_LOG.info('BURG.L initialised.')
 
 		# initialise global main channel object

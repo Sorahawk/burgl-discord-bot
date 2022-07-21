@@ -1,13 +1,13 @@
 import global_constants, requests
 
+from bot_messaging import *
+from global_constants import *
+
 from random import choice
 from subprocess import run
 from discord.ext.tasks import loop
 from discord import Activity, Streaming
 from datetime import datetime, time, timedelta, timezone
-
-from bot_messaging import *
-from global_constants import *
 
 
 # automatically rotate bot's Discord status every 10 minutes

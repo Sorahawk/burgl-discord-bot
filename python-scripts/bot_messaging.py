@@ -1,10 +1,10 @@
-from re import findall
-from discord import DMChannel
-from asyncio import TimeoutError
-
 from global_constants import *
 from storage_functions import *
 from string_processing import *
+
+from re import findall
+from discord import DMChannel
+from asyncio import TimeoutError
 
 
 # returns True if message author is elevated, otherwise False
