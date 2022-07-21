@@ -8,6 +8,6 @@ def init_logger(filepath):
 		format='{asctime} {name} - [{levelname}] {message}',
 		datefmt='%d/%m/%Y %I:%M:%S %p',
 		style='{',
-		level=logging,
+		level=DEBUG,
 		encoding='utf-8'
 	)
