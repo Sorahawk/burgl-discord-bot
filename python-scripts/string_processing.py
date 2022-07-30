@@ -77,7 +77,7 @@ def insert_smoothie_base(object_info, smoothie_type):
 	smoothie_name = object_info['name']
 	base_ingredient = SMOOTHIE_BASES[smoothie_type]
 	
-	if smoothie_name == 'Smoothie?':
+	if smoothie_name == DEFAULT_SMOOTHIE_NAME:
 		object_info['recipe'] = {}
 
 	object_info['recipe_name'] = f"{smoothie_type.title()} {smoothie_name}"
@@ -176,7 +176,8 @@ def get_appended_url(search_query):
 
 	search_query = sub(illegal_symbols, '', search_query)
 
-	# replace ? with %3F, e.g. Smoothie?
+	# replace ? with %3F
+	# used to be for Smoothie? but it has since changed name
 	search_query = search_query.replace('?', '%3F')
 
 	# check if 'arrows' is the last word and remove the trailing S

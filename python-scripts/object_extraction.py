@@ -134,8 +134,8 @@ def get_infobox_info(page_content):
 				# initially used a set to ignore duplicates, but it does not preserve insertion order
 				object_info['effects'] = [content]
 			else:
-				# account for special case where Sticky Smoothie? has an additional effect
-				if object_info['name'] == 'Smoothie?' and content == '+Regenerate':
+				# account for special case where Sticky default smoothie has an additional effect
+				if object_info['name'] == DEFAULT_SMOOTHIE_NAME and content == '+Regenerate':
 					content = f'{content} (Sticky only)'
 
 				# ignore any duplicate effects, e.g. during smoothie extraction

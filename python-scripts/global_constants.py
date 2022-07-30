@@ -137,6 +137,9 @@ CACHE_CLEAR_HOUR = 6
 # base URL for the Grounded Wiki
 BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
 
+# name of the smoothie item crafted when no recipe is matched
+DEFAULT_SMOOTHIE_NAME = 'Questionable Slop'
+
 # dictionary of smoothie bases and their base ingredients
 SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
 
@@ -229,7 +232,7 @@ BOT_VOICELINES = {
 BOT_ACTIVITY_STATUSES = {
 	'with a pet aphid': 0,
 	'with a pet weevil': 0,
-	'the ladybugs cooing': 2,
+	'the ladybugs coo': 2,
 	'audio logs': 2,
 	'the backyard': 3,
 	'the teens': 3, 'the Watcher': 3,
