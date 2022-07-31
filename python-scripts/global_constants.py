@@ -298,9 +298,9 @@ OBJECT_ATTRIBUTES = {
 
 	'damage': 4,
 	'health': 4,
+	'defense': 4,
 
 	'stun': 5,
-	'defense': 5,
 	'food': 5,
 	'sturdiness': 5,
 

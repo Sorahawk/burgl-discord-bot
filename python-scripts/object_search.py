@@ -173,19 +173,24 @@ def format_object_info(object_info):
 
 	if 'tooltype' in object_info:
 		embedded_info.set_field_at(3, name='Dmg. Type', value=prefix_custom_emoji(object_info['tooltype']), inline=True)
-
 	if 'class' in object_info:
-		embedded_info.set_field_at(4, name='Armor Class', value=prefix_custom_emoji(object_info['class']), inline=True)
+		embedded_info.set_field_at(3, name='Armor Class', value=prefix_custom_emoji(object_info['class']), inline=True)
 
-	if 'resistance' in object_info:
-		embedded_info.set_field_at(4, name='Dmg. Resistance', value=prefix_custom_emoji(object_info['resistance']), inline=True)
 	if 'eresistance' in object_info:
-		embedded_info.set_field_at(5, name='Elem. Resistance', value=prefix_custom_emoji(object_info['eresistance']), inline=True)
+		embedded_info.set_field_at(4, name='Elem. Resistance', value=prefix_custom_emoji(object_info['eresistance']), inline=True)
+	if 'resistance' in object_info:
+		resist_name = 'Resistance'
 
-	if 'weakness' in object_info:
-		embedded_info.set_field_at(7, name='Dmg. Weakness', value=underline_text(prefix_custom_emoji(object_info['weakness'])), inline=True)
+		# check if search object is a creature
+		if 'aggression' in object_info:
+			resist_name = f'Dmg. {resist_name}'
+
+		embedded_info.set_field_at(5, name=resist_name, value=prefix_custom_emoji(object_info['resistance']), inline=True)
+
 	if 'eweakness' in object_info:
-		embedded_info.set_field_at(8, name='Elem. Weakness', value=underline_text(prefix_custom_emoji(object_info['eweakness'])), inline=True)
+		embedded_info.set_field_at(7, name='Elem. Weakness', value=underline_text(prefix_custom_emoji(object_info['eweakness'])), inline=True)
+	if 'weakness' in object_info:
+		embedded_info.set_field_at(8, name='Dmg. Weakness', value=underline_text(prefix_custom_emoji(object_info['weakness'])), inline=True)
 
 	if 'weakpoint' in object_info:
 		is_robot = False
