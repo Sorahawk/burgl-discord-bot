@@ -141,7 +141,7 @@ BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
 DEFAULT_SMOOTHIE_NAME = 'Questionable Slop'
 
 # dictionary of smoothie bases and their base ingredients
-SMOOTHIE_BASES = {'basic': 'Grub Goop', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
+SMOOTHIE_BASES = {'basic': 'Grub Sludge', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
 
 # list of words which have atypical capitalisation
 SPECIAL_WORDS = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 'at', 'as well as', 'de', 'is', 'of', 'on', 'the', 'to']
