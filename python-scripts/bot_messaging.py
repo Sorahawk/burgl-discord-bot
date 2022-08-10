@@ -22,7 +22,7 @@ async def burgl_message(key, message=None, replace=None, notify=False):
 	voiceline = BOT_VOICELINES[key]
 
 	if replace:  # insert custom string into voiceline
-		voiceline = voiceline.replace('VAR1', f"'{replace}'")
+		voiceline = voiceline.replace('VAR1', f'"{replace}"')
 
 	if notify:  # notify users
 		voiceline = f'{NOTIFY_ROLE_NAME} {voiceline}'
