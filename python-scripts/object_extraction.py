@@ -168,16 +168,31 @@ def compile_counter(item_list, recipe_type=None):
 	return counter
 
 
-# returns object's crafting recipe as a Counter()
-def get_recipe_table(page_content, object_name):
-	recipe_keyword = 'Recipe'
+# returns object's crafting recipe(s) as a list of tuples
+# first entry of the tuple is the recipe name while second entry is the recipe as a Counter()
+def get_recipe_tables(page_content, object_name):
+	# get all tables on the page
+	table_list = page_content.find_class('wikitable')
 
-	# account for special case where upgraded Fiber Bandage has lower crafting costs
-	if object_name == 'Fiber Bandage':
-		recipe_keyword = 'Upgraded'
+	full_recipe_list = []
 
-	# get the recipe table right below the Recipe header
-	recipe_table = page_content.get_element_by_id(recipe_keyword).getparent().getnext().xpath('tbody/tr')
+	for table in table_list:
+
+		# check first column to determine whether that recipe table is for that object
+		# by either checking for a self-link (for most objects)
+		# or comparing the actual object name (for armor pieces within armor sets)
+		first_column = table.xpath('tbody/tr/td')[0]
+
+		if first_column.find_class('mw-selflink selflink') or object_name == first_column.text_content().strip():
+			recipe_info = process_recipe(table.xpath('tbody/tr'), object_name)
+
+			full_recipe_list.append(recipe_info)
+
+	return full_recipe_list
+
+
+# processes recipe table and extracts crafting information
+def process_recipe(recipe_table, object_name):
 	recipe_type = recipe_table[0].xpath('th')[0].text_content().strip()
 
 	if recipe_type == 'Item':
@@ -186,16 +201,19 @@ def get_recipe_table(page_content, object_name):
 		recipe_number = 2
 
 	recipe_table = recipe_table[1]
-	recipe_name = recipe_table[0].text_content().strip()
-	recipe_list = list(recipe_table[recipe_number].itertext())[::-1]
 
 	# check if recipe crafts multiple of the object
+	recipe_name = recipe_table[0].text_content().strip()
+
 	if recipe_name == object_name:
 		recipe_name = ''
 
+	# extract recipe and consolidate into a Counter()
+	recipe_list = list(recipe_table[recipe_number].itertext())[::-1]
+
 	recipe = compile_counter(recipe_list, recipe_type)
 
-	return recipe, recipe_name
+	return recipe_name, recipe
 
 
 # returns object's repair cost as a Counter()

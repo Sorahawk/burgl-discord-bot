@@ -146,9 +146,6 @@ SMOOTHIE_BASES = {'basic': 'Grub Sludge', 'beefy': 'Muscle Sprout', 'sticky': 'G
 # list of words which have atypical capitalisation
 SPECIAL_WORDS = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 'at', 'as well as', 'de', 'is', 'of', 'on', 'the', 'to']
 
-# list of items not to be broken down into their component materials for the Chopping List
-SPECIAL_ITEMS = ['Berry Leather', 'Crude Rope', 'Mushroom Slurry', 'Pupa Leather', 'Repair Glue']
-
 # lists of words that correspond to each armor piece type
 ARMOR_HEAD = ['face', 'goggles', 'hat', 'helmet', 'hood', 'mask']
 ARMOR_UPPER_BODY = ['arm', 'chest', 'poncho', 'shoulder', 'vest']

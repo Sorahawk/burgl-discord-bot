@@ -1,3 +1,5 @@
+import global_constants
+
 from object_search import *
 from global_constants import *
 
@@ -44,14 +46,19 @@ def process_chop_input(user_input, allow_numberless=False):
 # checks if item is valid for Chopping List
 # returns True if a given item fulfils a given condition, otherwise False
 def check_valid_chop_item(item_info, mode=0):
-	condition_1 = item_info['name'] in SPECIAL_ITEMS
-	condition_2 = 'category' in item_info and item_info['category'] == 'Natural Resources'
-	condition_3 = 'recipe' in item_info
+	# item is craftable
+	condition_1 = 'recipe' in item_info
 
-	if mode == 1:  # check against conditions 1 and 2 only
-		condition_3 = False
-	elif mode == 2:  # check against condition 3 only
-		condition_1, condition_2 = False, False
+	# item has multiple recipes
+	condition_2 = 'recipe' in item_info and isinstance(item_info['recipe'], str)
+
+	# item is a natural resource
+	condition_3 = 'category' in item_info and item_info['category'] == 'Natural Resources'
+
+	if mode == 1:  # check against condition 1 only
+		condition_2, condition_3 = False, False
+	elif mode == 2:  # check against conditions 2 and 3 only
+		condition_1 = False
 
 	return condition_1 or condition_2 or condition_3
 
@@ -62,7 +69,7 @@ def remove_chop_item(item_name, item_info, input_quantity, chopping_list):
 	base_components = chopping_list[item_name][1]
 
 	# if item is craftable, check if recipe crafts more than one of the item
-	if check_valid_chop_item(item_info, 2):
+	if check_valid_chop_item(item_info, 1):
 		recipe_quantity = findall('x\d+', item_info['recipe_name'])
 
 		if recipe_quantity:
@@ -117,11 +124,11 @@ def process_chop_components(item_name, quantity, base_components=None):
 
 	item_name = item_info['name']
 
-	# stop recursion if item is natural resource, or in SPECIAL_ITEMS
-	if check_valid_chop_item(item_info, 1):
+	# stop recursion if item is natural resource, or has multiple recipes
+	if check_valid_chop_item(item_info, 2):
 		base_components[item_name] += quantity
 
-	elif check_valid_chop_item(item_info, 2):
+	elif check_valid_chop_item(item_info, 1):
 		recipe_quantity = findall('x\d+', item_info['recipe_name'])
 
 		if recipe_quantity:

@@ -1,3 +1,5 @@
+import global_constants
+
 from url_processing import *
 from global_constants import *
 from object_extraction import *
@@ -13,13 +15,23 @@ def check_info_presence(page_content):
 	has_recipe = True
 	has_repair_cost = False
 
+	# check for presence of element ID 'Recipe'
 	try:
 		page_content.get_element_by_id('Recipe')
 	except KeyError:
 		has_recipe = False
 
-	if 'Repair Cost' in page_content.itertext():
-		has_repair_cost = True
+	# if 'Recipe' not found, search again for 'Recipes'
+	if not has_recipe:
+		try:
+			page_content.get_element_by_id('Recipes')
+			has_recipe = True
+		except:
+			pass
+
+	for text in page_content.itertext():
+		if 'Repair Cost' in text.strip():
+			has_repair_cost = True
 
 	return has_recipe, has_repair_cost
 
@@ -73,7 +85,22 @@ def get_object_info(search_query):
 
 	if has_recipe:
 		try:
-			object_info['recipe'], object_info['recipe_name'], = get_recipe_table(page_content, object_info['name'])
+			full_recipe_list = get_recipe_tables(page_content, object_info['name'])
+
+			# check for multiple recipes
+			if len(full_recipe_list) > 1:
+
+				# Fiber Bandage special case - use upgraded recipe
+				if object_info['name'] == 'Fiber Bandage':
+					object_info['recipe_name'], object_info['recipe'] = full_recipe_list[1]
+
+				else:
+					object_info['recipe_name'] = ''
+					object_info['recipe'] = 'Multiple Recipes'
+
+			else:
+				object_info['recipe_name'], object_info['recipe'] = full_recipe_list[0]
+
 		except:
 			# recipe extraction failed
 			global_constants.OPERATIONS_LOG.warning(f"Recipe extraction for {object_info['name']} failed.")
@@ -92,12 +119,15 @@ def get_object_info(search_query):
 # otherwise, can return error codes 101, 102 or 103 depending on the failure case
 # function also caches results for succesful retrieval, as well as errors 101 and 102
 def process_object_input(user_input, flag_presence={'override': False}):
-	result = None
 
 	# detect smoothie type
+	# processing this at the start means that smoothie types can be processed independently from shortened smoothie names
+	# however, as a result the smoothie type keywords (e.g. beefy, sticky) cannot be used as part of shortnames (e.g. sticky bomb) as they will be removed
 	user_input, smoothie_type = detect_smoothie_type(user_input)
 
-	# if user overrides shortcut table and cache, then perform search on the exact input provided
+	result = None
+
+	# if no override, check if cache contains requested data
 	if not flag_presence['override']:
 
 		# check if corresponding object info exists in cache
@@ -113,10 +143,16 @@ def process_object_input(user_input, flag_presence={'override': False}):
 
 				for attribute in counter_list:
 					if attribute in result:
+
+						# account for case where object has multiple recipes
+						if isinstance(result[attribute], str):
+							continue
+
 						result[attribute] = Counter(result[attribute])
 
-	# if query not in cache or algorithm overridden
+	# if data not found in cache
 	if not result:
+		# retrieve full name from shortcut table if no override
 		if flag_presence['override']:
 			full_name = user_input
 		else:
@@ -202,11 +238,17 @@ def format_object_info(object_info):
 	if 'recipe' in object_info:
 		recipe_name = 'Recipe'
 
-		# check if recipe crafts multiple items
-		if object_info['recipe_name']:
-			recipe_name += f": {object_info['recipe_name']}"
+		# account for objects with multiple recipes
+		if isinstance(object_info['recipe'], str):
+			recipe_list = object_info['recipe']
 
-		recipe_list = generate_recipe_string(object_info['recipe'])
+		else:
+			# check if recipe crafts multiple items
+			if object_info['recipe_name']:
+				recipe_name += f": {object_info['recipe_name']}"
+
+			recipe_list = generate_recipe_string(object_info['recipe'])
+
 		embedded_info.set_field_at(10, name=recipe_name, value=recipe_list, inline=True)
 
 	if 'repair_cost' in object_info:
