@@ -147,9 +147,11 @@ SMOOTHIE_BASES = {'basic': 'Grub Sludge', 'beefy': 'Muscle Sprout', 'sticky': 'G
 SPECIAL_WORDS = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 'at', 'as well as', 'de', 'is', 'of', 'on', 'the', 'to']
 
 # lists of words that correspond to each armor piece type
-ARMOR_HEAD = ['face', 'goggles', 'hat', 'head', 'helmet', 'hood', 'mask']
-ARMOR_UPPER_BODY = ['arm', 'chest', 'poncho', 'shirt', 'shoulder', 'torso', 'vest']
-ARMOR_LOWER_BODY = ['boots', 'knee', 'leg', 'pants', 'shin', 'shoes']
+ARMOR_KEYWORDS = {
+	'Head': ['face', 'goggles', 'hat', 'head', 'helmet', 'hood', 'mask'],
+	'Upper Body': ['arm', 'chest', 'poncho', 'shirt', 'shoulder', 'torso', 'vest'],
+	'Lower Body': ['boots', 'knee', 'leg', 'pants', 'shin', 'shoes']
+}
 
 
 # dictionary containing nested lists of strings to populate the help menu, categorised by command type

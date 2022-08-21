@@ -60,7 +60,7 @@ def locate_object_url(search_query):
 	# the appended URL can fail in the case of typos, nicknames, or some other syntax error in the user input
 	result = check_existing_page(url)
 
-	# if result != False, wiki page exists, so return the extracted page content and title
+	# if wiki page exists, return the extracted page content and title
 	if result:
 		return result[0], result[1], url
 

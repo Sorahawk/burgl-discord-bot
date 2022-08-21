@@ -46,6 +46,164 @@ def get_modifier_info(search_query):
 				return modifier_info
 
 
+# returns a list of names of all armor sets, extracted from the overall Armor page
+def get_all_armorsets():
+	url = f'{BASE_WIKI_URL}Armor'
+
+	page_content = get_page_data(url)
+	page_content = page_content.find_class('tocsection-1')[0].xpath('ul')[0].find_class('toctext')
+
+	armorset_list = []
+
+	for armor in page_content:
+		# remove 'Armor Set' suffix from each name
+		armorset_list.append(armor.text_content().replace('Armor Set', '').strip())
+
+	return armorset_list
+
+
+# returns a list with the name of each armor piece in the queried set
+def get_armorset_pieces(page_content):
+	table_list = page_content.find_class('wikitable')
+
+	armor_piece_types = ['Head', 'Upper Body', 'Lower Body']
+	armor_piece_names = {}
+
+	for table in table_list:
+		# skip table if it's not a recipe
+		if table.xpath('tbody/tr/th')[0].text_content().strip() != 'Item':
+			continue
+
+		first_column = table.xpath('tbody/tr/td')[0]
+
+		piece_type = armor_piece_types.pop(0)
+		armor_piece_names[piece_type] = first_column.text_content().strip()
+
+	return armor_piece_names
+
+
+# returns the full name of the specific armor piece being queried
+# if no matching piece can be found, returns None by default
+def process_armorset_input(search_query):
+	search_query = search_query.lower()
+	queried_armorset = None
+
+	# retrieve list of all armor sets
+	armorset_list = get_all_armorsets()
+
+	for armor in armorset_list:
+		# check if armor name prefix is in search query
+		if armor.lower() in search_query:
+			queried_armorset = armor
+			break
+
+	if not queried_armorset:
+		# no matching armor set found
+		return None
+
+	# get corresponding armor set page URL
+	url = get_appended_url(f'{queried_armorset} Armor')
+	page_content = get_page_data(url)
+
+	# get the names of each armor piece in the set
+	armor_piece_names = get_armorset_pieces(page_content)
+
+	# compare search query against armor piece names
+	for piece, full_name in armor_piece_names.items():
+		short_name = full_name.replace(queried_armorset, '').strip()
+
+		if short_name.lower() in search_query:
+			return full_name
+
+	# if no armor piece names are matched, then cross-check with ARMOR_KEYWORDS
+	for piece, keywords in ARMOR_KEYWORDS.items():
+		for word in keywords:
+			if word in search_query:
+				return armor_piece_names[piece]
+
+
+# returns a Counter() of the compiled materials and their quantities
+# collections.Counter will make it much easier to recursively sum up materials for Chopping List in future
+def compile_counter(item_list, recipe_type=None):
+	counter = Counter()
+	value = None
+
+	for item in item_list:
+		if item.strip():
+			if recipe_type == 'Smoothie':
+				counter[item] = 1
+			elif value is None:
+				value = item
+			else:
+				counter[value] = int(item)
+				value = None
+
+	return counter
+
+
+# returns object's crafting recipe(s) as a list of tuples
+# first entry of the tuple is the recipe name while second entry is the recipe as a Counter()
+def get_recipe_tables(page_content, object_name):
+	# get all tables on the page
+	table_list = page_content.find_class('wikitable')
+
+	full_recipe_list = []
+
+	for table in table_list:
+
+		# check first column to determine whether that recipe table is for that object
+		# by either checking for a self-link (for most objects)
+		# or comparing the actual object name (for armor pieces within armor sets)
+		first_column = table.xpath('tbody/tr/td')[0]
+
+		if first_column.find_class('mw-selflink selflink') or object_name == first_column.text_content().strip():
+			recipe_info = process_recipe(table.xpath('tbody/tr'), object_name)
+
+			full_recipe_list.append(recipe_info)
+
+	return full_recipe_list
+
+
+# processes recipe table and extracts crafting information
+def process_recipe(recipe_table, object_name):
+	recipe_type = recipe_table[0].xpath('th')[0].text_content().strip()
+
+	if recipe_type == 'Item':
+		recipe_number = 1
+	elif recipe_type == 'Smoothie':
+		recipe_number = 2
+
+	recipe_table = recipe_table[1]
+
+	# check if recipe crafts multiple of the object
+	recipe_name = recipe_table[0].text_content().strip()
+
+	if recipe_name == object_name:
+		recipe_name = ''
+
+	# extract recipe and consolidate into a Counter()
+	recipe_list = list(recipe_table[recipe_number].itertext())[::-1]
+
+	recipe = compile_counter(recipe_list, recipe_type)
+
+	return recipe_name, recipe
+
+
+# returns object's repair cost as a Counter()
+def get_repair_cost(page_content):
+	sections = page_content.iterdescendants('div')
+
+	for section in sections:
+		if section.get('data-source') == 'repair':
+			repair_list = section
+			break
+
+	repair_list = list(repair_list.xpath('div')[0].itertext())[::-1]
+	repair_cost = compile_counter(repair_list)
+	
+	return repair_cost
+
+
 # returns dictionary of available info extracted from infobox
 def get_infobox_info(page_content):
 	object_info = {}
@@ -147,85 +305,3 @@ def get_infobox_info(page_content):
 		object_info['effects'] = '\n'.join(object_info['effects'])
 
 	return object_info
-
-
-# returns a Counter() of the compiled materials and their quantities
-# collections.Counter will make it much easier to recursively sum up materials for Chopping List in future
-def compile_counter(item_list, recipe_type=None):
-	counter = Counter()
-	value = None
-
-	for item in item_list:
-		if item.strip():
-			if recipe_type == 'Smoothie':
-				counter[item] = 1
-			elif value is None:
-				value = item
-			else:
-				counter[value] = int(item)
-				value = None
-
-	return counter
-
-
-# returns object's crafting recipe(s) as a list of tuples
-# first entry of the tuple is the recipe name while second entry is the recipe as a Counter()
-def get_recipe_tables(page_content, object_name):
-	# get all tables on the page
-	table_list = page_content.find_class('wikitable')
-
-	full_recipe_list = []
-
-	for table in table_list:
-
-		# check first column to determine whether that recipe table is for that object
-		# by either checking for a self-link (for most objects)
-		# or comparing the actual object name (for armor pieces within armor sets)
-		first_column = table.xpath('tbody/tr/td')[0]
-
-		if first_column.find_class('mw-selflink selflink') or object_name == first_column.text_content().strip():
-			recipe_info = process_recipe(table.xpath('tbody/tr'), object_name)
-
-			full_recipe_list.append(recipe_info)
-
-	return full_recipe_list
-
-
-# processes recipe table and extracts crafting information
-def process_recipe(recipe_table, object_name):
-	recipe_type = recipe_table[0].xpath('th')[0].text_content().strip()
-
-	if recipe_type == 'Item':
-		recipe_number = 1
-	elif recipe_type == 'Smoothie':
-		recipe_number = 2
-
-	recipe_table = recipe_table[1]
-
-	# check if recipe crafts multiple of the object
-	recipe_name = recipe_table[0].text_content().strip()
-
-	if recipe_name == object_name:
-		recipe_name = ''
-
-	# extract recipe and consolidate into a Counter()
-	recipe_list = list(recipe_table[recipe_number].itertext())[::-1]
-
-	recipe = compile_counter(recipe_list, recipe_type)
-
-	return recipe_name, recipe
-
-
-# returns object's repair cost as a Counter()
-def get_repair_cost(page_content):
-	sections = page_content.iterdescendants('div')
-
-	for section in sections:
-		if section.get('data-source') == 'repair':
-			repair_list = section
-			break
-
-	repair_list = list(repair_list.xpath('div')[0].itertext())[::-1]
-	repair_cost = compile_counter(repair_list)
-	
-	return repair_cost

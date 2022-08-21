@@ -10,7 +10,7 @@ from json import dumps, loads
 from collections import Counter
 
 
-# returns booleans representing presence of recipe and repair costs on an object's page
+# returns tuple of booleans representing presence of recipe and repair costs on an object's page
 def check_info_presence(page_content):
 	has_recipe = True
 	has_repair_cost = False
@@ -45,8 +45,15 @@ def get_object_info(search_query):
 	# get most likely wiki URL of object
 	result = locate_object_url(search_query)
 
-	# unable to locate URL for item
+	# if unable to locate URL for item
 	if result is None:
+
+
+		# TODO: Implement armor search
+		# iterate through list of armor sets and check if any of the names are within user input
+		# if so then iterate through possible category terms and try to match which piece type it is referring to
+		# or match object name to the specific armor set
+
 
 		# check if it is a modifier
 		modifier_info = get_modifier_info(search_query)
@@ -62,7 +69,15 @@ def get_object_info(search_query):
 		object_info = get_infobox_info(page_content)
 		object_info['page_url'] = result[2]
 
-	except:  # page layout not supported
+	# if page layout not supported
+	except:
+
+
+		# TODO: Implement armor search
+		# iterate through list of armor sets and check if any of the names are within user input
+		# if so then iterate through possible category terms and try to match which piece type it is referring to
+		# or match object name to the specific armor set
+
 
 		# check if it is a modifier
 		modifier_info = get_modifier_info(search_query)
