@@ -323,26 +323,63 @@ def get_armor_piece_info(search_query):
 		# no matching armor piece found
 		return None
 
-	## extract information for matched armor piece
+	## extract information for queried armor piece
 
+	# initialise item_info dictionary
 	item_info = {'page_url': url}
-
 	item_info['name'], piece_type = queried_piece
+
+	# get entire armor wikitable element
+	armor_table = page_content.find_class('wikitable')
+
+	# iterate through all tables and search for the one with the self-link header
+	# prefer not to explicitly hardcode the index location in case of any future drastic changes
+	for table in armor_table:
+		if table.find_class('mw-selflink'):
+			armor_table = table
+			break
+
+	item_info = get_shared_set_info(armor_table, item_info)
+
+	# get corresponding crafting recipe
 	item_info['recipe_name'], item_info['recipe'] = get_recipe_tables(page_content, item_info['name'])[0]
 
-	item_info = get_shared_set_info(page_content, item_info)
 
 	return item_info
 
 
-# 
-def get_shared_set_info(page_content, item_info):
-	set_table = page_content.find_class('mw-selflink')[0].getparent().getparent().itersiblings()
-	set_table = list(set_table)
-	#print(set_table)
+# updates item info dictionary with data that is common across the entire armor set
+def get_shared_set_info(armor_table, item_info):
+
+	# extract armor set tier
+	tier_image = armor_table.find_class('mw-selflink')[0].getprevious()
+
+	if tier_image is not None:  # might be None, e.g. Clover Armor Set is tier-less
+		item_info['tier'] = tier_image.get('title').replace('Tier', '').strip()
+
+	# get list of row elements
+	row_list = armor_table.xpath('tbody/tr')
+
+	# extract armor class
+	class_row = row_list[-1]
+	item_info['class'] = list(class_row.iterdescendants('a'))[0].get('title')
+
+	# extract effects
+	effects_row = row_list[-2]
+	effects_list = []
+
+	for effect in effects_row.iterdescendants('a'):
+		effect = effect.text_content().strip()
+
+		if effect:
+			effects_list.append(effect)
+
+	item_info['effects'] = effects_list[0]
+	item_info['upgradeeffect'] = effects_list[1]
+	item_info['setbonus'] = effects_list[2]
+
+	return item_info
 
 
 
-
-
-#print(get_armor_piece_info('ladybug hat'))
+print(get_armor_piece_info('ladybug hat'))
