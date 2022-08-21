@@ -88,7 +88,10 @@ def insert_smoothie_base(object_info, smoothie_type):
 
 # insert BURG.L emoji to the front of string
 def prefix_burgl_emoji(input_string):
-	return f"{CUSTOM_EMOJIS['BURG.L']} *{input_string}*"
+	if 'BURG.L' in CUSTOM_EMOJIS:
+		return f"{CUSTOM_EMOJIS['BURG.L']} *{input_string}*"
+	else:
+		return f'*{input_string}*'
 
 
 # returns string surrounded by double underscores, which is the syntax for underlined text on Discord

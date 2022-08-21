@@ -70,14 +70,14 @@ def get_infobox_info(page_content):
 
 		standard_headers = ['aggression', 'tamewith', 'immune', 'weakpoint',
 							'tooltype', 'augmenttype',  'class', 'water', 'health',
-							'species', 'gender', 'description+']
+							'species', 'gender', 'description+', 'effect+']
 		stat_headers = ['damage', 'stun', 'speed', 'defense', 'sturdiness', 'weight']
 
 		if header in standard_headers:
 			object_info[header] = content
 
 		elif header in stat_headers:
-			# for base building parts, wiki layout has things that incorrectly reuse the 'weight' label
+			# for base building parts, wiki layout has some text stuff that incorrectly reuses the 'weight' label
 			# some item stats are also written as '.5' without the preceding zero
 			# converting them to floats will solve both of the above
 			try:

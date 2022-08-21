@@ -77,6 +77,10 @@ def get_object_info(search_query):
 		if 'tier+' in object_info:
 			object_info['tier'] = object_info['tier+']
 
+		# Fin Flops+ has different upgraded effect, so have to replace the original
+		if 'effect+' in object_info:
+			object_info['effects'] = object_info['effect+']
+
 	has_recipe, has_repair_cost = check_info_presence(page_content)
 
 	# disable recipe extraction for natural resources since some items like Plant Fiber can be grinded

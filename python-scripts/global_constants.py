@@ -137,7 +137,7 @@ CACHE_CLEAR_HOUR = 6
 # base URL for the Grounded Wiki
 BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
 
-# name of the smoothie item crafted when no recipe is matched
+# name of the generic smoothie
 DEFAULT_SMOOTHIE_NAME = 'Questionable Slop'
 
 # dictionary of smoothie bases and their base ingredients
@@ -147,9 +147,9 @@ SMOOTHIE_BASES = {'basic': 'Grub Sludge', 'beefy': 'Muscle Sprout', 'sticky': 'G
 SPECIAL_WORDS = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 'at', 'as well as', 'de', 'is', 'of', 'on', 'the', 'to']
 
 # lists of words that correspond to each armor piece type
-ARMOR_HEAD = ['face', 'goggles', 'hat', 'helmet', 'hood', 'mask']
-ARMOR_UPPER_BODY = ['arm', 'chest', 'poncho', 'shoulder', 'vest']
-ARMOR_LOWER_BODY = ['boots', 'knee', 'leg', 'shin', 'shoes']
+ARMOR_HEAD = ['face', 'goggles', 'hat', 'head', 'helmet', 'hood', 'mask']
+ARMOR_UPPER_BODY = ['arm', 'chest', 'poncho', 'shirt', 'shoulder', 'torso', 'vest']
+ARMOR_LOWER_BODY = ['boots', 'knee', 'leg', 'pants', 'shin', 'shoes']
 
 
 # dictionary containing nested lists of strings to populate the help menu, categorised by command type
