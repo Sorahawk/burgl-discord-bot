@@ -36,6 +36,27 @@ def check_info_presence(page_content):
 	return has_recipe, has_repair_cost
 
 
+# used when normal object search fails to check if search query is referring to special objects
+def get_special_info(search_query, page_title=None):
+
+	# check if it is a piece within an armor set
+
+	if page_title:
+		# if object search already redirected to a specific armor set page, then no need to match input to armor set
+		queried_set = page_title.replace('Armor', '').strip()
+	else:
+		queried_set = match_armor_set(search_query)
+
+	if queried_set:
+		item_info = get_armor_piece_info(search_query, queried_set)
+
+		if item_info:
+			return item_info
+
+	# check if it is a modifier
+	return get_modifier_info(search_query)
+
+
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
 def get_object_info(search_query):
 
@@ -48,16 +69,9 @@ def get_object_info(search_query):
 	# if unable to locate URL for item
 	if result is None:
 
-
-		# TODO: Implement armor search
-		# iterate through list of armor sets and check if any of the names are within user input
-		# if so then iterate through possible category terms and try to match which piece type it is referring to
-		# or match object name to the specific armor set
-
-
-		# check if it is a modifier
-		modifier_info = get_modifier_info(search_query)
-		return modifier_info if modifier_info else 101
+		# run through other search routes
+		info_result = get_special_info(search_query)
+		return info_result if info_result else 101
 
 	# Google API daily resource exhausted
 	elif result is False:
@@ -72,16 +86,9 @@ def get_object_info(search_query):
 	# if page layout not supported
 	except:
 
-
-		# TODO: Implement armor search
-		# iterate through list of armor sets and check if any of the names are within user input
-		# if so then iterate through possible category terms and try to match which piece type it is referring to
-		# or match object name to the specific armor set
-
-
-		# check if it is a modifier
-		modifier_info = get_modifier_info(search_query)
-		return modifier_info if modifier_info else [102, page_title]
+		# run through other search routes
+		info_result = get_special_info(search_query, page_title)
+		return info_result if info_result else [102, page_title]
 
 	# if query searching for upgraded tool, check for presence of both description+ and tier+
 	if is_upgraded_tool and ('description+' in object_info or 'tier+' in object_info):

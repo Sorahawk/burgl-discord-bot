@@ -30,7 +30,7 @@ def get_modifier_info(search_query):
 
 			if modifier_name.lower().replace(':', '') in prefixed_queries:
 				modifier_info['name'] = modifier_name
-				modifier_info['picture_url'] = list(columns[0].iterlinks())[0][2]
+				modifier_info['picture_url'] = columns[0].find_class('image')[0].get('href')
 
 				# ignore the second column under mutations, shift to the right by one
 				# also remove superscript footnote text present on some mutation descriptions and sources
@@ -52,7 +52,7 @@ def get_infobox_info(page_content):
 
 	infobox = page_content.find_class('portable-infobox')[0]
 	object_info['name'] = infobox.find_class('pi-title')[0].text_content()
-	object_info['picture_url'] = list(infobox.find_class('image-thumbnail')[0].iterlinks())[0][2]
+	object_info['picture_url'] = infobox.find_class('image-thumbnail')[0].find_class('image')[0].get('href')
 
 	sections = infobox.find_class('pi-item-spacing')
 
@@ -248,7 +248,7 @@ def get_all_armor_sets():
 
 
 # returns a list of each armor piece in the queried set
-def get_armor_set(page_content):
+def get_armor_pieces(page_content):
 	table_list = page_content.find_class('wikitable')
 
 	armor_types = ['Head', 'Upper Body', 'Lower Body']
@@ -267,10 +267,24 @@ def get_armor_set(page_content):
 	return armor_pieces
 
 
+# matches user input to an armor set and returns it
+# if no match found, returns None by default
+def match_armor_set(search_query):
+	search_query = search_query.lower()
+
+	# retrieve list of all armor sets
+	armor_set_list = get_all_armor_sets()
+
+	for armor_set in armor_set_list:
+		# check if armor name prefix is in search query
+		if armor_set.lower() in search_query:
+			return armor_set
+
+
 # matches user input to an armor piece in the given armor set and returns a tuple 
 # first item is name of queried armor piece, and second is type of armor piece
 # if no matching piece can be found, returns None by default
-def process_armor_input(search_query, queried_set, armor_pieces):
+def match_armor_piece(search_query, queried_set, armor_pieces):
 
 	# compare search query against armor piece names
 	for piece_type, full_name in armor_pieces.items():
@@ -288,43 +302,23 @@ def process_armor_input(search_query, queried_set, armor_pieces):
 
 # returns dictionary of extracted information for a piece of armor within a full set
 # if no matching armor piece can be found, returns None by default
-def get_armor_piece_info(search_query):
-
-	## determine queried armor set
-
-	search_query = search_query.lower()
-	queried_set = None
-
-	# retrieve list of all armor sets
-	armor_set_list = get_all_armor_sets()
-
-	for armor_set in armor_set_list:
-		# check if armor name prefix is in search query
-		if armor_set.lower() in search_query:
-			queried_set = armor_set
-			break
-
-	if not queried_set:
-		# no matching armor set found
-		return None
+def get_armor_piece_info(search_query, queried_set):
 
 	## determine queried armor piece
-
 	# get corresponding armor set page URL
 	url = get_appended_url(f'{queried_set} Armor')
 	page_content = get_page_data(url)
 
 	# get the names of each armor piece in the set
-	armor_pieces = get_armor_set(page_content)
+	armor_pieces = get_armor_pieces(page_content)
 
-	queried_piece = process_armor_input(search_query, queried_set, armor_pieces)
+	queried_piece = match_armor_piece(search_query, queried_set, armor_pieces)
 
 	if not queried_piece:
 		# no matching armor piece found
 		return None
 
 	## extract information for queried armor piece
-
 	# initialise item_info dictionary
 	item_info = {'page_url': url}
 	item_info['name'], piece_type = queried_piece
@@ -333,17 +327,20 @@ def get_armor_piece_info(search_query):
 	armor_table = page_content.find_class('wikitable')
 
 	# iterate through all tables and search for the one with the self-link header
-	# prefer not to explicitly hardcode the index location in case of any future drastic changes
+	# prefer not to hardcode position via index in case of any future drastic page layout changes
 	for table in armor_table:
 		if table.find_class('mw-selflink'):
 			armor_table = table
 			break
 
+	# extract common info fields
 	item_info = get_shared_set_info(armor_table, item_info)
+
+	# extract data specific to armor piece type
+	item_info = get_specific_piece_info(armor_table, piece_type, item_info)
 
 	# get corresponding crafting recipe
 	item_info['recipe_name'], item_info['recipe'] = get_recipe_tables(page_content, item_info['name'])[0]
-
 
 	return item_info
 
@@ -381,5 +378,37 @@ def get_shared_set_info(armor_table, item_info):
 	return item_info
 
 
+# updates item info dictionary with data that is specific to that armor piece
+def get_specific_piece_info(armor_table, piece_type, item_info):
 
-print(get_armor_piece_info('ladybug hat'))
+	# set index offset based on armor piece type
+	if piece_type == 'Head':
+		index_offset = 0
+	elif piece_type == 'Upper Body':
+		index_offset = 2
+	elif piece_type == 'Lower Body':
+		index_offset = 4
+
+	# insert category
+	item_info['category'] = f'Armor - {piece_type}'
+
+	# get list of specific rows
+	piece_rows = armor_table.xpath('tbody/tr')[2:4]
+
+	# extract picture URL from first column
+	item_info['picture_url'] = piece_rows[0].xpath('td')[index_offset].find_class('image')[0].get('href')
+
+	# extract defense and resistance
+	stat_list = list(piece_rows[0].xpath('td')[index_offset].itertext())
+
+	item_info['defense'] = stat_list[2]
+	item_info['resistance'] = stat_list[4]
+
+	# extract description
+	item_info['description'] = piece_rows[0].xpath('td')[index_offset + 1].find('p').text_content().strip()
+
+	# extract repair cost
+	repair_list = list(piece_rows[1].xpath('td')[index_offset // 2].find('p').itertext())[::-1]
+	item_info['repair_cost'] = compile_counter(repair_list)
+
+	return item_info

@@ -312,5 +312,7 @@ OBJECT_ATTRIBUTES = {
 
 	'upgradeeffect': (8, 'Sleek Upgrade Effect'),
 
+	'setbonus': (9, 'Set Bonus'),
+
 	'loot': 10
 }
