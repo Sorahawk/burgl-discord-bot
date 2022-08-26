@@ -40,8 +40,7 @@ def check_info_presence(page_content):
 def get_special_info(search_query, page_title=None):
 
 	# check if it is a piece within an armor set
-
-	if page_title:
+	if page_title and page_title != 'Armor':
 		# if object search already redirected to a specific armor set page, then no need to match input to armor set
 		queried_set = page_title.replace('Armor', '').strip()
 	else:
@@ -66,10 +65,8 @@ def get_object_info(search_query):
 	# get most likely wiki URL of object
 	result = locate_object_url(search_query)
 
-	# if unable to locate URL for item
 	if result is None:
-
-		# run through other search routes
+		# if unable to locate URL for item, run through other search routes
 		info_result = get_special_info(search_query)
 		return info_result if info_result else 101
 
@@ -83,10 +80,8 @@ def get_object_info(search_query):
 		object_info = get_infobox_info(page_content)
 		object_info['page_url'] = result[2]
 
-	# if page layout not supported
 	except:
-
-		# run through other search routes
+		# if page layout not supported, run through other search routes
 		info_result = get_special_info(search_query, page_title)
 		return info_result if info_result else [102, page_title]
 
