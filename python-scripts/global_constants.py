@@ -148,9 +148,9 @@ SPECIAL_WORDS = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 
 
 # lists of words that correspond to each armor piece type
 ARMOR_KEYWORDS = {
-	'Head': ['face', 'hat', 'head', 'helmet', 'hood', 'mask'],
-	'Upper Body': ['arm', 'chest', 'shirt', 'shoulder', 'torso', 'vest'],
-	'Lower Body': ['boots', 'knee', 'leg', 'pants', 'shin', 'shoes']
+	'Head': ['face', 'hat', 'helmet', 'hood', 'mask'],
+	'Upper Body': ['chest', 'shirt', 'shoulder', 'torso', 'vest'],
+	'Lower Body': ['boots', 'knee', 'pants', 'shin', 'shoes']
 }
 
 
