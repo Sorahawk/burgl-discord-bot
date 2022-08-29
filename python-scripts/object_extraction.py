@@ -52,7 +52,12 @@ def get_infobox_info(page_content):
 
 	infobox = page_content.find_class('portable-infobox')[0]
 	object_info['name'] = infobox.find_class('pi-title')[0].text_content()
-	object_info['picture_url'] = infobox.find_class('image-thumbnail')[0].find_class('image')[0].get('href')
+
+	try:
+		object_info['picture_url'] = infobox.find_class('image-thumbnail')[0].find_class('image')[0].get('href')
+	except:
+		# some infoboxes might not have images e.g. quests
+		object_info['picture_url'] = ''
 
 	sections = infobox.find_class('pi-item-spacing')
 
@@ -70,7 +75,7 @@ def get_infobox_info(page_content):
 
 		standard_headers = ['aggression', 'tamewith', 'immune', 'weakpoint',
 							'tooltype', 'augmenttype',  'class', 'water', 'health',
-							'species', 'gender', 'description+', 'effect+']
+							'species', 'gender', 'unlock', 'description+', 'effect+']
 		stat_headers = ['damage', 'stun', 'speed', 'defense', 'sturdiness', 'weight']
 
 		if header in standard_headers:
@@ -112,6 +117,22 @@ def get_infobox_info(page_content):
 			except:
 				# ignore Tier header
 				pass
+
+		elif header == 'objectives':
+			objectives = section.xpath('ul')
+
+			# check if only have a single objective
+			if not objectives:
+				object_info[header] = content.strip()
+			else:
+				output_string = ''
+
+				objectives = objectives[0].getchildren()
+
+				for objective in objectives:
+					output_string += objective.text_content().strip() + '\n'
+
+				object_info[header] = output_string.strip()
 
 		elif header == 'loot':
 			object_info[header] = content.strip().replace(')', ')\n').replace('\n ', '\n')

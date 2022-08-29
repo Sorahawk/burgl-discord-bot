@@ -148,9 +148,9 @@ SPECIAL_WORDS = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 
 
 # lists of words that correspond to each armor piece type
 ARMOR_KEYWORDS = {
-	'Head': ['face', 'hat', 'helmet', 'hood', 'mask'],
-	'Upper Body': ['chest', 'shirt', 'shoulder', 'torso', 'vest'],
-	'Lower Body': ['boots', 'knee', 'pants', 'shin', 'shoes']
+	'Head': ['hat', 'helmet', 'hood', 'mask'],
+	'Upper Body': ['chest', 'shoulder', 'torso', 'vest'],
+	'Lower Body': ['boots', 'knee', 'shin', 'shoes']
 }
 
 
@@ -298,6 +298,7 @@ OBJECT_ATTRIBUTES = {
 	'damage': 4,
 	'health': 4,
 	'defense': 4,
+	'unlock': (4, 'How to Unlock'),
 
 	'stun': 5,
 	'food': 5,
@@ -309,6 +310,7 @@ OBJECT_ATTRIBUTES = {
 	'weight': 6,
 
 	'effects': 7,
+	'objectives': 7,
 
 	'upgradeeffect': (8, 'Sleek Upgrade Effect'),
 

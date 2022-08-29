@@ -18,7 +18,7 @@ def check_info_presence(page_content):
 	# check for presence of element ID 'Recipe'
 	try:
 		page_content.get_element_by_id('Recipe')
-	except KeyError:
+	except:
 		has_recipe = False
 
 	# if 'Recipe' not found, search again for 'Recipes'
