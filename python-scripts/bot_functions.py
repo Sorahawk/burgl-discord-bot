@@ -153,14 +153,25 @@ async def clear_method(message, user_input, flag_presence):
 async def purge_method(message, user_input, flag_presence):
 	await burgl_message('purging', message)
 
-	# flatten message history into a list
-	message_history = [old_message async for old_message in message.channel.history()]
-
 	# if message is from a server channel
 	if not isinstance(message.channel, DMChannel):
-		await message.channel.purge()
+		purge_amount = findall('\d+', user_input)
 
-	else:  # if message is from a private message
+		# allow user to specify how many messages to delete
+		if not purge_amount:
+			purge_amount = DEFAULT_PURGE_AMOUNT
+		else:
+			purge_amount = int(purge_amount[0])
+
+		purge_amount += 2  # account for user command message and bot acknowledgement response
+
+		await message.channel.purge(limit=purge_amount)
+
+	# if message is from a private message
+	else:
+		# flatten message history into a list
+		message_history = [old_message async for old_message in message.channel.history()]
+
 		for old_message in message_history:
 			if old_message.author == global_constants.BOT_INSTANCE.user:
 				await old_message.delete()

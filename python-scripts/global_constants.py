@@ -134,6 +134,9 @@ CACHE_CLEAR_DAY = 0
 # 0 is 12AM, 23 is 11PM
 CACHE_CLEAR_HOUR = 6
 
+# integer value for default number of messages to delete when purging a channel
+DEFAULT_PURGE_AMOUNT = 25
+
 # base URL for the Grounded Wiki
 BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
 
