@@ -157,7 +157,7 @@ ARMOR_KEYWORDS = {
 # dictionary containing nested lists of strings to populate the help menu, categorised by command type
 BOT_HELP_MENU = {
 	'Main': [
-		['.search <object_name>', 'Displays any available information of the object. Works with most things, e.g. creatures, resources, equipment, building components.',
+		['.search <object_name>', 'Displays any available information of the object. Works with most things, like creatures, resources, equipment, structures, mutations, quests and more.',
 		'+Use flag `-o` to override any binded shortcuts.'],
 
 		['.card <creature_name>', "Displays the specified creature's bestiary card.",

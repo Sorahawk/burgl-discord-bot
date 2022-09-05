@@ -36,6 +36,15 @@ def check_info_presence(page_content):
 	return has_recipe, has_repair_cost
 
 
+# returns True if page is for an armor set, otherwise returns None by default
+def check_armor_set_page(page_content):
+	try:
+		page_content.get_element_by_id('Armor_Set')
+		return True
+	except:
+		pass
+
+
 # used when normal object search fails to check if search query is referring to special objects
 def get_special_info(search_query, page_title=None):
 

@@ -158,7 +158,7 @@ async def purge_method(message, user_input, flag_presence):
 
 	# if message is from a server channel
 	if not isinstance(message.channel, DMChannel):
-		await message.channel.delete_messages(message_history)
+		await message.channel.purge()
 
 	else:  # if message is from a private message
 		for old_message in message_history:
