@@ -235,14 +235,16 @@ BOT_ACTIVITY_STATUSES = {
 	'with a pet gnat': 0,
 	'with a pet aphid': 0,
 	'with a pet weevil': 0,
+	'data to Dr. Tully': 'https://www.youtube.com/watch?v=aueMEZC8uDE',
+	'broodmother trials': 'https://www.youtube.com/watch?v=tZlcSr5DfRI',
 	'audio logs': 2,
 	'the ladybugs coo': 2,
 	'the backyard': 3,
 	'the fungus spread': 3,
-	'the teens': 3, 'the Watcher': 3,
+	'the teens': 3,
+	'the Watcher': 3,
 	'burger flipping': 5,
-	'data to Dr. Tully': 'https://www.youtube.com/watch?v=aueMEZC8uDE',
-	'broodmother trials': 'https://www.youtube.com/watch?v=tZlcSr5DfRI'
+	'burger grilling': 5
 }
 
 
