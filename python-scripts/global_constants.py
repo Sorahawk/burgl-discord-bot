@@ -140,6 +140,9 @@ DEFAULT_PURGE_AMOUNT = 25
 # base URL for the Grounded Wiki
 BASE_WIKI_URL = 'https://grounded.fandom.com/wiki/'
 
+# titles of wiki pages to ignore
+WIKI_PAGE_BLACKLIST = ['Removed/Cut Content']
+
 # name of the generic smoothie
 DEFAULT_SMOOTHIE_NAME = 'Questionable Slop'
 
@@ -147,7 +150,7 @@ DEFAULT_SMOOTHIE_NAME = 'Questionable Slop'
 SMOOTHIE_BASES = {'basic': 'Grub Sludge', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
 
 # list of words which have atypical capitalisation
-SPECIAL_WORDS = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 'at', 'as well as', 'de', 'is', 'of', 'on', 'the', 'to']
+SPECIAL_WORDS = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 'at', 'as well as', 'de', 'in', 'into', 'is', 'of', 'on', 'the', 'to']
 
 # lists of words that correspond to each armor piece type
 ARMOR_KEYWORDS = {

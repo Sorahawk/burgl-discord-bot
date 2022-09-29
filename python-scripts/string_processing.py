@@ -52,6 +52,26 @@ def check_flags(user_input):
 	return flag_presence, user_input
 
 
+# returns page URL, comprised of sanitised search query appended to the base wiki URL
+def get_appended_url(search_query):
+
+	# symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
+	illegal_symbols = '[+%<>|}{[\]]+'
+
+	search_query = sub(illegal_symbols, '', search_query)
+
+	# replace ? with %3F
+	# used to be for Smoothie? but it has since changed name
+	search_query = search_query.replace('?', '%3F')
+
+	# check if 'arrows' is the last word and remove the trailing S
+	if search_query.strip()[-6:].lower() == 'arrows':
+		search_query = search_query[:-1]
+
+	search_query = custom_capitalise_string(search_query)
+	return f'{BASE_WIKI_URL}{search_query}'.replace(' ', '_')
+
+
 # detect special smoothie type keyword in user input and remove it
 # returns new search query and the smoothie type as two separate variables
 # returns 'basic' by default since don't expect basic to be explicitly stated for smoothies
@@ -169,26 +189,6 @@ def custom_capitalise_string(string):
 
 	string = string.strip()
 	return string[0].upper() + string[1:]
-
-
-# returns page URL, comprised of sanitised search query appended to the base wiki URL
-def get_appended_url(search_query):
-
-	# symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
-	illegal_symbols = '[+%<>|}{[\]]+'
-
-	search_query = sub(illegal_symbols, '', search_query)
-
-	# replace ? with %3F
-	# used to be for Smoothie? but it has since changed name
-	search_query = search_query.replace('?', '%3F')
-
-	# check if 'arrows' is the last word and remove the trailing S
-	if search_query.strip()[-6:].lower() == 'arrows':
-		search_query = search_query[:-1]
-
-	search_query = custom_capitalise_string(search_query)
-	return f'{BASE_WIKI_URL}{search_query}'.replace(' ', '_')
 
 
 # returns ratio of similarity between two input strings

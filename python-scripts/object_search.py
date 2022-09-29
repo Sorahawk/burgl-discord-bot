@@ -85,6 +85,10 @@ def get_object_info(search_query):
 
 	page_content, page_title = result[0], result[1]
 
+	# reject pages on the blacklist as unsupported
+	if page_title in WIKI_PAGE_BLACKLIST:
+		return [102, page_title]
+
 	try:
 		object_info = get_infobox_info(page_content)
 		object_info['page_url'] = result[2]

@@ -107,8 +107,7 @@ The overall roadmap and development tracker for this project can be found on the
 | 103 | Daily limit of 100 queries for Google Custom Search JSON API has been exceeded. |
 | 104 | Bestiary card for the specified creature cannot be located. |
 | 105 | Specified object is not compatible with the Chopping List. |
-| 106 | Specified item is not present in the Chopping List. |
-| 107 | Specified task does not exist in the Task Scheduler. |
+| 106 | Specified item is not present in the list. |
 
 <br>
 
