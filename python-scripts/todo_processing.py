@@ -33,8 +33,8 @@ def process_todo_input(user_input):
 				priority_level = level
 				user_input = user_input.rpartition(back)[0]
 
-	# lower all letters and remove edge symbols
-	user_input = user_input.lower().strip('., ').replace(' ,', ',')
+	# remove edge symbols
+	user_input = user_input.strip('., ').replace(' ,', ',')
 
 	return user_input, priority_level
 
