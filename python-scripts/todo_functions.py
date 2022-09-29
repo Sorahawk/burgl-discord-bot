@@ -81,7 +81,7 @@ async def todo_find(message, user_input):
 	number_pages = ceil(len(matching_tasks) / MAX_TODO_FIELDS)
 
 	for page in range(number_pages):
-		find_embed = Embed(title=f"**Matching Tasks - '{task_description_capitalisation(user_input)}'**", color=EMBED_COLOR_CODE)
+		find_embed = Embed(title=f"**Task Search: '{task_description_capitalisation(user_input)}'**", color=EMBED_COLOR_CODE)
 
 		start_index = page * MAX_TODO_FIELDS
 		end_index = start_index + MAX_TODO_FIELDS
@@ -109,8 +109,8 @@ async def todo_edit(message, user_input):
 	if not id_list:
 		return await burgl_message('empty', message)
 
-	string_header = 'Details of Edited Tasks\n'
-	formatted_string = ''
+	embed_title = '**Edited To-Do Entries**'
+	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
 	for task_id in id_list:
 		task_description = remove_task_scheduler(task_id)
@@ -124,10 +124,11 @@ async def todo_edit(message, user_input):
 		new_id = insert_task_scheduler(task_priority, task_description)
 
 		task_description = task_description_capitalisation(task_description)
-		formatted_string += f'- **{task_id} -> {new_id}**: {task_description}\n'
+		summary_embed.add_field(name=f'{task_id} -> {new_id}', value=task_description, inline=False)
 
-	if formatted_string:
-		await message.channel.send(string_header + formatted_string)
+	# only send embed if valid items were added
+	if len(summary_embed) != len(embed_title):
+		await message.channel.send(embed=summary_embed)
 
 
 # check one or more tasks off the Task Scheduler
@@ -138,8 +139,8 @@ async def todo_delete(message, user_input):
 	if not regex_results:
 		return await burgl_message('empty', message)
 
-	string_header = 'Tasks checked off the Task Scheduler:\n'
-	formatted_string = ''
+	embed_title = '**Completed Tasks**'
+	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
 	# slice each result as there are leading and trailing whitespaces/symbols
 	for task_id in regex_results:
@@ -163,10 +164,11 @@ async def todo_delete(message, user_input):
 		if material_name in global_constants.HARVEST_TASK_REFERENCE:
 			del global_constants.HARVEST_TASK_REFERENCE[material_name]
 
-		formatted_string += f'- **{task_id}**: {task_description_capitalisation(task_description)}\n'
+		summary_embed.add_field(name=f'{task_id}', value=task_description_capitalisation(task_description), inline=False)
 
-	if formatted_string:
-		await message.channel.send(string_header + formatted_string)
+	# only send embed if valid items were added
+	if len(summary_embed) != len(embed_title):
+		await message.channel.send(embed=summary_embed)
 
 
 # wipe the entire Task Scheduler
