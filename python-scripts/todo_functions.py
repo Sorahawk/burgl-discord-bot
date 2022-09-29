@@ -25,7 +25,7 @@ async def todo_default(message, user_input):
 	embed_title = '**New To-Do Entry**'
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
-	summary_embed.add_field(name=f'Task {task_id}', value=task_description, inline=False)
+	summary_embed.add_field(name=f'Task {task_id}', value=task_description_capitalisation(task_description), inline=False)
 
 	await message.channel.send(embed=summary_embed)
 
@@ -52,7 +52,7 @@ async def todo_view(message, user_input):
 			task_id = entry[0]
 			task_description = entry[1]
 
-			todo_embed.add_field(name=f'{task_id}', value=task_description, inline=False)
+			todo_embed.add_field(name=f'{task_id}', value=task_description_capitalisation(task_description), inline=False)
 
 		todo_embed.set_footer(text=f'Page {page + 1}/{number_pages}')
 		embed_list.append(todo_embed)
@@ -81,7 +81,7 @@ async def todo_find(message, user_input):
 	number_pages = ceil(len(matching_tasks) / MAX_TODO_FIELDS)
 
 	for page in range(number_pages):
-		find_embed = Embed(title=f"**Matching Tasks - '{user_input}'**", color=EMBED_COLOR_CODE)
+		find_embed = Embed(title=f"**Matching Tasks - '{task_description_capitalisation(user_input)}'**", color=EMBED_COLOR_CODE)
 
 		start_index = page * MAX_TODO_FIELDS
 		end_index = start_index + MAX_TODO_FIELDS
@@ -90,7 +90,7 @@ async def todo_find(message, user_input):
 			task_id = entry[0]
 			task_description = entry[1]
 
-			find_embed.add_field(name=f'{task_id}', value=task_description, inline=False)
+			find_embed.add_field(name=f'{task_id}', value=task_description_capitalisation(task_description), inline=False)
 
 		find_embed.set_footer(text=f'Page {page + 1}/{number_pages}')
 		embed_list.append(find_embed)
@@ -123,7 +123,7 @@ async def todo_edit(message, user_input):
 		# insert new entry with the new priority level
 		new_id = insert_task_scheduler(task_priority, task_description)
 
-		task_description = task_description
+		task_description = task_description_capitalisation(task_description)
 		formatted_string += f'- **{task_id} -> {new_id}**: {task_description}\n'
 
 	if formatted_string:
@@ -163,7 +163,7 @@ async def todo_delete(message, user_input):
 		if material_name in global_constants.HARVEST_TASK_REFERENCE:
 			del global_constants.HARVEST_TASK_REFERENCE[material_name]
 
-		formatted_string += f'- **{task_id}**: {task_description}\n'
+		formatted_string += f'- **{task_id}**: {task_description_capitalisation(task_description)}\n'
 
 	if formatted_string:
 		await message.channel.send(string_header + formatted_string)

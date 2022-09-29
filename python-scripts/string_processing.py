@@ -228,4 +228,13 @@ def check_harvest_task(task_description):
 	task_description = task_description.split()
 
 	if len(task_description) > 3 and task_description[0].title() == keyword:
-		return custom_capitalise_string(' '.join(task_description[3:]))
+		return task_description_capitalisation(' '.join(task_description[3:]))
+
+
+# checks entire description of tasks in the Task Scheduler for any special words, and replaces them as such
+def task_description_capitalisation(string):
+	for special_word in SPECIAL_WORDS:
+		if special_word.lower() in string:
+			string = string.replace(special_word.lower(), special_word)
+
+	return string
