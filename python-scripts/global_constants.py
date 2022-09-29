@@ -150,7 +150,7 @@ DEFAULT_SMOOTHIE_NAME = 'Questionable Slop'
 SMOOTHIE_BASES = {'basic': 'Grub Sludge', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
 
 # list of words which have atypical capitalisation
-SPECIAL_WORDS = ['AARTZ', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'a', 'and', 'at', 'as well as', 'de', 'in', 'into', 'is', 'of', 'on', 'the', 'to']
+SPECIAL_WORDS = ['AARTZ', 'ASL', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'de', 'of', 'on', 'the']
 
 # lists of words that correspond to each armor piece type
 ARMOR_KEYWORDS = {
@@ -171,23 +171,23 @@ BOT_HELP_MENU = {
 		'+Use flag `-o` to override any binded shortcuts.'],
 
 		['.bind <object_name>, <shortcut_1>, [shortcut_2], ...', 'Binds the object name to one or more shortcut phrases.',
+		'+Parameters are case-insensitive and must be separated by a comma.'],
 		'+Use flag `-v` to view all binded shortcuts (no arguments required).',
 		'+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).',
-		'+Parameters are case-insensitive and must be separated by a comma.'],
 
 		['.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...', 'Adds one or more specified items to the Chopping List.',
+		f'+Parameters are case-insensitive and there is a maximum of {MAX_CHOPPING_INPUT} parameters per entry.',
+		'+Commas are optional unless two item_names are arranged consecutively.'],
 		'+Use flag `-v` to view all items in the Chopping List (no arguments required).',
 		'+Use flag `-d` to check one or more specified items off the Chopping List (quantity is optional; item will be marked as fully completed).',
 		"+Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required).",
-		f'+Parameters are case-insensitive and there is a maximum of {MAX_CHOPPING_INPUT} parameters per entry.',
-		'+Commas are optional unless two item_names are arranged consecutively.'],
 
 		['.todo <task_description>, [priority_level]', 'Adds the given task to the Task Scheduler.',
+		"+Valid task priority levels are: 'Low', 'Medium', 'High', 'Recurring'. Defaults to 'Medium' if not provided.",
 		"+Use flag `-e` to edit a task's priority level (task_ID and new priority level required).",
 		'+Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).',
 		'+Use flag `-d` to check one or more specified tasks off the Task Scheduler (at least one task_ID is required).',
-		"+Use flag `-r` to reset the entire Task Scheduler (the word 'confirm' is required).",
-		"+Valid task priority levels are: 'Low', 'Medium', 'High', 'Recurring'. Defaults to 'Medium' if not provided."]
+		"+Use flag `-r` to reset the entire Task Scheduler (the word 'confirm' is required)."]
 	],
 
 	'Utility': [

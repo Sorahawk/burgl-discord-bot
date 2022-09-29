@@ -66,28 +66,28 @@ The overall roadmap and development tracker for this project can be found on the
   - *Use flag `-o` to override any binded shortcuts.*
 - `.bind <object_name>, <shortcut_1>, [shortcut_2], ...`
   - Binds an object name to one or more shortcut phrases.
+  - *Parameters are case-insensitive and must be separated by a comma.*
   - *Use flag `-v` to view all binded shortcuts (no arguments required).*
   - *Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).*
-  - *Parameters are case-insensitive and must be separated by a comma.*
 - `.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...`
   - Adds one or more specified items to the Chopping List, which tracks player-required resources and quantities.
   - If a specified item is not already a natural resource, it will be broken down into its component materials before being added to the list.
+  - *Parameters are case-insensitive and there is a maximum of 9 parameters per entry.*
+  - *Commas are optional unless two item_names are arranged consecutively.*
   - *Use flag `-v` to view all items in the Chopping List (no arguments required).*
   - *Use flag `-d` to check one or more specified items off from the Chopping List (quantity is optional; item will be marked as fully completed).*
   - *Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required).*
-  - *Parameters are case-insensitive and there is a maximum of 9 parameters per entry.*
-  - *Commas are optional unless two item_names are arranged consecutively.*
 - `.todo <task_description>, [priority_level]`
   - Adds the given task to the Task Scheduler, which tracks both player-specified tasks as well as auto-generated tasks.
-  - *Use flag `-e` to edit a task's priority level (task_ID and new priority level required).*
-  - *Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).*
-  - *Use flag `-d` to check one or more specified tasks off the Task Scheduler (at least one task_ID is required).*
-  - *Use flag `-r` to reset the entire Task Scheduler (the word 'confirm' is required).*
   - *Valid task priority levels are:*
     - Low
     - Medium (Default)
     - High
     - Recurring
+  - *Use flag `-e` to edit a task's priority level (task_ID and new priority level required).*
+  - *Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).*
+  - *Use flag `-d` to check one or more specified tasks off the Task Scheduler (at least one task_ID is required).*
+  - *Use flag `-r` to reset the entire Task Scheduler (the word 'confirm' is required).*
 - `.clear`
   - Clears the webpage data and object information caches.
 - `.purge`

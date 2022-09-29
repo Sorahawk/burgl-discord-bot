@@ -25,7 +25,7 @@ async def todo_default(message, user_input):
 	embed_title = '**New To-Do Entry**'
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
-	summary_embed.add_field(name=f'Task {task_id}', value=custom_capitalise_string(task_description), inline=False)
+	summary_embed.add_field(name=f'Task {task_id}', value=task_description, inline=False)
 
 	await message.channel.send(embed=summary_embed)
 
