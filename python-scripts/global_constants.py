@@ -171,16 +171,16 @@ BOT_HELP_MENU = {
 		'+Use flag `-o` to override any binded shortcuts.'],
 
 		['.bind <object_name>, <shortcut_1>, [shortcut_2], ...', 'Binds the object name to one or more shortcut phrases.',
-		'+Parameters are case-insensitive and must be separated by a comma.'],
+		'+Parameters are case-insensitive and must be separated by a comma.',
 		'+Use flag `-v` to view all binded shortcuts (no arguments required).',
-		'+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).',
+		'+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).'],
 
 		['.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...', 'Adds one or more specified items to the Chopping List.',
 		f'+Parameters are case-insensitive and there is a maximum of {MAX_CHOPPING_INPUT} parameters per entry.',
-		'+Commas are optional unless two item_names are arranged consecutively.'],
+		'+Commas are optional unless two item_names are arranged consecutively.',
 		'+Use flag `-v` to view all items in the Chopping List (no arguments required).',
 		'+Use flag `-d` to check one or more specified items off the Chopping List (quantity is optional; item will be marked as fully completed).',
-		"+Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required).",
+		"+Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required)."],
 
 		['.todo <task_description>, [priority_level]', 'Adds the given task to the Task Scheduler.',
 		"+Valid task priority levels are: 'Low', 'Medium', 'High', 'Recurring'. Defaults to 'Medium' if not provided.",

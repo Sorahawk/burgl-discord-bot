@@ -9,9 +9,13 @@ from asyncio import TimeoutError
 
 # returns True if message author is elevated, otherwise False
 def check_user_elevation(message):
-	for role in message.author.roles:
-		if role.id in ELEVATED_USER_ROLES:
-			return True
+	try:
+		for role in message.author.roles:
+			if role.id in ELEVATED_USER_ROLES:
+				return True
+	except:
+		# the try block will fail in DMs because there are no roles
+		pass
 
 	return False
 
