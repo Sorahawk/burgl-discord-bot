@@ -151,7 +151,7 @@ async def clear_method(message, user_input, flag_presence):
 
 # message purging method
 async def purge_method(message, user_input, flag_presence):
-	await burgl_message('purging', message)
+	await burgl_message('processing', message)
 
 	# if message is from a server channel
 	if not isinstance(message.channel, DMChannel):
