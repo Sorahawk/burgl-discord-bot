@@ -234,17 +234,21 @@ BOT_VOICELINES = {
 # available ActivityTypes: 0 is gaming (Playing), 1 is streaming (Streaming), 2 is listening (Listening to),
 # 3 is watching (Watching), 4 is custom, 5 is competing (Competing in)
 BOT_ACTIVITY_STATUSES = {
-	'with a pet gnat': 0,
 	'with a pet aphid': 0,
 	'with a pet weevil': 0,
+	'with a pet gnat': 0,
 	'data to Dr. Tully': 'https://www.youtube.com/watch?v=aueMEZC8uDE',
 	'broodmother trials': 'https://www.youtube.com/watch?v=tZlcSr5DfRI',
+	'mantis trials': 'https://www.youtube.com/watch?v=VCOccrPJQ4Y',
 	'audio logs': 2,
+	'the aphids chirp': 2,
 	'the ladybugs coo': 2,
-	'the backyard': 3,
-	'the fungus spread': 3,
 	'the teens': 3,
 	'the Watcher': 3,
+	'the Asst. Manager': 3,
+	'the backyard': 3,
+	'the fungus spread': 3,
+	'burger cooking': 5,
 	'burger flipping': 5,
 	'burger grilling': 5
 }
