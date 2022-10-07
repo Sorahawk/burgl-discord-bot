@@ -105,10 +105,10 @@ MAX_CHOPPING_FIELDS = 10
 MAX_TODO_FIELDS = 10
 
 # max number that can be used to generate task IDs
-MAXIMUM_ID = 999
+MAXIMUM_ID = 99
 
 # list of valid to-do priority levels for Task Scheduler
-TODO_PRIORITY_LEVELS = ['Low', 'Medium', 'High', 'Recurring']
+TODO_PRIORITY_LEVELS = ['Note', 'Low', 'Medium', 'High']
 
 # template format for harvesting task descriptions
 HARVEST_DESCRIPTION_TEMPLATE = '[Chop] Harvest VAR1 VAR2'
