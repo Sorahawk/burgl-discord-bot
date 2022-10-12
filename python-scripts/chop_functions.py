@@ -41,8 +41,8 @@ async def chop_default(message, user_input):
 		update_chopping_list(actual_name, final_quantity, base_components)
 
 		# forward the raw material counts to the Task Scheduler to update harvesting tasks
-		for material_name, quantity in base_components.items():
-			create_harvesting_task(material_name, quantity)
+		#for material_name, quantity in base_components.items():
+			#create_harvesting_task(material_name, quantity)
 
 		summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
 
@@ -139,6 +139,6 @@ async def chop_reset(message, user_input):
 	ddb_remove_all(CHOPPING_TABLE)
 
 	# Send signal to Task Scheduler to remove all generated harvest tasks
-	remove_all_harvesting_tasks()
+	#remove_all_harvesting_tasks()
 
 	await burgl_message('list_reset', message)

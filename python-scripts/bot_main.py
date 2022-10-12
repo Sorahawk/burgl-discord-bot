@@ -37,7 +37,7 @@ async def on_ready():
 		global_constants.MAIN_CHANNEL = bot.get_channel(MAIN_CHANNEL_ID)
 
 		# populate harvesting task global reference table
-		populate_harvest_reference()
+		#populate_harvest_reference()
 
 		if DEBUG_MODE:
 			#await burgl_message('debug')

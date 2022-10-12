@@ -159,13 +159,13 @@ async def todo_delete(message, user_input):
 		material_name = check_harvest_task(task_description)
 
 		# if deleted task was a harvesting task, try to delete corresponding raw material entry from the CL
-		if material_name:
-			ddb_remove_item(CHOPPING_TABLE, material_name)
-			global_constants.OPERATIONS_LOG.info(f'Corresponding entry for {material_name} on the Chopping List was deleted.')
+		#if material_name:
+			#ddb_remove_item(CHOPPING_TABLE, material_name)
+			#global_constants.OPERATIONS_LOG.info(f'Corresponding entry for {material_name} on the Chopping List was deleted.')
 
 		# update reference table
-		if material_name in global_constants.HARVEST_TASK_REFERENCE:
-			del global_constants.HARVEST_TASK_REFERENCE[material_name]
+		#if material_name in global_constants.HARVEST_TASK_REFERENCE:
+			#del global_constants.HARVEST_TASK_REFERENCE[material_name]
 
 		summary_embed.add_field(name=f'{task_id}', value=task_description_capitalisation(task_description), inline=False)
 
