@@ -101,7 +101,7 @@ async def todo_find(message, user_input):
 # edit priority of one or more tasks
 async def todo_edit(message, user_input):
 	# extract priority level from user input
-	task_priority = process_todo_input(user_input)[1]
+	new_description, task_priority = process_todo_input(user_input)
 
 	# get list of entered task IDs
 	id_list = extract_task_id(user_input)
@@ -113,7 +113,10 @@ async def todo_edit(message, user_input):
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
 	for task_id in id_list:
-		task_description = remove_task_scheduler(task_id)
+		if len(id_list) == 1:
+			task_description = new_description
+		else:
+			task_description = remove_task_scheduler(task_id)
 
 		# if given task ID did not exist, display error for that task ID
 		if not task_description:

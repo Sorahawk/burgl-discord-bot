@@ -304,7 +304,7 @@ def match_armor_set(search_query):
 
 # matches user input to an armor piece in the given armor set and returns a tuple 
 # first item is name of queried armor piece, and second is type of armor piece
-# if no matching piece can be found, returns None by default
+# if no matching piece can be found, returns Head armor piece by default
 def match_armor_piece(search_query, queried_set, armor_pieces):
 
 	# compare search query against armor piece names
@@ -319,6 +319,9 @@ def match_armor_piece(search_query, queried_set, armor_pieces):
 		for word in keywords:
 			if word in search_query:
 				return armor_pieces[piece_type], piece_type
+
+	# return Head armor piece by default if no other matches found
+	return armor_pieces['Head'], 'Head'
 
 
 # returns dictionary of extracted information for a piece of armor within a full set
