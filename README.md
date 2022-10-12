@@ -80,11 +80,11 @@ The overall roadmap and development tracker for this project can be found on the
 - `.todo <task_description>, [priority_level]`
   - Adds the given task to the Task Scheduler, which tracks both player-specified tasks as well as auto-generated tasks.
   - *Valid task priority levels are:*
+    - Note
     - Low
     - Medium (Default)
     - High
-    - Recurring
-  - *Use flag `-e` to edit a task's priority level (task_ID and new priority level required).*
+  - *Use flag `-e` to edit a task's description and/or priority level (task_ID required).*
   - *Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).*
   - *Use flag `-d` to check one or more specified tasks off the Task Scheduler (at least one task_ID is required).*
   - *Use flag `-r` to reset the entire Task Scheduler (the word 'confirm' is required).*

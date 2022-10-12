@@ -183,8 +183,8 @@ BOT_HELP_MENU = {
 		"+Use flag `-r` to reset the entire Chopping List (the word 'confirm' is required)."],
 
 		['.todo <task_description>, [priority_level]', 'Adds the given task to the Task Scheduler.',
-		"+Valid task priority levels are: 'Low', 'Medium', 'High', 'Recurring'. Defaults to 'Medium' if not provided.",
-		"+Use flag `-e` to edit a task's priority level (task_ID and new priority level required).",
+		"+Valid task priority levels are: 'Note', 'Low', 'Medium', 'High'. Defaults to 'Medium' if not provided.",
+		"+Use flag `-e` to edit a task's description and/or priority level (task_ID required).",
 		'+Use flag `-v` to view all pending tasks in the Task Scheduler (no arguments required).',
 		'+Use flag `-d` to check one or more specified tasks off the Task Scheduler (at least one task_ID is required).',
 		"+Use flag `-r` to reset the entire Task Scheduler (the word 'confirm' is required)."]
