@@ -113,15 +113,18 @@ async def todo_edit(message, user_input):
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
 	for task_id in id_list:
-		if len(id_list) == 1:
-			task_description = new_description
-		else:
-			task_description = remove_task_scheduler(task_id)
+		task_description = remove_task_scheduler(task_id)
 
 		# if given task ID did not exist, display error for that task ID
 		if not task_description:
 			await detect_errors(message, f'Task {task_id}', 106)
 			continue
+
+		# remove task ID from new description
+		new_description = new_description.replace(id_list[0].upper(), '').replace(id_list[0].lower(), '').strip()
+
+		if len(id_list) == 1 and new_description:
+			task_description = new_description
 
 		# insert new entry with the new priority level
 		new_id = insert_task_scheduler(task_priority, task_description)
