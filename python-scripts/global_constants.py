@@ -269,10 +269,10 @@ CUSTOM_EMOJIS = {
 	'Medium': '<:ArmorClass_Medium:976063426575097856>',
 	'Heavy': '<:ArmorClass_Heavy:976063426600243250>',
 
-	'Fresh': '<:ElementalType_Fresh:977409544315621467>',
-	'Spicy': '<:ElementalType_Spicy:977409544206553138>',
-	'Salty': '<:ElementalType_Salty:977409544495980564>',
-	'Sour': '<:ElementalType_Sour:977409544344993802>',
+	'Fresh': '<:ElementalType_Fresh:1031415361100333056>',
+	'Spicy': '<:ElementalType_Spicy:1031415346516738070>',
+	'Salty': '<:ElementalType_Salty:1031415328430882888>',
+	'Sour': '<:ElementalType_Sour:1031414983986257960>',
 
 	'Busting': '<:DamageType_Busting:976155517707763762>',
 	'Chopping': '<:DamageType_Chopping:976155517699383297>',
