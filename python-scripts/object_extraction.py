@@ -3,6 +3,7 @@ from global_constants import *
 from string_processing import *
 
 from collections import Counter
+from re import sub
 
 
 # returns dictionary of extracted information for a given status effect or mutation
@@ -34,8 +35,10 @@ def get_modifier_info(search_query):
 
 				# ignore the second column under mutations, shift to the right by one
 				# also remove superscript footnote text present on some mutation descriptions and sources
-				modifier_info['description'] = columns[1 + index].text_content().split('[')[0].replace('\n\n', '\n').strip()
-				modifier_info['source'] = columns[2 + index].text_content().split('[')[0].strip()
+				remove_footnotes = '[\[].*?[\]]'
+
+				modifier_info['description'] = sub(remove_footnotes, '', columns[1 + index].text_content()).strip()
+				modifier_info['source'] = sub(remove_footnotes, '', columns[2 + index].text_content()).strip()
 
 				# replace source text for purchasable mutations
 				if 'BURG.L' in modifier_info['source']:
