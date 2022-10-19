@@ -73,7 +73,7 @@ async def todo_find(message, user_input):
 			task_id = todo_task[0]
 			task_description = todo_task[1]
 
-			if user_input in task_description:
+			if user_input in task_description.lower():
 				matching_tasks.append((task_id, task_description))
 
 	# process matches into pages and display
