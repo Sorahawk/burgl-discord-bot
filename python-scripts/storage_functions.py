@@ -225,20 +225,3 @@ def retrieve_task_scheduler_sorted():
 		todo_list[key].sort()
 
 	return todo_list
-
-
-# updates the global dictionary harvesting task reference dictionary
-def populate_harvest_reference():
-	todo_list = retrieve_task_scheduler_flat()
-
-	for task_id, task_description in todo_list.items():
-
-		# verify that the task is a generated one
-		material_name = check_harvest_task(task_description)
-
-		if not material_name:
-			continue
-
-		global_constants.HARVEST_TASK_REFERENCE[material_name] = task_id
-
-	global_constants.OPERATIONS_LOG.info('Reference table for harvesting tasks succesfully populated.')

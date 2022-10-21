@@ -100,14 +100,14 @@ async def todo_find(message, user_input):
 
 # edit priority of one or more tasks
 async def todo_edit(message, user_input):
-	# extract priority level from user input
-	new_description, task_priority = process_todo_input(user_input)
-
 	# get list of entered task IDs
-	id_list = extract_task_id(user_input)
+	user_input, id_list = extract_task_id(user_input)
 
 	if not id_list:
 		return await burgl_message('empty', message)
+
+	# extract priority level from user input
+	new_description, task_priority = process_todo_input(user_input)
 
 	embed_title = '**Edited To-Do Entries**'
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
@@ -139,17 +139,17 @@ async def todo_edit(message, user_input):
 
 # check one or more tasks off the Task Scheduler
 async def todo_delete(message, user_input):
-	regex_results = extract_task_id(user_input)
+	user_input, id_list = extract_task_id(user_input)
 
 	# check if any valid input was provided
-	if not regex_results:
+	if not id_list:
 		return await burgl_message('empty', message)
 
 	embed_title = '**Completed Tasks**'
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
 	# slice each result as there are leading and trailing whitespaces/symbols
-	for task_id in regex_results:
+	for task_id in id_list:
 		# try to delete each task ID
 		task_description = remove_task_scheduler(task_id)
 
@@ -157,18 +157,6 @@ async def todo_delete(message, user_input):
 		if not task_description:
 			await detect_errors(message, f'Task {task_id}', 106)
 			continue
-
-		# check if the task is a generated harvesting task
-		material_name = check_harvest_task(task_description)
-
-		# if deleted task was a harvesting task, try to delete corresponding raw material entry from the CL
-		#if material_name:
-			#ddb_remove_item(CHOPPING_TABLE, material_name)
-			#global_constants.OPERATIONS_LOG.info(f'Corresponding entry for {material_name} on the Chopping List was deleted.')
-
-		# update reference table
-		#if material_name in global_constants.HARVEST_TASK_REFERENCE:
-			#del global_constants.HARVEST_TASK_REFERENCE[material_name]
 
 		summary_embed.add_field(name=f'{task_id}', value=task_description_capitalisation(task_description), inline=False)
 

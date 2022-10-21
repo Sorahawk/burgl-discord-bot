@@ -110,13 +110,6 @@ MAXIMUM_ID = 99
 # list of valid to-do priority levels for Task Scheduler
 TODO_PRIORITY_LEVELS = ['Note', 'Low', 'Medium', 'High']
 
-# template format for harvesting task descriptions
-HARVEST_DESCRIPTION_TEMPLATE = '[Chop] Harvest VAR1 VAR2'
-
-# dictionary to act as a global reference table linking harvesting task materials to their task IDs
-# to be populated during runtime
-HARVEST_TASK_REFERENCE = {}
-
 # decimal value for minimum ratio of string similarity between search query and predicted result
 SIMILAR_THRESHOLD_API = 0.35
 

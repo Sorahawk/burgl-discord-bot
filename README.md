@@ -31,7 +31,7 @@ The overall roadmap and development tracker for this project can be found on the
 | Object Search | Retrieves object information (e.g. creatures, items, resources, status effects, mutations). |
 | Creature Card Search | Retrieves a creature's bestiary card. |
 | Chopping List | Tracks player-required resources and their corresponding quantities. |
-| Task Scheduler | Keeps track of user-inputted tasks, as well as generating harvesting tasks based on the Chopping List. |
+| Task Scheduler | Keeps track of user-inputted tasks. |
 | Database Storage and Caching | Stores permanent data, as well as caching queried data from searches. |
 
 <br>
