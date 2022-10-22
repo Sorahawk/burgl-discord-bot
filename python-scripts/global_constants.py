@@ -79,7 +79,7 @@ BOT_INSTANCE = None
 BOT_COMMAND_PREFIX = '.'
 
 # list of bot commands
-BOT_COMMAND_LIST = ['search', 'card', 'bind', 'chop', 'todo', 'help', 'clear', 'purge', 'sleep']
+BOT_COMMAND_LIST = ['search', 'card', 'weak', 'bind', 'chop', 'todo', 'help', 'clear', 'purge', 'sleep']
 
 # dictionary of command flags
 # each flag can only be a single letter
@@ -143,7 +143,7 @@ DEFAULT_SMOOTHIE_NAME = 'Questionable Slop'
 SMOOTHIE_BASES = {'basic': 'Grub Sludge', 'beefy': 'Muscle Sprout', 'sticky': 'Gum Nugget'}
 
 # list of words which have atypical capitalisation
-SPECIAL_WORDS = ['AARTZ', 'ASL', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'de', 'of', 'on', 'the']
+SPECIAL_WORDS = ['AARTZ', 'ASL', 'BBQ', 'BLT', 'BURG.L', 'EverChar', 'HQ', 'MIX.R', 'PEEP.R', 'SCA.B', 'de', 'of', 'on', 'the']
 
 # lists of words that correspond to each armor piece type
 ARMOR_KEYWORDS = {
@@ -162,6 +162,8 @@ BOT_HELP_MENU = {
 		['.card <creature_name>', "Displays the specified creature's bestiary card.",
 		"+Use flag `-g` to display the creature's gold bestiary card.",
 		'+Use flag `-o` to override any binded shortcuts.'],
+
+		['.weak <elemental_type> <damage_type>', 'Displays all creatures which match the specified weakness combination.'],
 
 		['.bind <object_name>, <shortcut_1>, [shortcut_2], ...', 'Binds the object name to one or more shortcut phrases.',
 		'+Parameters are case-insensitive and must be separated by a comma.',
@@ -186,7 +188,7 @@ BOT_HELP_MENU = {
 	'Utility': [
 		['.help [page_number]', 'Displays this help menu.'],
 		['.clear', 'Clears the webpage data and object information caches.'],
-		['.purge', 'Purges up to 100 recent messages (in server channels), and all bot messages (in private chats).'],
+		['.purge [delete_number]', 'Purges the 25 most recent messages by default (in server channels), and all bot messages (in private chats).'],
 		['.sleep', 'Toggles sleep mode (ignores all other user commands).']
 	]
 }

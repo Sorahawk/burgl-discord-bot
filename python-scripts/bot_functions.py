@@ -8,6 +8,7 @@ from object_search import *
 from bind_functions import *
 from chop_functions import *
 from todo_functions import *
+from weakness_search import *
 from global_constants import *
 from storage_functions import *
 from string_processing import *
@@ -72,6 +73,47 @@ async def card_method(message, user_input, flag_presence):
 		embedded_card.set_footer(text='Creature Card')
 
 		await message.channel.send(embed=embedded_card)
+
+
+# consolidated creature weakness retrieval method
+async def weak_method(message, user_input, flag_presence):
+	if user_input == '':
+		return await burgl_message('empty', message)
+
+	weakness_dict = weakness_extraction()
+
+	# process user input
+	user_input = user_input.split()
+
+	queried_types = []
+	embed_description = ''
+
+	for word in user_input:
+		if word.lower() in weakness_dict:
+			queried_types.append(weakness_dict[word.lower()])
+			embed_description += f'{prefix_custom_emoji(word.capitalize())}, '
+
+	# reject if no type matches
+	if not queried_types:
+		return await burgl_message('empty', message)		
+
+	# remove trailing comma
+	embed_description = embed_description[:-2]
+
+	# get common creatures among all queried weakness types
+	intersection = set(queried_types[0])
+
+	for weakness_type in queried_types[1:]:
+		intersection.intersection_update(weakness_type)
+
+	if not intersection:
+		return await burgl_message('no_display', message)
+
+	# place results into Embed message
+	embedded_message = Embed(title='Creatures weak to:', color=EMBED_COLOR_CODE)
+	embedded_message.add_field(name=embed_description, value='\n'.join(intersection))
+
+	await message.channel.send(embed=embedded_message)
 
 
 # shortcut binding method

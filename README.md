@@ -55,7 +55,7 @@ The overall roadmap and development tracker for this project can be found on the
 
 ## Bot Commands
 
-- `.help`
+- `.help [page_number]`
   - Displays the help menu.
 - `.search <object_name>`
   - Displays any available information of the object, including its picture and description. Works with most things, like creatures, resources, equipment, structures, mutations, quests and more.
@@ -64,6 +64,8 @@ The overall roadmap and development tracker for this project can be found on the
   - Displays the specified creature's bestiary card.
   - *Use flag `-g` to display the creature's gold bestiary card.*
   - *Use flag `-o` to override any binded shortcuts.*
+- `.weak <elemental_type> <damage_type>`
+  - Displays all creatures which match the specified weakness combination.
 - `.bind <object_name>, <shortcut_1>, [shortcut_2], ...`
   - Binds an object name to one or more shortcut phrases.
   - *Parameters are case-insensitive and must be separated by a comma.*
@@ -90,8 +92,8 @@ The overall roadmap and development tracker for this project can be found on the
   - *Use flag `-r` to reset the entire Task Scheduler (the word 'confirm' is required).*
 - `.clear`
   - Clears the webpage data and object information caches.
-- `.purge`
-  - In a server channel: Purges up to 100 recent messages.
+- `.purge [delete_number]`
+  - In a server channel: Purges the 25 most recent messages by default.
   - In a private message: Purges all of this bot's messages.
 - `.sleep`
   - Toggles sleep mode (ignores all other user commands).
