@@ -11,30 +11,31 @@ def process_todo_input(user_input):
 	# split user input into individual words
 	split_input = user_input.lower().strip().split()
 
-	# check front and back for presence of priority level
-	front, back = split_input[0], split_input[-1]
-
 	# default priority level is medium
 	priority_level = 'Medium'
 
-	# check from highest to lowest priority
-	for level in TODO_PRIORITY_LEVELS[::-1]:
-		lowered_level = level.lower()
+	if split_input:
+		# check front and back for presence of priority level
+		front, back = split_input[0], split_input[-1]
 
-		# either match the first letter or the entire priority word, no in-betweens
-		if front in [lowered_level[0], lowered_level]:
-			priority_level = level
+		# check from highest to lowest priority
+		for level in TODO_PRIORITY_LEVELS[::-1]:
+			lowered_level = level.lower()
 
-			# partition() returns a tuple (preceding string, string match, following string)
-			user_input = user_input.partition(front)[2]
-			break
+			# either match the first letter or the entire priority word, no in-betweens
+			if front in [lowered_level[0], lowered_level]:
+				priority_level = level
 
-		if back in [lowered_level[0], lowered_level]:
-			priority_level = level
+				# partition() returns a tuple (preceding string, string match, following string)
+				user_input = user_input.partition(front)[2]
+				break
 
-			# rpartition() also returns same type of tuple as partition()
-			user_input = user_input.rpartition(back)[0]
-			break
+			if back in [lowered_level[0], lowered_level]:
+				priority_level = level
+
+				# rpartition() also returns same type of tuple as partition()
+				user_input = user_input.rpartition(back)[0]
+				break
 
 	return user_input.strip(), priority_level
 
