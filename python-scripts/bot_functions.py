@@ -83,15 +83,17 @@ async def weak_method(message, user_input, flag_presence):
 	weakness_dict = weakness_extraction()
 
 	# process user input
-	user_input = user_input.split()
+	user_input = user_input.replace(',', '').split()
 
 	queried_types = []
 	embed_description = ''
 
-	for word in user_input:
-		if word.lower() in weakness_dict:
-			queried_types.append(weakness_dict[word.lower()])
-			embed_description += f'{prefix_custom_emoji(word.capitalize())} & '
+	# allow partial matches
+	for weakness_type in weakness_dict:
+		for word in user_input:
+			if word.lower() in weakness_type:
+				queried_types.append(weakness_dict[weakness_type])
+				embed_description += f'{prefix_custom_emoji(weakness_type.capitalize())} & '
 
 	# reject if no type matches
 	if not queried_types:
