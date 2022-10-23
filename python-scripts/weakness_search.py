@@ -35,6 +35,6 @@ def process_weakness_table(weakness_table, weakness_dict):
 			if creature_name.strip():
 				creature_list.append(creature_name.strip())
 
-		weakness_dict[weakness] = creature_list.sort()
+		weakness_dict[weakness] = sorted(creature_list)
 
 	return weakness_dict
