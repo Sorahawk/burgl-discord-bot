@@ -91,14 +91,14 @@ async def weak_method(message, user_input, flag_presence):
 	for word in user_input:
 		if word.lower() in weakness_dict:
 			queried_types.append(weakness_dict[word.lower()])
-			embed_description += f'{prefix_custom_emoji(word.capitalize())}, '
+			embed_description += f'{prefix_custom_emoji(word.capitalize())} & '
 
 	# reject if no type matches
 	if not queried_types:
 		return await burgl_message('empty', message)		
 
 	# remove trailing comma
-	embed_description = embed_description[:-2]
+	embed_description = embed_description[:-3]
 
 	# get common creatures among all queried weakness types
 	intersection = set(queried_types[0])
