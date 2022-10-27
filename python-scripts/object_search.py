@@ -213,7 +213,7 @@ def create_grid_embed(title, url, image):
 
 	embedded_message.add_field(name='Description', value='\u200b', inline=False)
 
-	for field_num in range(12):
+	for field_num in range(15):
 		embedded_message.add_field(name='\u200b', value='\u200b', inline=True)
 
 	return embedded_message
@@ -247,7 +247,7 @@ def format_object_info(object_info):
 		embedded_info.set_field_at(3, name='Armor Class', value=prefix_custom_emoji(object_info['class']), inline=True)
 
 	if 'eresistance' in object_info:
-		embedded_info.set_field_at(4, name='Elem. Resistance', value=prefix_custom_emoji(object_info['eresistance']), inline=True)
+		embedded_info.set_field_at(7, name='Elem. Resistance', value=prefix_custom_emoji(object_info['eresistance']), inline=True)
 	if 'resistance' in object_info:
 		resist_name = 'Resistance'
 
@@ -255,19 +255,19 @@ def format_object_info(object_info):
 		if 'aggression' in object_info:
 			resist_name = f'Dmg. {resist_name}'
 
-		embedded_info.set_field_at(5, name=resist_name, value=prefix_custom_emoji(object_info['resistance']), inline=True)
+		embedded_info.set_field_at(8, name=resist_name, value=prefix_custom_emoji(object_info['resistance']), inline=True)
 
 	if 'eweakness' in object_info:
-		embedded_info.set_field_at(7, name='Elem. Weakness', value=underline_text(prefix_custom_emoji(object_info['eweakness'])), inline=True)
+		embedded_info.set_field_at(10, name='Elem. Weakness', value=underline_text(prefix_custom_emoji(object_info['eweakness'])), inline=True)
 	if 'weakness' in object_info:
-		embedded_info.set_field_at(8, name='Dmg. Weakness', value=underline_text(prefix_custom_emoji(object_info['weakness'])), inline=True)
+		embedded_info.set_field_at(11, name='Dmg. Weakness', value=underline_text(prefix_custom_emoji(object_info['weakness'])), inline=True)
 
 	if 'weakpoint' in object_info:
 		is_robot = False
 		if '.' in object_name:
 			is_robot = True
 
-		embedded_info.set_field_at(9, name='Weak Point', value=underline_text(prefix_custom_emoji(object_info['weakpoint'], is_robot)), inline=True)
+		embedded_info.set_field_at(12, name='Weak Point', value=underline_text(prefix_custom_emoji(object_info['weakpoint'], is_robot)), inline=True)
 
 	if 'recipe' in object_info:
 		recipe_name = 'Recipe'
@@ -306,7 +306,7 @@ def format_object_info(object_info):
 	# start from bottom up so deleting fields won't affect the index while checking the fields on top
 
 	# check each row (indexes 1-3, 4-6, 7-9, 10-12)
-	for row_index in range(12, 0, -3):
+	for row_index in range(15, 0, -3):
 		field_indices = [row_index - 2, row_index - 1, row_index]  # left, middle, right
 
 		# generate a corresponding list of booleans that represent whether each field is empty

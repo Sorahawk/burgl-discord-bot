@@ -310,7 +310,6 @@ OBJECT_ATTRIBUTES = {
 	'food': 5,
 	'sturdiness': 5,
 
-	'immune': (6, 'Immune to'),
 	'speed': 6,
 	'water': 6,
 	'weight': 6,
@@ -320,7 +319,8 @@ OBJECT_ATTRIBUTES = {
 
 	'upgradeeffect': (8, 'Sleek Upgrade Effect'),
 
+	'immune': (9, 'Immune to'),
 	'setbonus': (9, 'Set Bonus'),
 
-	'loot': 10
+	'loot': 13
 }
