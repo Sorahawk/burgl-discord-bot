@@ -68,6 +68,12 @@ def get_special_info(search_query, page_title=None):
 # returns dictionary of extracted information for an input object, or error codes if an error occurs
 def get_object_info(search_query):
 
+	# run search query through special routes first
+	info_result = get_special_info(search_query)
+
+	if info_result:
+		return info_result
+
 	# check for special queries, e.g. upgraded tools
 	is_upgraded_tool = '+' in search_query
 
@@ -75,9 +81,8 @@ def get_object_info(search_query):
 	result = locate_object_url(search_query)
 
 	if result is None:
-		# if unable to locate URL for item, run through other search routes
-		info_result = get_special_info(search_query)
-		return info_result if info_result else 101
+		# unable to locate URL for item
+		return 101
 
 	# Google API daily resource exhausted
 	elif result is False:
@@ -94,9 +99,8 @@ def get_object_info(search_query):
 		object_info['page_url'] = result[2]
 
 	except:
-		# if page layout not supported, run through other search routes
-		info_result = get_special_info(search_query, page_title)
-		return info_result if info_result else [102, page_title]
+		# page layout not supported
+		return [102, page_title]
 
 	# if query searching for upgraded tool, check for presence of both description+ and tier+
 	if is_upgraded_tool and ('description+' in object_info or 'tier+' in object_info):
