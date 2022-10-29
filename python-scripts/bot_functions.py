@@ -127,7 +127,7 @@ async def bind_method(message, user_input, flag_presence):
 		await burgl_message('unauthorised', message)
 
 	elif user_input == '':
-		await burgl_message('empty', message)
+		await bind_view(message, user_input)
 
 	elif flag_presence['delete']:
 		await bind_delete(message, user_input)
@@ -148,7 +148,7 @@ async def chop_method(message, user_input, flag_presence):
 		await chop_reset(message, user_input)
 
 	elif user_input == '':
-		await burgl_message('empty', message)
+		await chop_view(message, user_input)
 
 	elif flag_presence['delete']:
 		await chop_delete(message, user_input)
@@ -169,7 +169,7 @@ async def todo_method(message, user_input, flag_presence):
 		await todo_reset(message, user_input)
 
 	elif user_input == '':
-		await burgl_message('empty', message)
+		await todo_view(message, user_input)
 
 	elif flag_presence['find']:
 		await todo_find(message, user_input)
