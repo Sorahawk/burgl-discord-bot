@@ -199,6 +199,11 @@ async def purge_method(message, user_input, flag_presence):
 
 	# if message is from a server channel
 	if not isinstance(message.channel, DMChannel):
+
+		# disallow the purging function in servers other than our own, just to be safe
+		if not check_user_elevation(message):
+			return await burgl_message('unauthorised', message)
+
 		purge_amount = findall('\d+', user_input)
 
 		# allow user to specify how many messages to delete
