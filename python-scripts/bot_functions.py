@@ -123,7 +123,7 @@ async def bind_method(message, user_input, flag_presence):
 	if flag_presence['view']:  # allow non-elevated users to view
 		await bind_view(message, user_input)
 
-	elif not check_user_elevation(message):
+	elif not await check_user_elevation(message, flag_presence):
 		await burgl_message('unauthorised', message)
 
 	elif user_input == '':
@@ -141,7 +141,7 @@ async def chop_method(message, user_input, flag_presence):
 	if flag_presence['view']:
 		await chop_view(message, user_input)
 
-	elif not check_user_elevation(message):
+	elif not await check_user_elevation(message, flag_presence):
 		await burgl_message('unauthorised', message)
 
 	elif flag_presence['reset']:
@@ -162,7 +162,7 @@ async def todo_method(message, user_input, flag_presence):
 	if flag_presence['view']:
 		await todo_view(message, user_input)
 
-	elif not check_user_elevation(message):
+	elif not await check_user_elevation(message, flag_presence):
 		await burgl_message('unauthorised', message)
 
 	elif flag_presence['reset']:
@@ -186,7 +186,7 @@ async def todo_method(message, user_input, flag_presence):
 
 # cache clearing method
 async def clear_method(message, user_input, flag_presence):
-	if not check_user_elevation(message):
+	if not await check_user_elevation(message, flag_presence):
 		await burgl_message('unauthorised', message)
 	else:
 		clear_cache()
@@ -201,7 +201,7 @@ async def purge_method(message, user_input, flag_presence):
 	if not isinstance(message.channel, DMChannel):
 
 		# disallow the purging function in servers other than our own, just to be safe
-		if not check_user_elevation(message):
+		if not await check_user_elevation(message, flag_presence):
 			return await burgl_message('unauthorised', message)
 
 		purge_amount = findall('\d+', user_input)
@@ -236,7 +236,7 @@ async def sleep_method(message, user_input, flag_presence):
 		# ignore command if in development mode
 		return
 
-	elif not check_user_elevation(message):
+	elif not await check_user_elevation(message, flag_presence):
 		return await burgl_message('unauthorised', message)
 
 	sleep_command = ['sleep']
