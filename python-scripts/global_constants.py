@@ -209,7 +209,7 @@ BOT_VOICELINES = {
 	'branch_active': 'Movement detected on VAR1 branch of the Oak Tree!',
 	'processing': 'Processing... Processing...',
 	'unauthorised': 'You are not authorised to use this command.',
-	'authorisation_override': f"Ominent authorisation code for '{ROOT_USER_NAME}' verified.",
+	'authorisation_override': f"Ominent authorisation code verified: '{ROOT_USER_NAME}'",
 	'empty': 'Please provide valid input parameters.',
 	'need_confirmation': "This command flag requires 'confirm' as a parameter.",
 	'insufficient': 'A minimum of two comma-separated parameters are required.',
