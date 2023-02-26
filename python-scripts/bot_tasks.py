@@ -23,6 +23,7 @@ async def rotate_status():
 	await global_constants.BOT_INSTANCE.change_presence(activity=activity_status)
 
 
+'''
 # automatically clear caches once a week
 tz = timezone(timedelta(hours=TIMEZONE_OFFSET))
 @loop(time=time(hour=CACHE_CLEAR_HOUR, tzinfo=tz))
@@ -30,6 +31,7 @@ async def clear_cache_weekly():
 	if datetime.today().weekday() == CACHE_CLEAR_DAY:
 		clear_cache()
 		await burgl_message('cleared', notify=True)
+'''
 
 
 # checks project repository for new code
