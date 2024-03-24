@@ -42,7 +42,7 @@ async def on_ready():
 
 		rotate_status.start()
 		monitor_app_info.start()
-		clear_cache_weekly.start()
+		#clear_cache_weekly.start()
 
 		# activate self-updating task if running on Linux cloud instance
 		if platform == 'linux':
