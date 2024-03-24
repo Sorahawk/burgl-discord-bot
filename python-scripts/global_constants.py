@@ -207,7 +207,7 @@ BOT_VOICELINES = {
 	'cleared': 'Data caches have been cleared.',
 	'assets_updated': 'New sign images available in the Swap Shop!',
 	'branch_active': 'Movement detected on VAR1 branch of the Oak Tree!',
-	'processing': 'Processing... Processing...',
+	'processing': 'Processing...',
 	'unauthorised': 'You are not authorised to use this command.',
 	'authorisation_override': f"Ominent authorisation code verified: '{ROOT_USER_NAME}'",
 	'empty': 'Please provide valid input parameters.',
