@@ -6,16 +6,16 @@
 DEBUG_MODE = False
 
 # (string) AWS Access Key
-AWS_ACCESS_KEY = None
+AWS_ACCESS_KEY = ''
 
 # (string) AWS Secret Key
-AWS_SECRET_KEY = None
+AWS_SECRET_KEY = ''
 
 # (string) Discord Bot Token
-DISCORD_BOT_TOKEN = None
+DISCORD_BOT_TOKEN = ''
 
 # (string) Google Custom Search JSON API Key
-JSON_API_KEY = None
+JSON_API_KEY = ''
 
 # (string) Google Programmable Search Engine ID
-SEARCH_ENGINE_ID = None
+SEARCH_ENGINE_ID = ''
