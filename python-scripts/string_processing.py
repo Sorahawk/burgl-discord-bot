@@ -6,10 +6,11 @@ from difflib import SequenceMatcher
 from re import IGNORECASE, Match, sub
 
 
-# determines which command is being used, if any (remember that bot reads all messages)
-# returns a tuple containing firstly, the name of the corresponding method of the bot command as a string to be called by eval()
-# and secondly, the commandless user input
-# otherwise returns None by default if no command given
+# determines if user input contains any command
+# if no command detected, returns None
+# otherwise, returns a tuple containing:
+# first, the name of the corresponding method of the bot command as a string to be called by eval()
+# second, the user input stripped of command word
 def check_command(user_input):
 	lowered_input = user_input.lower() + ' '
 
@@ -17,15 +18,16 @@ def check_command(user_input):
 		command = command_name + ' '
 
 		if lowered_input.startswith(command):
-			# have to slice by index instead of using replace because have to be case-insensitive
+			# have to slice by index instead of using replace, to be case-insensitive
 			user_input = user_input[len(command):]
 
 			return f'{command_name}_method', user_input
 
 
-# check for presence of any command flags in user input
-# returns a tuple containing firstly, a dictionary of booleans indicating presence of each command flag
-# and secondly, the flagless user input
+# checks for presence of any command flags in user input
+# returns a tuple containing:
+# first, a dictionary of booleans indicating presence of command flags
+# second, the user input stripped of flags
 def check_flags(user_input):
 	flag_presence = {}
 
@@ -46,7 +48,7 @@ def check_flags(user_input):
 	other_flags = '-[a-zA-Z] '
 	user_input = sub(other_flags, ' ', user_input + ' ')
 
-	# remove any excess whitespace, have to be done here instead of when checking command because clean up after replacing the flags
+	# remove any excess whitespace
 	user_input = ' '.join(user_input.split())
 
 	return flag_presence, user_input
