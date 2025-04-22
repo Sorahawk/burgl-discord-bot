@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://sorahawk.github.io/burgl-discord-bot/">
-    <img src="images/burgl.png" alt="Project Logo" width="337.5" height="300">
+    <img src="images/burgl.png" alt="Project Logo" width="315" height="280">
   </a>
   <h3 align="center">BURG.L Discord Bot</h3>
   <p align="center">
