@@ -115,4 +115,4 @@ The overall roadmap and development tracker for this project can be found on the
 
 ---
 
-Copyright © 2022, [Sorahawk](https://github.com/Sorahawk)
+Copyright © 2025, [Sorahawk](https://github.com/Sorahawk)
