@@ -1,10 +1,10 @@
 <div align="center">
   <a href="https://sorahawk.github.io/burgl-discord-bot/">
-    <img src="images/burgl.png" alt="Project Logo" width="225" height="200">
+    <img src="images/burgl.png" alt="Project Logo" width="337.5" height="300">
   </a>
   <h3 align="center">BURG.L Discord Bot</h3>
   <p align="center">
-    A Discord resource management bot that augments the Grounded gaming experience.
+    A Discord bot that augments the Grounded gaming experience.
   </p>
 </div>
 
