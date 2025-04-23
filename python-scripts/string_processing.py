@@ -42,7 +42,7 @@ def check_flags(user_input):
 			flag_presence[flag_key] = True
 
 		# if flag not in query, replacing won't affect the string
-		user_input = user_input.replace(flag, ' ').replace(flag.upper(), ' ')
+		user_input = user_input.replace(flag.lower(), ' ').replace(flag.upper(), ' ')
 
 	# remove any other 'flags', a dash followed by a single letter, even if they are not valid
 	other_flags = '-[a-zA-Z] '
