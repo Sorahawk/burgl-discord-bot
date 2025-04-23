@@ -64,7 +64,6 @@ async def on_message(message):
 
 	# check for any valid command if the message starts with the prefix symbol
 	result = check_command(message.content[prefix_length:])
-
 	if not result:
 		return
 
