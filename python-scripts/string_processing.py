@@ -12,16 +12,13 @@ from re import IGNORECASE, Match, sub
 # first, the name of the corresponding method of the bot command as a string to be called by eval()
 # second, the user input stripped of command word
 def check_command(user_input):
-	lowered_input = user_input.lower() + ' '
+	# isolate first word
+	keyword = user_input.split()[0].lower()
 
-	for command_name in global_constants.BOT_COMMAND_LIST:
-		command = command_name + ' '
-
-		if lowered_input.startswith(command):
-			# have to slice by index instead of using replace, to be case-insensitive
-			user_input = user_input[len(command):]
-
-			return f'{command_name}_method', user_input
+	if keyword in BOT_COMMAND_LIST:
+		# remove command word from user input
+		sliced_input = re.sub(keyword, '', user_input, flags=re.IGNORECASE).strip()
+		return f'{keyword}_method', sliced_input
 
 
 # checks for presence of any command flags in user input
@@ -31,7 +28,7 @@ def check_command(user_input):
 def check_flags(user_input):
 	flag_presence = {}
 
-	# insert surrounding whitespace so leading and trailing flags can be detected
+	# insert surrounding whitespace so leading and trailing flags can still be detected
 	user_input = f' {user_input} '
 
 	for flag_key, flag in BOT_COMMAND_FLAGS.items():
@@ -41,14 +38,13 @@ def check_flags(user_input):
 		if flag in user_input.lower():
 			flag_presence[flag_key] = True
 
-		# if flag not in query, replacing won't affect the string
-		user_input = user_input.replace(flag.lower(), ' ').replace(flag.upper(), ' ')
+	# remove all 'flags', a dash followed by a single letter, even if they are not valid
+	all_flags = ' -[a-z] '
 
-	# remove any other 'flags', a dash followed by a single letter, even if they are not valid
-	other_flags = '-[a-zA-Z] '
-	user_input = sub(other_flags, ' ', user_input + ' ')
+	# duplicate each whitespace within the input so that each present flag can be matched by the regex properly
+	user_input = re.sub(all_flags, ' ', ' ' + user_input.replace(' ', '  ') + ' ', flags=re.IGNORECASE)
 
-	# remove any excess whitespace
+	# remove excess whitespace
 	user_input = ' '.join(user_input.split())
 
 	return flag_presence, user_input
