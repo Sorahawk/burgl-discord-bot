@@ -7,7 +7,7 @@ After=multi-user.target
 
 [Service]
 User=ubuntu
-ExecStart=/usr/bin/python3 /<path_to_script>/bot_main.py
+ExecStart=/usr/bin/python3 -u /<path_to_script>/bot_main.py
 Restart=always
 
 [Install]
