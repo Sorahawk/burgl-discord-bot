@@ -1,7 +1,7 @@
-import global_constants
+import var_global
 
+from var_global import *
 from url_processing import *
-from global_constants import *
 from object_extraction import *
 from string_processing import *
 
@@ -141,14 +141,14 @@ def get_object_info(search_query):
 
 		except:
 			# recipe extraction failed
-			global_constants.OPERATIONS_LOG.warning(f"Recipe extraction for {object_info['name']} failed.")
+			var_global.OPERATIONS_LOG.warning(f"Recipe extraction for {object_info['name']} failed.")
 
 	if has_repair_cost:
 		try:
 			object_info['repair_cost'] = get_repair_cost(page_content)
 		except:
 			# repair cost extraction failed
-			global_constants.OPERATIONS_LOG.warning(f"Repair cost extraction for {object_info['name']} failed.")
+			var_global.OPERATIONS_LOG.warning(f"Repair cost extraction for {object_info['name']} failed.")
 
 	return object_info
 

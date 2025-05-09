@@ -1,5 +1,5 @@
 
-### Make a copy of this file, rename it secrets.py, and fill it in
+### Make a copy of this file, rename it var_secret.py, and fill it in
 
 
 # (boolean) Toggle development/debug mode, which disables the caches when on

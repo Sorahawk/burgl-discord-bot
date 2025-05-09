@@ -1,5 +1,5 @@
+from var_global import *
 from url_processing import *
-from global_constants import *
 from string_processing import *
 
 

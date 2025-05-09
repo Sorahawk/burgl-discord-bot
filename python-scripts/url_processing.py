@@ -1,8 +1,8 @@
 import requests  # don't import requests.get directly to avoid confusion as get() is a common function name
 
-from secrets import *
+from var_secret import *
+from var_global import *
 from dynamodb_methods import *
-from global_constants import *
 from storage_functions import *
 from string_processing import *
 

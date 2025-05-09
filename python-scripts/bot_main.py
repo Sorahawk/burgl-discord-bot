@@ -1,10 +1,10 @@
-import global_constants
+import var_global
 
-from secrets import *
+from var_secret import *
 from bot_tasks import *
+from var_global import *
 from bot_functions import *
 from status_logging import *
-from global_constants import *
 from storage_functions import *
 from string_processing import *
 
@@ -20,21 +20,21 @@ intents = Intents.all()
 
 # initialise client
 bot = Client(intents=intents)
-global_constants.BOT_INSTANCE = bot
+var_global.BOT_INSTANCE = bot
 
 
 @bot.event
 async def on_ready():
 	# on_ready() can be called more than once, typically whenever the bot momentarily loses connection to Discord 
 	# check if this is first time bot is calling on_ready()
-	if not global_constants.MAIN_CHANNEL:
+	if not var_global.MAIN_CHANNEL:
 		print(f'{bot.user} is online.\n')
 
-		global_constants.OPERATIONS_LOG = getLogger('BURG.L Operations Log')
-		global_constants.OPERATIONS_LOG.info('BURG.L initialised.')
+		var_global.OPERATIONS_LOG = getLogger('BURG.L Operations Log')
+		var_global.OPERATIONS_LOG.info('BURG.L initialised.')
 
 		# initialise global main channel object
-		global_constants.MAIN_CHANNEL = bot.get_channel(MAIN_CHANNEL_ID)
+		var_global.MAIN_CHANNEL = bot.get_channel(MAIN_CHANNEL_ID)
 
 		if DEBUG_MODE:
 			#await burgl_message('debug')
@@ -81,7 +81,7 @@ async def on_message(message):
 		await eval(command_method)(message, user_input, flag_presence)
 
 	except Exception as e:  # log any errors if command fails in any unexpected way
-		global_constants.OPERATIONS_LOG.warning(e)
+		var_global.OPERATIONS_LOG.warning(e)
 
 
 # get current directory

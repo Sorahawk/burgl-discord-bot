@@ -1,5 +1,5 @@
+from var_global import *
 from url_processing import *
-from global_constants import *
 
 
 # extracts the weakness tables from the wiki, processing them into a single dictionary for return

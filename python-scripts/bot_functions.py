@@ -1,7 +1,8 @@
-import global_constants
+import var_global
 
-from secrets import *
+from var_secret import *
 from bot_tasks import *
+from var_global import *
 from card_search import *
 from bot_messaging import *
 from object_search import *
@@ -9,7 +10,6 @@ from bind_functions import *
 from chop_functions import *
 from todo_functions import *
 from weakness_search import *
-from global_constants import *
 from storage_functions import *
 from string_processing import *
 
@@ -222,7 +222,7 @@ async def purge_method(message, user_input, flag_presence):
 		message_history = [old_message async for old_message in message.channel.history()]
 
 		for old_message in message_history:
-			if old_message.author == global_constants.BOT_INSTANCE.user:
+			if old_message.author == var_global.BOT_INSTANCE.user:
 				await old_message.delete()
 
 
@@ -241,15 +241,15 @@ async def sleep_method(message, user_input, flag_presence):
 
 	sleep_command = ['sleep']
 
-	if global_constants.BOT_COMMAND_LIST == sleep_command:  # switch off sleep mode
-		global_constants.BOT_COMMAND_LIST = full_command_list
+	if var_global.BOT_COMMAND_LIST == sleep_command:  # switch off sleep mode
+		var_global.BOT_COMMAND_LIST = full_command_list
 
 		await burgl_message('hello', message)
 		rotate_status.start()
 
 	else:
-		global_constants.BOT_COMMAND_LIST = sleep_command
+		var_global.BOT_COMMAND_LIST = sleep_command
 
 		await burgl_message('sleeping', message)
-		await global_constants.BOT_INSTANCE.change_presence(status=Status.idle)
+		await var_global.BOT_INSTANCE.change_presence(status=Status.idle)
 		rotate_status.cancel()

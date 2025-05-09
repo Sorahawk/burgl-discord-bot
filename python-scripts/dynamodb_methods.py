@@ -1,5 +1,5 @@
-from secrets import *
-from global_constants import *
+from var_secret import *
+from var_global import *
 
 from boto3 import resource
 

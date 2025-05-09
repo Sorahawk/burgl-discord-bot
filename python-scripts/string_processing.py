@@ -1,6 +1,6 @@
-import global_constants
+import var_global
 
-from global_constants import *
+from var_global import *
 
 from difflib import SequenceMatcher
 from re import IGNORECASE, Match, sub

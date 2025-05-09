@@ -1,9 +1,9 @@
-import global_constants
+import var_global
 
+from var_global import *
 from bot_messaging import *
 from todo_processing import *
 from dynamodb_methods import *
-from global_constants import *
 from storage_functions import *
 from string_processing import *
 

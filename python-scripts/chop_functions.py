@@ -1,7 +1,7 @@
+from var_global import *
 from bot_messaging import *
 from chop_processing import *
 from todo_processing import *
-from global_constants import *
 from storage_functions import *
 from string_processing import *
 

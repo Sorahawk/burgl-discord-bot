@@ -1,6 +1,6 @@
-import global_constants
+import var_global
 
-from global_constants import *
+from var_global import *
 from storage_functions import *
 
 from re import findall, IGNORECASE

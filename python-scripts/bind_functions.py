@@ -1,5 +1,5 @@
+from var_global import *
 from bot_messaging import *
-from global_constants import *
 from storage_functions import *
 from string_processing import *
 

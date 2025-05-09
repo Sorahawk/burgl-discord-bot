@@ -1,8 +1,8 @@
-import global_constants
+import var_global
 
-from secrets import *
+from var_secret import *
+from var_global import *
 from dynamodb_methods import *
-from global_constants import *
 from string_processing import *
 
 from random import randint

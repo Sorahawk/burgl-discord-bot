@@ -1,7 +1,7 @@
-import global_constants
+import var_global
 
+from var_global import *
 from object_search import *
-from global_constants import *
 
 from math import ceil
 from collections import Counter
@@ -119,7 +119,7 @@ def process_chop_components(item_name, quantity, base_components=None):
 			return item_info
 
 		else:  # print warning if any errors occur for component materials
-			global_constants.OPERATIONS_LOG.warning(f"Error {item_info} occurred for component material '{item_name}'.")
+			var_global.OPERATIONS_LOG.warning(f"Error {item_info} occurred for component material '{item_name}'.")
 			return base_components
 
 	item_name = item_info['name']

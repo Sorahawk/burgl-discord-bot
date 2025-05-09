@@ -1,7 +1,7 @@
-import global_constants, requests
+import var_global, requests
 
+from var_global import *
 from bot_messaging import *
-from global_constants import *
 
 from random import choice
 from subprocess import run
@@ -20,7 +20,7 @@ async def rotate_status():
 	else:
 		activity_status = Activity(type=activity_type, name=activity)
 
-	await global_constants.BOT_INSTANCE.change_presence(activity=activity_status)
+	await var_global.BOT_INSTANCE.change_presence(activity=activity_status)
 
 
 '''
@@ -40,7 +40,7 @@ async def clear_cache_weekly():
 async def monitor_repository():
 	table_name = MISC_TABLE
 	key = 'Repository_ETag'
-	repository_headers = global_constants.REPOSITORY_HEADERS
+	repository_headers = var_global.REPOSITORY_HEADERS
 
 	# check repository status
 	response = requests.get(REPOSITORY_URL, headers=repository_headers)
@@ -59,7 +59,7 @@ async def monitor_repository():
 
 		# if etag exists in storage, and is same as response etag, update local header and return
 		if result and result[value_header] == etag:
-			global_constants.REPOSITORY_HEADERS['If-None-Match'] = etag
+			var_global.REPOSITORY_HEADERS['If-None-Match'] = etag
 			return
 
 	# if one of the following conditions are fulfilled:
@@ -86,7 +86,7 @@ async def monitor_repository():
 async def monitor_app_info():
 	table_name = MISC_TABLE
 	key = 'Steam_Timestamps'
-	steam_timestamps = global_constants.STEAM_TIMESTAMPS
+	steam_timestamps = var_global.STEAM_TIMESTAMPS
 	changes_detected = False
 
 	try:
@@ -94,12 +94,12 @@ async def monitor_app_info():
 
 		# ensure that response is valid and contains requested info
 		if response.status_code != 200:
-			return global_constants.OPERATIONS_LOG.warning(response)
+			return var_global.OPERATIONS_LOG.warning(response)
 
 	# as the SteamCMD API is third-party and is not as established as something like GitHub,
 	# have to account for possible timeout resulting from API overload, as well as other unexpected errors
 	except Exception as e:
-		return global_constants.OPERATIONS_LOG.warning(e)
+		return var_global.OPERATIONS_LOG.warning(e)
 
 	app_info = response.json()['data']['962130']
 	latest_assets = app_info['common']['store_asset_mtime']
@@ -116,21 +116,21 @@ async def monitor_app_info():
 			result = result[value_header]
 
 			for category in result:
-				global_constants.STEAM_TIMESTAMPS[category] = result[category]
+				var_global.STEAM_TIMESTAMPS[category] = result[category]
 
 		else:  # populate global dictionary and update persistent storage
 			changes_detected = True
 
-			global_constants.STEAM_TIMESTAMPS['asset_update'] = latest_assets
+			var_global.STEAM_TIMESTAMPS['asset_update'] = latest_assets
 
 			for branch_name in branches_info:
-				global_constants.STEAM_TIMESTAMPS[branch_name] = branches_info[branch_name]['timeupdated']
+				var_global.STEAM_TIMESTAMPS[branch_name] = branches_info[branch_name]['timeupdated']
 
 	# check for store asset updates
 	if steam_timestamps['asset_update'] != latest_assets:
 		changes_detected = True
 
-		global_constants.STEAM_TIMESTAMPS['asset_update'] = latest_assets
+		var_global.STEAM_TIMESTAMPS['asset_update'] = latest_assets
 
 		await burgl_message('assets_updated', notify=True)
 
@@ -142,7 +142,7 @@ async def monitor_app_info():
 		if branch_name not in steam_timestamps:
 			changes_detected = True
 
-			global_constants.STEAM_TIMESTAMPS[branch_name] = branch_timing
+			var_global.STEAM_TIMESTAMPS[branch_name] = branch_timing
 
 			await burgl_message('branch_active', replace=branch_name, notify=True)
 
@@ -150,10 +150,10 @@ async def monitor_app_info():
 			changes_detected = True
 
 			notify = branch_name in NOTIFY_BRANCHES
-			global_constants.STEAM_TIMESTAMPS[branch_name] = branch_timing
+			var_global.STEAM_TIMESTAMPS[branch_name] = branch_timing
 
 			await burgl_message('branch_active', replace=branch_name, notify=notify)
 
 	# write latest timestamps to persistent storage 
 	if changes_detected:
-		ddb_insert_item(table_name, key, global_constants.STEAM_TIMESTAMPS)
+		ddb_insert_item(table_name, key, var_global.STEAM_TIMESTAMPS)
