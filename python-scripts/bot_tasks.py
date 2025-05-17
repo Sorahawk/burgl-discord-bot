@@ -77,7 +77,7 @@ async def monitor_repository():
 	run(f'cd {LINUX_ABSOLUTE_PATH} && git reset --hard HEAD && git pull', shell=True)
 
 	# restart service
-	run(f'sudo systemctl restart {LINUX_SERVICE_NAME}', shell=True)
+	run(['sudo', 'systemctl', 'restart', LINUX_SERVICE_NAME])
 
 
 # checks Steam for new activity related to store assets and development branches
