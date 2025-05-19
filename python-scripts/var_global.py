@@ -18,9 +18,9 @@ MAIN_CHANNEL_ID = 976308922010959892
 # main channel object, to be initialised when the bot calls on_ready()
 MAIN_CHANNEL = None
 
-# ID and name of root user
-ROOT_USER_ID = 261795156359905281
-ROOT_USER_NAME = 'Sora H.'
+# ID and name of super user
+SUPER_USER_ID = 261795156359905281
+SUPER_USER_NAME = 'Sora H.'
 
 # list of elevated Discord roles
 ELEVATED_USER_ROLES = [981223991547158609, 886572468012199967]
@@ -209,7 +209,7 @@ BOT_VOICELINES = {
 	'branch_active': 'Movement detected on VAR1 branch of the Oak Tree!',
 	'processing': 'Processing...',
 	'unauthorised': 'You are not authorised to use this command.',
-	'authorisation_override': f"Ominent authorisation code verified: '{ROOT_USER_NAME}'",
+	'authorisation_override': f"Ominent authorisation code verified: '{SUPER_USER_NAME}'",
 	'empty': 'Please provide valid input parameters.',
 	'need_confirmation': "This command flag requires 'confirm' as a parameter.",
 	'insufficient': 'A minimum of two comma-separated parameters are required.',

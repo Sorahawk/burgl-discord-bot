@@ -9,7 +9,7 @@ from asyncio import TimeoutError
 
 # returns True if message author is elevated, otherwise False
 async def check_user_elevation(message, flag_presence):
-	if flag_presence['override'] and message.author.id == ROOT_USER_ID:
+	if flag_presence['override'] and message.author.id == SUPER_USER_ID:
 		await burgl_message('authorisation_override', message)
 		return True
 
