@@ -74,7 +74,7 @@ async def monitor_repository():
 	ddb_insert_item(table_name, key, etag)
 
 	# reset any changes that could have been made to the project folder and pull latest code
-	run(f'cd {LINUX_ABSOLUTE_PATH} && git reset --hard HEAD && git pull', shell=True)
+	run(f"cd {LINUX_ABSOLUTE_PATH} && git reset --hard HEAD && git pull", shell=True)
 
 	# restart service
 	run(['sudo', 'systemctl', 'restart', LINUX_SERVICE_NAME])

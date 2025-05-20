@@ -40,7 +40,7 @@ async def chop_default(message, user_input):
 
 		update_chopping_list(actual_name, final_quantity, base_components)
 
-		summary_embed.add_field(name=f'{actual_name} (x{final_quantity})', value=base_components_string, inline=False)
+		summary_embed.add_field(name=f"{actual_name} (x{final_quantity})", value=base_components_string, inline=False)
 
 	# only send embed if valid items were added
 	if len(summary_embed) != len(embed_title):
@@ -68,9 +68,9 @@ async def chop_view(message, user_input):
 			quantity = entry[1][0]
 			components = generate_recipe_string(entry[1][1])
 
-			chopping_embed.add_field(name=f'{item} (x{quantity})', value=components, inline=False)
+			chopping_embed.add_field(name=f"{item} (x{quantity})", value=components, inline=False)
 
-		chopping_embed.set_footer(text=f'Page {page + 1}/{number_pages}')
+		chopping_embed.set_footer(text=f"Page {page + 1}/{number_pages}")
 		embed_list.append(chopping_embed)
 
 	return await multipage_embed_handler(message, user_input, embed_list)
@@ -117,7 +117,7 @@ async def chop_delete(message, user_input):
 
 		# proceed with item deletion
 		input_quantity = remove_chop_item(item_name, item_info, input_quantity, chopping_list)
-		formatted_string += f'- **{item_name} (x{input_quantity})**\n'
+		formatted_string += f"- **{item_name} (x{input_quantity})**\n"
 
 	# send string to acknowledge entry deletion
 	if formatted_string:

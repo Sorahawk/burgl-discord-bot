@@ -33,7 +33,7 @@ async def burgl_message(key, message=None, replace=None, notify=False):
 		voiceline = voiceline.replace('VAR1', f"'{replace}'")
 
 	if notify:  # notify users
-		voiceline = f'{NOTIFY_ROLE_NAME} {voiceline}'
+		voiceline = f"{NOTIFY_ROLE_NAME} {voiceline}"
 
 	# append BURG.L emoji and italicise text content
 	voiceline = prefix_burgl_emoji(voiceline)

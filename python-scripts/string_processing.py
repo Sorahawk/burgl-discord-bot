@@ -18,7 +18,7 @@ def check_command(user_input):
 	if keyword in BOT_COMMAND_LIST:
 		# remove command word from user input
 		sliced_input = re.sub(keyword, '', user_input, flags=re.IGNORECASE).strip()
-		return f'{keyword}_method', sliced_input
+		return f"{keyword}_method", sliced_input
 
 
 # checks for presence of any command flags in user input
@@ -27,10 +27,10 @@ def check_command(user_input):
 # second, the user input stripped of flags
 def check_flags(user_input):
 	# insert surrounding whitespace so leading and trailing flags can still be detected
-	user_input = f' {user_input} '
+	user_input = f" {user_input} "
 
 	# generate flag presence dictionary
-	flag_presence = {flag: True if f' -{letter} ' in user_input.lower() else False for flag, letter in BOT_COMMAND_FLAGS.items()}
+	flag_presence = {flag: True if f" -{letter} " in user_input.lower() else False for flag, letter in BOT_COMMAND_FLAGS.items()}
 
 	# remove all 'flags', a dash followed by a single letter, even if they are not valid
 	# each whitespace within input is duplicated so that all present flags can be matched by the regex properly
@@ -46,7 +46,7 @@ def check_flags(user_input):
 def get_appended_url(search_query):
 
 	# symbols to ignore from user input as most of these will cause a 'Bad Title' page on the wiki
-	illegal_symbols = '[+%<>|}{[\]]+'
+	illegal_symbols = r'[+%<>|}{[\]]+'
 
 	search_query = sub(illegal_symbols, '', search_query)
 
@@ -59,7 +59,7 @@ def get_appended_url(search_query):
 		search_query = search_query[:-1]
 
 	search_query = custom_capitalise_string(search_query)
-	return f'{BASE_WIKI_URL}{search_query}'.replace(' ', '_')
+	return f"{BASE_WIKI_URL}{search_query}".replace(' ', '_')
 
 
 # detect special smoothie type keyword in user input and remove it
@@ -101,19 +101,19 @@ def prefix_burgl_emoji(input_string):
 	if 'BURG.L' in CUSTOM_EMOJIS:
 		return f"{CUSTOM_EMOJIS['BURG.L']} *{input_string}*"
 	else:
-		return f'*{input_string}*'
+		return f"*{input_string}*"
 
 
 # returns string surrounded by double underscores, which is the syntax for underlined text on Discord
 # at the same time, ensure that the whitespace in between emoji and text is not underlined
 def underline_text(input_string):
-	return f'__{input_string}__'.replace('> ', '>__ __')
+	return f"__{input_string}__".replace('> ', '>__ __')
 
 
 # insert pet icon emoji behind the name of corresponding tameable creature
 def append_pet_emoji(creature_name):
 	if creature_name in CUSTOM_EMOJIS:
-		return f'{creature_name} {CUSTOM_EMOJIS[creature_name]}'
+		return f"{creature_name} {CUSTOM_EMOJIS[creature_name]}"
 	else:
 		return creature_name
 
@@ -121,7 +121,7 @@ def append_pet_emoji(creature_name):
 # insert elemental icon emoji behind the name of elemental weapons
 def append_elem_emoji(weapon_name, elemental_type):
 	if elemental_type in CUSTOM_EMOJIS:
-		return f'{weapon_name} {CUSTOM_EMOJIS[elemental_type]}'
+		return f"{weapon_name} {CUSTOM_EMOJIS[elemental_type]}"
 	else:
 		return weapon_name
 
@@ -135,10 +135,10 @@ def prefix_custom_emoji(input_string, is_robot=False):
 			continue
 
 		elif is_robot and keyword == 'RobotBack':  # check if weak point is a robot's back
-			input_string = input_string.replace('Back', f'{emoji} Back')
+			input_string = input_string.replace('Back', f"{emoji} Back")
 
 		elif isinstance(keyword, str):
-			input_string = input_string.replace(keyword, f'{emoji} {keyword}')
+			input_string = input_string.replace(keyword, f"{emoji} {keyword}")
 
 	return input_string
 
@@ -172,7 +172,7 @@ def custom_capitalise_string(string):
 	string = sub(contraction_pattern, convert_lowercase, string, flags=IGNORECASE)
 
 	for phrase in SPECIAL_WORDS:
-		phrase = f' {phrase} '  # make sure the phrase is standalone and not part of a word
+		phrase = f" {phrase} "  # make sure the phrase is standalone and not part of a word
 
 		# replace phrases with their proper capitalisation
 		string = sub(phrase, phrase, string, flags=IGNORECASE)
@@ -196,7 +196,7 @@ def res_weak_processing(header, content):
 
 	header = header.split(keyword)
 	if header[0] == 'e':
-		keyword = f'e{keyword}'
+		keyword = f"e{keyword}"
 
 	return keyword, content.replace('-or-', '\n')
 
@@ -206,7 +206,7 @@ def generate_recipe_string(recipe_list):
 	recipe_string = ''
 
 	for item in sorted(recipe_list.items()):
-		recipe_string += f'{item[1]} {item[0]}\n'
+		recipe_string += f"{item[1]} {item[0]}\n"
 
 	return recipe_string
 

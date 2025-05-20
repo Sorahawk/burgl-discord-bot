@@ -257,7 +257,7 @@ def format_object_info(object_info):
 
 		# check if search object is a creature
 		if 'aggression' in object_info:
-			resist_name = f'Dmg. {resist_name}'
+			resist_name = f"Dmg. {resist_name}"
 
 		embedded_info.set_field_at(8, name=resist_name, value=prefix_custom_emoji(object_info['resistance']), inline=True)
 

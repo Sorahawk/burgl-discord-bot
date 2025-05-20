@@ -25,7 +25,7 @@ async def todo_default(message, user_input):
 	embed_title = '**New To-Do Entry**'
 	summary_embed = Embed(title=embed_title, color=EMBED_COLOR_CODE)
 
-	summary_embed.add_field(name=f'Task {task_id}', value=task_description_capitalisation(task_description), inline=False)
+	summary_embed.add_field(name=f"Task {task_id}", value=task_description_capitalisation(task_description), inline=False)
 
 	await message.channel.send(embed=summary_embed)
 
@@ -52,9 +52,9 @@ async def todo_view(message, user_input):
 			task_id = entry[0]
 			task_description = entry[1]
 
-			todo_embed.add_field(name=f'{task_id}', value=task_description_capitalisation(task_description), inline=False)
+			todo_embed.add_field(name=f"{task_id}", value=task_description_capitalisation(task_description), inline=False)
 
-		todo_embed.set_footer(text=f'Page {page + 1}/{number_pages}')
+		todo_embed.set_footer(text=f"Page {page + 1}/{number_pages}")
 		embed_list.append(todo_embed)
 
 	return await multipage_embed_handler(message, user_input, embed_list)
@@ -90,9 +90,9 @@ async def todo_find(message, user_input):
 			task_id = entry[0]
 			task_description = entry[1]
 
-			find_embed.add_field(name=f'{task_id}', value=task_description_capitalisation(task_description), inline=False)
+			find_embed.add_field(name=f"{task_id}", value=task_description_capitalisation(task_description), inline=False)
 
-		find_embed.set_footer(text=f'Page {page + 1}/{number_pages}')
+		find_embed.set_footer(text=f"Page {page + 1}/{number_pages}")
 		embed_list.append(find_embed)
 
 	return await multipage_embed_handler(message, user_input, embed_list)
@@ -117,7 +117,7 @@ async def todo_edit(message, user_input):
 
 		# if given task ID did not exist, display error for that task ID
 		if not task_description:
-			await detect_errors(message, f'Task {task_id}', 106)
+			await detect_errors(message, f"Task {task_id}", 106)
 			continue
 
 		# remove task ID from new description
@@ -130,7 +130,7 @@ async def todo_edit(message, user_input):
 		new_id = insert_task_scheduler(task_priority, task_description)
 
 		task_description = task_description_capitalisation(task_description)
-		summary_embed.add_field(name=f'{task_id} -> {new_id}', value=task_description, inline=False)
+		summary_embed.add_field(name=f"{task_id} -> {new_id}", value=task_description, inline=False)
 
 	# only send embed if valid items were added
 	if len(summary_embed) != len(embed_title):
@@ -155,10 +155,10 @@ async def todo_delete(message, user_input):
 
 		# if given task ID did not exist, display error for that task ID
 		if not task_description:
-			await detect_errors(message, f'Task {task_id}', 106)
+			await detect_errors(message, f"Task {task_id}", 106)
 			continue
 
-		summary_embed.add_field(name=f'{task_id}', value=task_description_capitalisation(task_description), inline=False)
+		summary_embed.add_field(name=f"{task_id}", value=task_description_capitalisation(task_description), inline=False)
 
 	# only send embed if valid items were added
 	if len(summary_embed) != len(embed_title):

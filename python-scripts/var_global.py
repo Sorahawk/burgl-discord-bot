@@ -175,7 +175,7 @@ BOT_HELP_MENU = {
 		'+Use flag `-d` to delete shortcuts for specified objects (at least one object_name required).'],
 
 		['.chop <item_name_1> <quantity_1>, [item_name_2] [quantity_2], ...', 'Adds one or more specified items to the Chopping List.',
-		f'+Parameters are case-insensitive and there is a maximum of {MAX_CHOPPING_INPUT} parameters per entry.',
+		f"+Parameters are case-insensitive and there is a maximum of {MAX_CHOPPING_INPUT} parameters per entry.",
 		'+Commas are optional unless two item_names are arranged consecutively.',
 		'+Use flag `-v` to view all items in the Chopping List (no arguments required).',
 		'+Use flag `-d` to check one or more specified items off the Chopping List (quantity is optional; item will be marked as fully completed).',
@@ -213,7 +213,7 @@ BOT_VOICELINES = {
 	'empty': 'Please provide valid input parameters.',
 	'need_confirmation': "This command flag requires 'confirm' as a parameter.",
 	'insufficient': 'A minimum of two comma-separated parameters are required.',
-	'chop_exceeded': f'A maximum of {MAX_CHOPPING_INPUT} items are allowed per entry.',
+	'chop_exceeded': f"A maximum of {MAX_CHOPPING_INPUT} items are allowed per entry.",
 	'no_display': 'There is nothing to display.',
 	'embed_close': 'Menu has been closed.',
 	'list_reset': 'The specified list has been reset.',

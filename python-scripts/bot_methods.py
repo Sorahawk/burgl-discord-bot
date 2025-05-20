@@ -26,18 +26,18 @@ async def help_method(message, user_input, flag_presence):
 
 	for page in range(len(category_names)):
 		category = category_names[page]
-		help_embed = Embed(title='**Command List**', description=f'**{category}**', color=EMBED_COLOR_CODE)
+		help_embed = Embed(title='**Command List**', description=f"**{category}**", color=EMBED_COLOR_CODE)
 
 		for command in BOT_HELP_MENU[category]:
 
 			# italicise lines that start with +
 			for index in range(len(command)):
 				if command[index][0] == '+':
-					command[index] = f'*{command[index]}*'
+					command[index] = f"*{command[index]}*"
 
 			help_embed.add_field(name=command[0], value='\n'.join(command[1:]), inline=False)
 
-		help_embed.set_footer(text=f'Page {page + 1}/{len(category_names)}')
+		help_embed.set_footer(text=f"Page {page + 1}/{len(category_names)}")
 		embed_list.append(help_embed)
 
 	await multipage_embed_handler(message, user_input, embed_list)
@@ -68,7 +68,7 @@ async def card_method(message, user_input, flag_presence):
 
 	# check for errors and proceed if none detected
 	if await detect_errors(message, user_input, result):
-		embedded_card = Embed(title=f'{result[0]}', color=EMBED_COLOR_CODE)
+		embedded_card = Embed(title=f"{result[0]}", color=EMBED_COLOR_CODE)
 		embedded_card.set_image(url=result[1])
 		embedded_card.set_footer(text='Creature Card')
 
@@ -93,7 +93,7 @@ async def weak_method(message, user_input, flag_presence):
 		for word in user_input:
 			if word.lower() in weakness_type:
 				queried_types.append(weakness_dict[weakness_type])
-				embed_description += f'{prefix_custom_emoji(weakness_type.capitalize())} & '
+				embed_description += f"{prefix_custom_emoji(weakness_type.capitalize())} & "
 
 	# reject if no type matches
 	if not queried_types:

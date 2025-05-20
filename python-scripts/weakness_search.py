@@ -4,7 +4,7 @@ from url_processing import *
 
 # extracts the weakness tables from the wiki, processing them into a single dictionary for return
 def weakness_extraction():
-	url = f'{BASE_WIKI_URL}Creature_Strengths_and_Weaknesses'
+	url = f"{BASE_WIKI_URL}Creature_Strengths_and_Weaknesses"
 	page_content = get_page_data(url)
 
 	tables = page_content.find_class('wds-is-current')

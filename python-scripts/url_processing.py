@@ -67,7 +67,7 @@ def locate_object_url(search_query):
 	# if URL not correct, then use Google search to try and find the correct page
 	# created a Google Programmable Search Engine that only searches within the Grounded wiki
 	# also generated a Google Custom Search JSON API key that allows 100 queries a day for free
-	url = f'https://www.googleapis.com/customsearch/v1?key={JSON_API_KEY}&cx={SEARCH_ENGINE_ID}&q={search_query}'
+	url = f"https://www.googleapis.com/customsearch/v1?key={JSON_API_KEY}&cx={SEARCH_ENGINE_ID}&q={search_query}"
 
 	results = requests.get(url).json()
 

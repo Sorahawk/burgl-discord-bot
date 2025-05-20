@@ -9,7 +9,7 @@ from re import sub
 # returns dictionary of extracted information for a given status effect or mutation
 # if modifier can't be found, returns None by default
 def get_modifier_info(search_query):
-	urls = [f'{BASE_WIKI_URL}Status_Effects', f'{BASE_WIKI_URL}Mutations']
+	urls = [f"{BASE_WIKI_URL}Status_Effects", f"{BASE_WIKI_URL}Mutations"]
 
 	modifier_info = {}
 
@@ -27,7 +27,7 @@ def get_modifier_info(search_query):
 				continue
 
 			lowered_query = search_query.lower().replace(':', '')
-			prefixed_queries = [lowered_query, f'+{lowered_query}', f'-{lowered_query}']
+			prefixed_queries = [lowered_query, f"+{lowered_query}", f"-{lowered_query}"]
 
 			if modifier_name.lower().replace(':', '') in prefixed_queries:
 				modifier_info['name'] = modifier_name
@@ -35,7 +35,7 @@ def get_modifier_info(search_query):
 
 				# ignore the second column under mutations, shift to the right by one
 				# also remove superscript footnote text present on some mutation descriptions and sources
-				remove_footnotes = '[\[].*?[\]]'
+				remove_footnotes = r'[\[].*?[\]]'
 
 				modifier_info['description'] = sub(remove_footnotes, '', columns[1 + index].text_content()).strip()
 				modifier_info['source'] = sub(remove_footnotes, '', columns[2 + index].text_content()).strip()
@@ -160,7 +160,7 @@ def get_infobox_info(page_content):
 			else:
 				# account for special case where Sticky default smoothie has an additional effect
 				if object_info['name'] == DEFAULT_SMOOTHIE_NAME and content == '+Regenerate':
-					content = f'{content} (Sticky only)'
+					content = f"{content} (Sticky only)"
 
 				# ignore any duplicate effects, e.g. during smoothie extraction
 				if content not in object_info['effects']:
@@ -257,7 +257,7 @@ def compile_counter(item_list, recipe_type=None):
 
 # returns a list of all armor sets, extracted from the overall Armor page
 def get_all_armor_sets():
-	url = f'{BASE_WIKI_URL}Armor'
+	url = f"{BASE_WIKI_URL}Armor"
 
 	page_content = get_page_data(url)
 	page_content = page_content.find_class('tocsection-1')[0].xpath('ul')[0].find_class('toctext')
@@ -330,7 +330,7 @@ def get_armor_piece_info(search_query, queried_set):
 
 	## determine queried armor piece
 	# get corresponding armor set page URL
-	url = get_appended_url(f'{queried_set} Armor')
+	url = get_appended_url(f"{queried_set} Armor")
 	page_content = get_page_data(url)
 
 	# get the names of each armor piece in the set
@@ -414,7 +414,7 @@ def get_specific_piece_info(armor_table, piece_type, item_info):
 		index_offset = 4
 
 	# insert category
-	item_info['category'] = f'Armor - {piece_type}'
+	item_info['category'] = f"Armor - {piece_type}"
 
 	# get list of specific rows
 	piece_rows = armor_table.xpath('tbody/tr')[2:4]

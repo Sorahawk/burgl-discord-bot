@@ -40,7 +40,7 @@ def iterate_creature_cards(search_query, creature_cards, get_gold):
 # returns creature card image URL of the specified creature
 # if creature card can't be found, returns error code 104
 def get_creature_card(search_query, get_gold):
-	url = f'{BASE_WIKI_URL}Creature_Cards'
+	url = f"{BASE_WIKI_URL}Creature_Cards"
 
 	page_content = get_page_data(url)
 	creature_cards = page_content.find_class('image')

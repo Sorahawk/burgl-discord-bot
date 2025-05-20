@@ -13,11 +13,11 @@ def process_chop_input(user_input, allow_numberless=False):
 	# regex search patterns
 	name_pattern = "[a-z _+'?-]+"
 	qty_pattern = '[0-9]+'
-	regex_pattern = f'{name_pattern} {qty_pattern}|{qty_pattern} {name_pattern}'
+	regex_pattern = f"{name_pattern} {qty_pattern}|{qty_pattern} {name_pattern}"
 
 	# toggle recognition of comma-separated item names without any quantities
 	if allow_numberless:
-		regex_pattern += f'|{name_pattern}'
+		regex_pattern += f"|{name_pattern}"
 
 	# find all item-quantity pairs
 	results = findall(regex_pattern, user_input, IGNORECASE)

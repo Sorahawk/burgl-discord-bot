@@ -44,7 +44,7 @@ def process_todo_input(user_input):
 # returns the list of task IDs as well processed user input
 def extract_task_id(user_input):
 	number_length = len(str(MAXIMUM_ID))
-	regex_pattern = f'[a-z][0-9]{{{number_length}}}'
+	regex_pattern = f"[a-z][0-9]{{{number_length}}}"
 
 	split_input = user_input.split()
 	id_list = []

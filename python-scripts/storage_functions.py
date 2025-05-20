@@ -14,14 +14,14 @@ def bind_shortcuts(full_name, shortcuts):
 	added_items = []
 	display_name = custom_capitalise_string(full_name)
 
-	formatted_string = f'Case-insensitive shortcuts added for **{display_name}**:\n'
+	formatted_string = f"Case-insensitive shortcuts added for **{display_name}**:\n"
 
 	for short_name in shortcuts:
 		short_name = short_name.strip()  # remove preceding whitespace before each word, e.g. 'a, b, c'
 		result = ddb_insert_item(SHORTCUT_TABLE, short_name, full_name)
 
 		if result:
-			formatted_string += f'- {short_name}\n'
+			formatted_string += f"- {short_name}\n"
 
 			# remove entry from object info cache with short_name as the key, if any
 			ddb_remove_item(INFO_TABLE, short_name)
@@ -147,7 +147,7 @@ def generate_task_id(priority_level=None):
 
 		# pad numeric ID with leading zero if not full-length
 		while len(numeric_id) < len(str(MAXIMUM_ID)):
-			numeric_id = f'0{numeric_id}'
+			numeric_id = f"0{numeric_id}"
 
 		task_id = priority_level[0] + numeric_id
 

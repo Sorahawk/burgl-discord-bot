@@ -28,7 +28,7 @@ async def on_ready():
 	# on_ready() can be called more than once, typically whenever the bot momentarily loses connection to Discord 
 	# check if this is first time bot is calling on_ready()
 	if not var_global.MAIN_CHANNEL:
-		print(f'{bot.user} is online.\n')
+		print(f"{bot.user} is online.\n")
 
 		var_global.OPERATIONS_LOG = getLogger('BURG.L Operations Log')
 		var_global.OPERATIONS_LOG.info('BURG.L initialised.')
@@ -51,7 +51,7 @@ async def on_ready():
 		await burgl_message('hello')
 
 	else:  # do not start tasks again if they are alreay ongoing as RuntimeError will be thrown
-		print(f'{bot.user} has reconnected to Discord.\n')
+		print(f"{bot.user} has reconnected to Discord.\n")
 
 
 @bot.event

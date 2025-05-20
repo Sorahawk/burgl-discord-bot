@@ -36,9 +36,9 @@ async def bind_view(message, user_input):
 
 		for binded_pair in shortcut_list[start_index:end_index]:
 			shortcuts = ', '.join(binded_pair[1])
-			shortcut_embed.add_field(name=binded_pair[0], value=f'*{shortcuts}*', inline=False)
+			shortcut_embed.add_field(name=binded_pair[0], value=f"*{shortcuts}*", inline=False)
 
-		shortcut_embed.set_footer(text=f'Page {page + 1}/{number_pages}')
+		shortcut_embed.set_footer(text=f"Page {page + 1}/{number_pages}")
 		embed_list.append(shortcut_embed)
 
 	return await multipage_embed_handler(message, user_input, embed_list)
@@ -60,7 +60,7 @@ async def bind_delete(message, user_input):
 		if not await detect_errors(message, item_name, result):
 			continue
 
-		formatted_string += f'- **{custom_capitalise_string(item_name)}**\n'
+		formatted_string += f"- **{custom_capitalise_string(item_name)}**\n"
 
 	if formatted_string:
 		await message.channel.send(string_header + formatted_string)
